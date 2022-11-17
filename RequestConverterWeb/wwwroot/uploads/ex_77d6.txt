@@ -1,1 +1,0 @@
-[{"Headers":[{"Item1":"User-Agent","Item2":"Fiddler"},{"Item1":"test","Item2":"\\\"lol\\\""},{"Item1":"xd","Item2":"\\\"55\\\""},{"Item1":"Host","Item2":"www.example.com"}],"Cookies":[],"Url":"http://www.example.com/","RequestBody":null}]

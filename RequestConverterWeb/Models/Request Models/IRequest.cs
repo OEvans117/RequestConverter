@@ -2,6 +2,8 @@
 {
     public class IRequest
     {
+        public Guid RequestID { get; set; } = Guid.NewGuid();
+
         public string? Url { get; set; }
 
         public List<Tuple<string, string>> Headers = new List<Tuple<string, string>>();

@@ -45,7 +45,6 @@ namespace RequestConverterWeb.Controllers
                     using (var sr = new StreamReader(entry.Open()))
                     {
                         string RequestText = sr.ReadToEnd().Replace("\"", @"\""");
-
                         RequestSplit = RequestText.Split("\r\n");
                     }
 

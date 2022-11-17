@@ -4,17 +4,38 @@
     ViewData["Title"] = "Index";
 }
 
+<script type="text/javascript">
+
+    var previouselem;
+
+    function ShowCode(obj) {
+        var elemcode = document.getElementById("text-" + obj[obj.selectedIndex].id);
+
+        elemcode.style.display = elemcode.style.display === 'none' ? '' : 'none';
+
+        if (previouselem != null) {
+            previouselem.style.display = 'none';
+        }
+
+        previouselem = elemcode;
+    }
+</script>
+
 <h1>Index</h1>
 
-<select name="requests" id="request-select">
-    <option value="dog">Dog</option>
-</select>
-
-
-
-<select name="requests" id="request-select">
+<select name="requests" id="request-select" onchange="ShowCode(this);">
     @foreach (var req in Model)
     {
-        <option value="dog">Dog</option>
+        <option value="@req.Url" id="@req.RequestID">@req.RequestType.ToString() @req.Url</option>
     }
 </select>
+
+<br />
+<br />
+
+@foreach (var req in Model)
+{
+    <textarea style="display:none; width:600px; height:600px;" id="text-@req.RequestID">
+        @(new PythonConverter().Convert(req))
+    </textarea>
+}
