@@ -1,0 +1,27 @@
+﻿@using RequestConverterWeb.Conversion
+@model IEnumerable<IRequest>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<select name="requests" id="request-select">
+    <option value="dog">Dog</option>
+</select>
+
+
+
+<select name="requests" id="request-select">
+    @foreach (var req in Model)
+    {
+        <option value="dog">Dog</option>
+    }
+</select>
+
+@*<textarea style="width: 80%; height:600px; margin: auto;">
+    @(new PythonConverter().Convert(req))
+    </textarea>
+<br />
+<br />
+*@

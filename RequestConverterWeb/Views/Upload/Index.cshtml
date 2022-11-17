@@ -1,0 +1,11 @@
+﻿@model UploadViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <input asp-for="RequestBundle" />
+    <input type="submit" />
+</form>
