@@ -35,7 +35,7 @@ namespace RequestConverterWeb.Controllers
                     model.RequestBundle.CopyTo(stream);
             }
 
-            List<IRequest> RequestList = new List<IRequest>();
+            List<IRequest> RequestList = new List<IRequest>(); 
             using (ZipArchive archive = ZipFile.OpenRead(filePath))
             {
                 foreach (ZipArchiveEntry entry in archive.Entries.Where(x => x.Name.Contains("_c")))
