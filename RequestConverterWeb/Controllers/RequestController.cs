@@ -19,12 +19,11 @@ namespace RequestConverterWeb.Controllers
             // Read from the serialized bundle of requests stored as a txt
             // In the WebRootPath/Uploads folder.
 
-            var UploadFolder = Path.Combine(hostingEnvironment.WebRootPath, "uploads");
-            string FileName = (string)TempData["bundle"] + ".txt";
-            var BundleStream = new StreamReader(Path.Combine(UploadFolder, FileName));
-            var RequestList = JsonConvert.DeserializeObject<List<IRequest>>(BundleStream.ReadToEnd());
+            if (TempData["bundle"] == null)
+                return View(new List<IRequest>());
 
-            return View(RequestList);
+            using (var BundleStream = new StreamReader(Path.Combine(Path.Combine(hostingEnvironment.WebRootPath, "uploads"), (string)TempData["bundle"] + ".txt")))
+                return View(JsonConvert.DeserializeObject<List<IRequest>>(BundleStream.ReadToEnd()));
         }
     }
 }

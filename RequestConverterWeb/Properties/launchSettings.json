@@ -3,6 +3,7 @@
     "RequestConverterWeb": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "Upload",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

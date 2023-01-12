@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RequestConverterWeb.Models;
+using System.Drawing;
 using System.IO.Compression;
+using System.Reflection;
 
 namespace RequestConverterWeb.Controllers
 {
@@ -63,6 +65,46 @@ namespace RequestConverterWeb.Controllers
             TempData["bundle"] = Path.GetFileNameWithoutExtension(SerializedListPath);
 
             return RedirectToAction("Index", "Request");
+        }
+
+        [HttpPost]
+        public IActionResult UploadFile(IFormFile file)
+        {
+            string filePath = "";
+            if (file.Length > 1)
+            {
+                var uniqueFileName = GetUniqueFileName(file.FileName).Replace("saz", "zip");
+                var uploads = Path.Combine(hostingEnvironment.WebRootPath, "uploads");
+                filePath = Path.Combine(uploads, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                    file.CopyTo(stream);
+            }
+
+            List<IRequest> RequestList = new List<IRequest>();
+            using (ZipArchive archive = ZipFile.OpenRead(filePath))
+            {
+                foreach (ZipArchiveEntry entry in archive.Entries.Where(x => x.Name.Contains("_c")))
+                {
+                    string[] RequestSplit;
+
+                    using (var sr = new StreamReader(entry.Open()))
+                    {
+                        string RequestText = sr.ReadToEnd().Replace("\"", @"\""");
+                        RequestSplit = RequestText.Split("\r\n");
+                    }
+
+                    if (!RequestSplit[0].Contains("CONNECT"))
+                        RequestList.Add(new FiddlerRequest(RequestSplit));
+                }
+            }
+
+            string SerializedListPath = filePath.Replace("zip", "txt");
+            using (StreamWriter _testData = new StreamWriter(filePath.Replace("zip", "txt"), true))
+                _testData.Write(JsonConvert.SerializeObject(RequestList));
+            TempData["bundle"] = Path.GetFileNameWithoutExtension(SerializedListPath);
+
+            return Json("Success!");
         }
 
         private string GetUniqueFileName(string fileName)
