@@ -26,16 +26,15 @@ namespace RequestConverterWeb.Controllers
             // for a while. Then transfer the memory stream to the next page, and allow the user to
             // save the request contents to a database which gives him an ID
 
-            string filePath = "";
-            if (model.RequestBundle != null)
-            {
-                var uniqueFileName = GetUniqueFileName(model.RequestBundle.FileName).Replace("saz", "zip");
-                var uploads = Path.Combine(hostingEnvironment.WebRootPath, "uploads");
-                filePath = Path.Combine(uploads, uniqueFileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                    model.RequestBundle.CopyTo(stream);
+            using (var stream = file.OpenReadStream())
+            using (var archive = new ZipArchive(stream))
+            {
+                var innerFile = archive.GetEntry("foo.txt");
+                // do something with the inner file
             }
+
+
 
             List<IRequest> RequestList = new List<IRequest>(); 
             using (ZipArchive archive = ZipFile.OpenRead(filePath))
