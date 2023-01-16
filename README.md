@@ -6,15 +6,12 @@ Will be coding the frontend in different frameworks such as Angular, React, Vue 
 
 Roadmap:
 
-• Ability to import Wireshark (currently only supports Fiddler files)
-
-• Include more programming languages (Java/Rust/Perl/Go/Kotlin...)
-
-• Add settings to change the programming output & theme etc.
-
-• Ability to save request bundle as link (rq.com/r/9OBAi1/1)
-
-• Ability to save request bundle to account (login/register features)
+- Ability to import Wireshark (currently only supports Fiddler files)
+- Include more programming languages (Java/Rust/Perl/Go/Kotlin...)
+- Add settings to change the programming output & theme etc.
+- Ability to save request bundle as link (rq.com/r/9OBAi1/1)
+- Ability to save request bundle to account (login/register features)
+- Recode RequestConverter in React, Vue & Blazor (learning experience)
 
 V2 (CSS Changes + React/Angular/Vue/Blazor Support):
 
