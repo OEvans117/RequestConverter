@@ -14,7 +14,7 @@ Very much early days on a web app that will allow you to upload request bundles 
 V2 (CSS Changes + React/Angular/Vue/Blazor Support):
 
 ![V2](https://i.imgur.com/ef7u3T7.png)
-![V2](https://i.imgur.com/Y4J05sm.png)
+![V2](https://i.imgur.com/rBxRGaT.png)
 
 V1:
 
