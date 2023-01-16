@@ -1,0 +1,30 @@
+#main-navbar {
+  /*display: block;*/
+  position:absolute;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100%;
+  background: #474747;
+}
+
+#main-navbar ul {
+  margin: 0;
+  padding: 0;
+  padding-left: 0.5%;
+}
+
+#main-navbar li {
+  display: inline-block;
+  padding: 10px 20px;
+}
+
+#main-navbar li a {
+  text-decoration: none;
+  color: #FFF;
+}
+
+#main-navbar li a:hover {
+  padding-bottom: 3px;
+  color: #252525;
+}

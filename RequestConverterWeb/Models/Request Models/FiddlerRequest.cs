@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace RequestConverterWeb.Models
+namespace RequestConverterSSR.Models
 {
     public class FiddlerRequest : IRequest
     {

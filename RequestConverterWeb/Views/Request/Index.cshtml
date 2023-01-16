@@ -1,49 +1,8 @@
-﻿@using RequestConverterWeb.Conversion
+﻿@using RequestConverterSSR.Conversion
 @model IEnumerable<IRequest>
 @{
     ViewData["Title"] = "Index";
 }
-
-<script type="text/javascript">
-
-    var cm;
-
-    function ShowCode(obj) {
-        var elemcode = document.getElementById("text-" + obj[obj.selectedIndex].id);
-
-        //elemcode.style.display = elemcode.style.display === 'none' ? '' : 'none';
-
-        //if (previouselem != null) {
-        //    previouselem.style.display = 'none';
-        //}
-
-        //previouselem = elemcode;
-
-        if(cm == null){
-            cm = CodeMirror.fromTextArea(
-                document.getElementsByClassName("codeeditor")[1],
-                {
-                    mode: "python",
-                    tabMode: "indent",
-                    autoRefresh: true,
-                    styleActiveLine: true,
-                    lineNumbers: true,
-                    lineWrapping: true,
-                    autoCloseTags: true,
-                    foldGutter: true,
-                    dragDrop: true,
-                    lint: true,
-                    theme: "nord",
-                    styleActiveLine: { nonEmpty: true },
-                }
-            );
-            cm.setSize("100%", "100%");
-        }
-        else{
-            cm.setValue()
-        }
-    }
-</script>
 
 <header>
     <nav id="main-navbar">

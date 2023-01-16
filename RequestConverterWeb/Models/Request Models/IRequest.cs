@@ -1,4 +1,4 @@
-﻿namespace RequestConverterWeb.Models
+﻿namespace RequestConverterSSR.Models
 {
     public class IRequest
     {
@@ -11,6 +11,7 @@
         public List<Tuple<string, string>> Cookies = new List<Tuple<string, string>>();
 
         public string? RequestBody { get; set; }
+
         public RequestType RequestType { get; set; }
     }
 

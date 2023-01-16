@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using RequestConverterWeb.Models;
+using RequestConverterSSR.Models;
 using System.Drawing;
 using System.IO.Compression;
 using System.Reflection;
 
-namespace RequestConverterWeb.Controllers
+namespace RequestConverterSSR.Controllers
 {
     public class UploadController : Controller
     {
@@ -26,18 +26,8 @@ namespace RequestConverterWeb.Controllers
             // for a while. Then transfer the memory stream to the next page, and allow the user to
             // save the request contents to a database which gives him an ID
 
-
-            using (var stream = file.OpenReadStream())
-            using (var archive = new ZipArchive(stream))
-            {
-                var innerFile = archive.GetEntry("foo.txt");
-                // do something with the inner file
-            }
-
-
-
             List<IRequest> RequestList = new List<IRequest>(); 
-            using (ZipArchive archive = ZipFile.OpenRead(filePath))
+            using (ZipArchive archive = ZipFile.OpenRead(model.FileName))
             {
                 foreach (ZipArchiveEntry entry in archive.Entries.Where(x => x.Name.Contains("_c")))
                 {
@@ -58,8 +48,8 @@ namespace RequestConverterWeb.Controllers
             // TempData can only store 4096 bytes, so I can't sent the serialized object.
             // Just store the file as a txt, and read it on the next page.
 
-            string SerializedListPath = filePath.Replace("zip", "txt");
-            using (StreamWriter _testData = new StreamWriter(filePath.Replace("zip", "txt"), true))
+            string SerializedListPath = model.FileName.Replace("zip", "txt");
+            using (StreamWriter _testData = new StreamWriter(model.FileName.Replace("zip", "txt"), true))
                 _testData.Write(JsonConvert.SerializeObject(RequestList));
             TempData["bundle"] = Path.GetFileNameWithoutExtension(SerializedListPath);
 

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
 using Newtonsoft.Json;
-using RequestConverterWeb.Models;
+using RequestConverterSSR.Models;
 using System;
 
-namespace RequestConverterWeb.Controllers
+namespace RequestConverterSSR.Controllers
 {
     public class RequestController : Controller
     {

@@ -1,0 +1,17 @@
+.dropzonecl {
+  box-sizing: border-box;
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 99999;
+  background: #252525;
+  opacity: 50%;
+}
+
+input[type=file] {
+  width: 90px;
+  color: transparent;
+}

@@ -1,0 +1,53 @@
+<app-menu></app-menu>
+
+<div id="dropzone" class="dropzonecl"></div>
+
+<app-welcome-modal *ngIf="!this.jsonResp" (emitJson)="testy($event)"></app-welcome-modal>
+
+<requestpage *ngIf="this.jsonResp" [jsonResp]="this.jsonResp"></requestpage>
+
+<script src="~/lib/dropzone/dropzone-min.js"></script>
+<script type="text/javascript">
+
+  const dropzone = new Dropzone("div#myId", { url: "/file/post" });
+
+  let myDropzone = new Dropzone("#dropzone", {
+    init: function () {
+      this.on("complete", file => {
+        location.href = "/Request"
+      });
+    },
+    url: "/Upload/UploadFile",
+    paramName: "file",
+    maxFiles: 1,
+  });
+
+  var dropZone = document.getElementById('dropzone');
+  function showDropZone() {
+    dropZone.style.display = "block";
+  }
+  function hideDropZone() {
+    dropZone.style.display = "none";
+  }
+  function allowDrag(e) {
+    if (true) {
+      e.dataTransfer.dropEffect = 'copy';
+      e.preventDefault();
+    }
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    hideDropZone();
+  }
+  window.addEventListener('dragenter', function (e) {
+    showDropZone();
+  });
+  dropZone.addEventListener('dragenter', allowDrag);
+  dropZone.addEventListener('dragover', allowDrag);
+  dropZone.addEventListener('dragleave', function (e) {
+    console.log('dragleave');
+    hideDropZone();
+  });
+  dropZone.addEventListener('drop', handleDrop);
+
+</script>

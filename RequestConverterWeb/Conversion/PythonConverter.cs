@@ -1,10 +1,10 @@
-﻿using RequestConverterWeb.Models;
+﻿using RequestConverterSSR.Models;
 using System.Net;
 using System.Reflection.PortableExecutable;
 using System.Security.Principal;
 using System.Text;
 
-namespace RequestConverterWeb.Conversion
+namespace RequestConverterSSR.Conversion
 {
     public class PythonConverter : IConverter
     {

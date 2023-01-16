@@ -1,6 +1,6 @@
-﻿using RequestConverterWeb.Models;
+﻿using RequestConverterSSR.Models;
 
-namespace RequestConverterWeb.Conversion
+namespace RequestConverterSSR.Conversion
 {
     public interface IConverter
     {

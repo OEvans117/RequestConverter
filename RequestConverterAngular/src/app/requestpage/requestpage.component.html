@@ -1,0 +1,70 @@
+<div id="outer-container">
+  <div id="sidebar" class="sidebar">
+    <div class="sidebarsection">
+      <div class="sidebartitle">
+        <p class="sidebartext" style="float: right;">SAVE & SHARE</p>
+        <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
+      </div>
+      <hr />
+      <div class="sidebarcontent">
+        <i class="sidebariconleft fa-solid fa-floppy-disk fa-xl"></i>
+        <p class="sidebartext" style="float: right;">Save (CTRL + S)</p>
+      </div>
+    </div>
+
+    <div class="sidebarsection">
+      <div class="sidebartitle">
+        <p class="sidebartext" style="float: right;">LANGUAGE</p>
+        <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
+      </div>
+      <hr />
+      <div class="sidebarcontent">
+        <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
+        <p class="sidebartext" style="float: right;">Python - Requests</p>
+      </div>
+      <div class="sidebarcontent">
+        <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
+        <p class="sidebartext" style="float: right;">Python - XHTTP</p>
+      </div>
+      <div class="sidebarcontent">
+        <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
+        <p class="sidebartext" style="float: right;">C# - HttpWebRequest</p>
+      </div>
+      <div class="sidebarcontent">
+        <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
+        <p class="sidebartext" style="float: right;">C# - HttpClient</p>
+      </div>
+      <div class="sidebarcontent">
+        <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
+        <p class="sidebartext" style="float: right;">C# - RestSharp</p>
+      </div>
+    </div>
+
+    <div class="sidebarsection">
+      <div class="sidebartitle">
+        <p class="sidebartext" style="float: right;">SETTINGS</p>
+        <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
+      </div>
+      <hr />
+      <div class="sidebarcontent">
+        <select #teams (change)="onSelected(teams.value)" style="float: right; padding: 5px; margin: 5px 0px 5px 0px;" id="request-select">
+          <option [ngValue]="request" *ngFor="let request of jsonResp">{{request.url}}</option>
+        </select>
+      </div>
+      <div class="sidebarcontent">
+        <i class="sidebariconleft fa-solid fa-square-check fa-xl"></i>
+        <p class="sidebartext" style="float: right;">Show headers</p>
+      </div>
+      <div class="sidebarcontent">
+        <i class="sidebariconleft fa-solid fa-square-check fa-xl"></i>
+        <p class="sidebartext" style="float: right;">Show request body</p>
+      </div>
+    </div>
+  </div>
+  
+  <div id="content">
+    <ngx-codemirror [ngModel]="currentRequest | python" id="codemirror"  [options]="codeMirrorOptions">
+      yeah
+    </ngx-codemirror>
+  </div>
+</div>

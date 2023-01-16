@@ -1,0 +1,28 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~assets/lib/dropzone/dropzone.min.css";
+@import "~assets/lib/codemirror/codemirror.css";
+@import "~assets/lib/codemirror/theme/nord.css";
+@import "~assets/css/request.css";
+/*@import "~assets/css/upload.css";*/
+@import "~assets/lib/font-awesome/css/fontawesome.css";
+@import "~assets/lib/font-awesome/css/brands.css";
+@import "~assets/lib/font-awesome/css/solid.css";
+@import "https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap";
+@import '~codemirror/lib/codemirror';
+@import '~codemirror/theme/material';
+
+{
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background: #252525;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  overflow-y: hidden;
+}

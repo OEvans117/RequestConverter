@@ -14,9 +14,10 @@ namespace RequestConverterAPI.Controllers
             return View();
         }
 
-        [HttpPost]
-        public JsonResult UploadFile(IFormFile RequestBundle)
+        [HttpPost("UploadFile")]
+        public IActionResult UploadFile(IFormFile file)
         {
+            var RequestBundle = Request.Form.Files[0];
             List<IRequest> RequestList = new List<IRequest>();
             using (var stream = RequestBundle.OpenReadStream())
             using (var archive = new ZipArchive(stream))
@@ -28,12 +29,12 @@ namespace RequestConverterAPI.Controllers
                     using (var sr = new StreamReader(entry.Open()))
                         RequestSplit = sr.ReadToEnd().Replace("\"", @"\""").Split("\r\n");
 
+                    // Fix this to accept IRequest instead
                     if (!RequestSplit[0].Contains("CONNECT"))
                         RequestList.Add(new FiddlerRequest(RequestSplit));
                 }
             }
-
-            return Json(RequestList);
+            return RequestList.Count == 0 ? NotFound() : Ok(RequestList);
         }
     }
 }

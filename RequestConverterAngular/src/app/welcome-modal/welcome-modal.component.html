@@ -1,0 +1,28 @@
+<div id="upload-panel">
+  <button class="panel button">
+    New Project
+  </button>
+  <button class="panel button">
+    Open Project
+  </button>
+  <button class="panel button">
+    Example Project
+  </button>
+  <div class="panel bottom">
+    <img class="folderimg" src="../../assets/img/folder.png" />
+
+    <p style="text-align:center; width:55%;">
+      Drag and drop your request bundles to start conversion
+    </p>
+
+    <h3><span>OR</span></h3>
+
+    <input type="file" style='display: none;' class="file-input"
+           (change)="onFileSelected($event)" #fileUpload>
+
+    <div style="cursor: pointer;" class="browsefiles" id="addfiles" (click)="fileUpload.click()">
+      Browse Files
+    </div>
+
+  </div>
+</div>

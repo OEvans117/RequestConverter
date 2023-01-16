@@ -6,9 +6,9 @@
 
         public string? Url { get; set; }
 
-        public List<Tuple<string, string>> Headers = new List<Tuple<string, string>>();
+        public List<Tuple<string, string>> Headers { get; set; } = new List<Tuple<string, string>>();
 
-        public List<Tuple<string, string>> Cookies = new List<Tuple<string, string>>();
+        public List<Tuple<string, string>> Cookies { get; set; } = new List<Tuple<string, string>>();
 
         public string? RequestBody { get; set; }
 

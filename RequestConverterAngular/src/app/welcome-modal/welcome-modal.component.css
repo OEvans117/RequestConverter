@@ -1,0 +1,57 @@
+#upload-panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.panel {
+  background: #474747;
+  border-radius: 15px;
+  color: #fff;
+}
+
+.panel.button {
+  border: none;
+  padding: 1;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  width: 128px;
+  height: 21.65px;
+  margin-right: 8px;
+}
+
+.panel.bottom {
+  margin-top: 12px;
+  padding: 20px;
+  width: 407px;
+  text-align: -webkit-center;
+}
+
+
+h3 {
+  width: 55%;
+  text-align: center;
+  border-bottom: 1px solid #fff;
+  line-height: 0.1em;
+  margin: 10px 0 20px;
+  margin-top: 20px;
+}
+
+h3 span {
+  background: #474747;
+  padding: 0 10px;
+}
+
+.browsefiles {
+  width: 55%;
+  padding: 8px;
+  background-color: #4C5FF9;
+}
+
+.folderimg {
+  width: 92px;
+  height: 78px;
+}

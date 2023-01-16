@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RequestConverterWeb.Models;
+using RequestConverterSSR.Models;
 using System.Diagnostics;
 
-namespace RequestConverterWeb.Controllers
+namespace RequestConverterSSR.Controllers
 {
     public class HomeController : Controller
     {

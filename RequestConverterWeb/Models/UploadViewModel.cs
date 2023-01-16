@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace RequestConverterWeb.Models
+namespace RequestConverterSSR.Models
 {
     public class UploadViewModel
     {
