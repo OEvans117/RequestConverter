@@ -1,10 +1,8 @@
-RequestConverter - Convert request bundles from Fiddler, Burpsuite etc into clean, readable code. Current support for C# & Python
+**RequestConverter** - Convert request bundles from Fiddler, Burpsuite etc into clean, readable code. Current support for C# & Python
 
 Very much early days on a web app that will allow you to upload request bundles (such as .SAZ on Fiddler) and view them in different programming languages on the user interface, with abilities and options to modify data output.
 
-Will be coding the frontend in different frameworks such as Angular, React, Vue and Blazor to learn about each one.
-
-Roadmap:
+**Roadmap:**
 
 - Ability to import Wireshark (currently only supports Fiddler files)
 - Include more programming languages (Java/Rust/Perl/Go/Kotlin...)
