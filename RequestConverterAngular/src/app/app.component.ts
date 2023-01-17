@@ -9,5 +9,4 @@ import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 })
 export class AppComponent {
 
-
 }

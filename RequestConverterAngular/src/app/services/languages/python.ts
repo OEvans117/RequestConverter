@@ -1,15 +1,10 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { forEach } from 'jszip';
-import { RequestType, SRequest } from '../welcome-modal/welcome-modal.component';
+import { RequestType, SRequest } from "../../welcome-modal/welcome-modal.component";
+import { CodeFormatter } from "../code.service";
 
-@Pipe({
-  name: 'python'
-})
-export class PythonPipe implements PipeTransform {
-
-  transform(request: SRequest): string {
-
-    let PythonResult:string = "";
+export class PythonFormatter extends CodeFormatter {
+  constructor() { super('python'); }
+  format(request: SRequest): string {
+    let PythonResult: string = "";
 
     PythonResult += "reqHeaders = OrderedDict([";
     PythonResult += "\n";
@@ -21,16 +16,16 @@ export class PythonPipe implements PipeTransform {
     PythonResult += "])\n\n";
 
     if (request.requestType == RequestType.GET) {
-      PythonResult += "getProfileReq = RequestSession.get('" + request.url + "', proxies =" +
+      PythonResult += "customReq = RequestSession.get('" + request.url + "', proxies =" +
         " Account.ProxyDict, cookies = Account.CookieDict, headers = reqHeaders, verify = False)\n";
-      PythonResult += "getProfileResponse = getProfileReq.text";
+      PythonResult += "customResponse = customReq.text";
     }
 
     if (request.requestType == RequestType.POST) {
       PythonResult += "reqBody = \"" + request.requestBody + "\"\n";
-      PythonResult += "getProfileReq = RequestSession.post('" + request.url + "', data = reqBody, proxies =" +
+      PythonResult += "customReq = RequestSession.post('" + request.url + "', data = reqBody, proxies =" +
         " Account.ProxyDict, cookies = Account.CookieDict, headers = reqHeaders, verify = False)\n";
-      PythonResult += "getProfileResponse = getProfileReq.text";
+      PythonResult += "customResponse = customReq.text";
     }
 
     return PythonResult;

@@ -15,8 +15,17 @@
 }
 
 .sidebarcontent {
+  cursor: pointer;
   display: flex;
 }
+
+  .sidebarcontent:hover {
+    background-color: #3c3c3c;
+  }
+
+  .sidebarcontent:active {
+    background-color: #2a2a2a;
+  }
 
 .sidebartitle {
   display: flex;
@@ -38,6 +47,12 @@
   color: white;
   align-self: center;
   margin-right: 12%;
+  margin-left: 6%;
+}
+
+.sidebarcheckbox {
+  width: 17px;
+  height: 17px;
 }
 
 hr {
@@ -71,3 +86,4 @@ hr {
 /*  min-height: 100vh;
   height: calc(100vh - 98px);*/
 }
+

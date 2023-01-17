@@ -18,23 +18,23 @@
         <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
       </div>
       <hr />
-      <div class="sidebarcontent">
+      <div class="sidebarcontent" (click)="changeLanguage('python')">
         <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
-        <p class="sidebartext" style="float: right;">Python - Requests</p>
+        <p class="sidebartext"  style="float: right;">Python - Requests</p>
       </div>
-      <div class="sidebarcontent">
+      <div class="sidebarcontent" (click)="changeLanguage('python')">
         <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
         <p class="sidebartext" style="float: right;">Python - XHTTP</p>
       </div>
-      <div class="sidebarcontent">
+      <div class="sidebarcontent" (click)="changeLanguage('csharp')">
         <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
         <p class="sidebartext" style="float: right;">C# - HttpWebRequest</p>
       </div>
-      <div class="sidebarcontent">
+      <div class="sidebarcontent" (click)="changeLanguage('csharp')">
         <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
         <p class="sidebartext" style="float: right;">C# - HttpClient</p>
       </div>
-      <div class="sidebarcontent">
+      <div class="sidebarcontent" (click)="changeLanguage('csharp')">
         <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
         <p class="sidebartext" style="float: right;">C# - RestSharp</p>
       </div>
@@ -51,20 +51,9 @@
           <option [ngValue]="request" *ngFor="let request of jsonResp">{{request.url}}</option>
         </select>
       </div>
-      <div class="sidebarcontent">
-        <i class="sidebariconleft fa-solid fa-square-check fa-xl"></i>
-        <p class="sidebartext" style="float: right;">Show headers</p>
-      </div>
-      <div class="sidebarcontent">
-        <i class="sidebariconleft fa-solid fa-square-check fa-xl"></i>
-        <p class="sidebartext" style="float: right;">Show request body</p>
-      </div>
     </div>
   </div>
   
   <div id="content">
-    <ngx-codemirror [ngModel]="currentRequest | python" id="codemirror"  [options]="codeMirrorOptions">
-      yeah
-    </ngx-codemirror>
-  </div>
+    <ngx-codemirror [ngModel]="currentTranslatedRequest" id="codemirror"  [options]="codeMirrorOptions"></ngx-codemirror>  </div>
 </div>
