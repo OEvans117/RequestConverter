@@ -1,15 +1,15 @@
-import { RequestType, SRequest } from "../../welcome-modal/welcome-modal.component";
-import { CodeFormatter } from "../code.service";
+import { RequestType, SRequest } from "../../../welcome-modal/welcome-modal.component";
+import { CodeFormatter } from "../../code.service";
 
-export class CSharpFormatter extends CodeFormatter {
-  constructor() { super('csharp'); }
+export class CSharpHttpWebRequestFormatter extends CodeFormatter {
+  constructor() { super('httpwebrequest'); }
   format(request: SRequest): string {
     let PythonResult: string = "";
 
     PythonResult += "HttpWebRequest cbReq = WebRequest.CreateHttp(\"" + request.url + "\");\n\n";
 
     request.headers.forEach(function (header) {
-      PythonResult += "fidReq.Headers.Add(\"" + header.item1 + ", \"" + header.item2 + "\");\n"
+      PythonResult += "cbReq.Headers.Add(\"" + header.item1 + ", \"" + header.item2 + "\");\n"
     });
 
     PythonResult += "\n";

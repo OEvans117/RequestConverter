@@ -1,8 +1,8 @@
-import { RequestType, SRequest } from "../../welcome-modal/welcome-modal.component";
-import { CodeFormatter } from "../code.service";
+import { RequestType, SRequest } from "../../../welcome-modal/welcome-modal.component";
+import { CodeFormatter } from "../../code.service";
 
-export class PythonFormatter extends CodeFormatter {
-  constructor() { super('python'); }
+export class PythonRequestsFormatter extends CodeFormatter {
+  constructor() { super('requests'); }
   format(request: SRequest): string {
     let PythonResult: string = "";
 

@@ -1,27 +1,26 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, Input, Pipe, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
-import { CsharpPipe } from '../pipes/csharp.pipe';
-import { PythonPipe } from '../pipes/python.pipe';
 import { SRequest } from '../welcome-modal/welcome-modal.component';
 import { CodeFormatter, CodeService } from '../services/code.service';
-import { CSharpFormatter } from '../services/languages/csharp'
-import { PythonFormatter } from '../services/languages/python'
+import { CSharpHttpWebRequestFormatter } from '../services/languages/csharp/httpwebrequest';
+import { PythonRequestsFormatter } from '../services/languages/python/requests';
 
 @Component({
   selector: 'requestpage',
   templateUrl: './requestpage.component.html',
   styleUrls: ['./requestpage.component.css'],
   encapsulation: ViewEncapsulation.None,
-  providers: [ CodeService,
-    { provide: CodeFormatter, useClass: PythonFormatter, multi: true },
-    { provide: CodeFormatter, useClass: CSharpFormatter, multi: true },
+  providers: [CodeService,
+    { provide: CodeFormatter, useClass: PythonRequestsFormatter, multi: true },
+    { provide: CodeFormatter, useClass: CSharpHttpWebRequestFormatter, multi: true },
   ]
 })
 
 export class RequestpageComponent {
   @Input() jsonResp: SRequest[];
   currentRequest: any;
+  currentLanguage: any;
   currentTranslatedRequest: any = "";
 
   @ViewChild(CodemirrorComponent) codemirrorComponent: CodemirrorComponent | undefined;
@@ -31,13 +30,17 @@ export class RequestpageComponent {
   }
 
   changeLanguage(language: string) {
+    this.currentLanguage = language;
     this.currentTranslatedRequest = this.codeService.format(this.currentRequest, language)
+    //if (language.includes("py")) {
+    //  this.codeMirrorOptions["mode"] = "python";
+    //}
   }
 
   onSelected(value: string): void {
     let requestObj = this.jsonResp.find((j: { url: string; }) => j.url === value);
     this.currentRequest = requestObj as SRequest;
-    this.currentTranslatedRequest = this.codeService.format(this.currentRequest, "python")
+    this.currentTranslatedRequest = this.codeService.format(this.currentRequest, this.currentLanguage)
   }
 
   codeMirrorOptions: any = {

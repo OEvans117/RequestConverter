@@ -12,9 +12,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 
 import { FormsModule } from '@angular/forms';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
-import { PythonPipe } from './pipes/python.pipe';
-import { DynamicPipe } from './pipes/dynamic.pipe';
-import { CsharpPipe } from './pipes/csharp.pipe';
 import { CodeService } from './services/code.service';
 
 @NgModule({
@@ -24,9 +21,7 @@ import { CodeService } from './services/code.service';
     MenuComponent,
     WelcomeModalComponent,
     RequestpageComponent,
-    PythonPipe,
-    DynamicPipe,
-    CsharpPipe,
+
   ],
   imports: [
     CodemirrorModule,
