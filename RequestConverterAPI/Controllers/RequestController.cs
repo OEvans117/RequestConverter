@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace RequestConverterAPI.Controllers
 {
-    public class UploadController : Controller
+    public class RequestController : Controller
     {
         public IActionResult Index()
         {

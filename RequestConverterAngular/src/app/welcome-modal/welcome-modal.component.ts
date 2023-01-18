@@ -21,7 +21,7 @@ export class WelcomeModalComponent {
       const formData = new FormData();
       formData.append('file', reqFile, reqFile.name);
       const headers = new HttpHeaders().append('Content-Disposition', 'multipart/form-data');
-      this.http.post("https://asp.frenziedsms.com/SurfFinder/WeatherForecast/UploadFile", formData, { headers }).subscribe(resp => {
+      this.http.post("https://asp.frenziedsms.com/RequestConverter/Convert", formData, { headers }).subscribe(resp => {
         this.emitJson.emit(resp as SRequest[]);
       });
     }
