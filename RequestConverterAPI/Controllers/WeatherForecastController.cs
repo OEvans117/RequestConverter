@@ -1,16 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using RequestConverterAPI.Models;
 using System.IO.Compression;
 
-namespace RequestConverterAPI.Controllers
+namespace SurfFinderAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ConverterController : ControllerBase
+    public class WeatherForecastController : ControllerBase
     {
+        private static readonly string[] Summaries = new[]
+        {
+        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    };
+
+        private readonly ILogger<WeatherForecastController> _logger;
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        {
+            _logger = logger;
+        }
+
+        [HttpGet(Name = "GetWeatherForecast")]
+        public string Get()
+        {
+            return "xd1";
+        }
+
         [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
         [HttpPost("UploadFile")]
-        public IActionResult UploadFile()
+        public IActionResult UploadFile([FromForm] IFormFile file)
         {
             var RequestBundle = Request.Form.Files[0];
             List<IRequest> RequestList = new List<IRequest>();
