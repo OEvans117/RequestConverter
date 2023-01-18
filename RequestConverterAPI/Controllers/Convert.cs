@@ -1,20 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting.Internal;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using RequestConverterAPI.Models;
 using System.IO.Compression;
-using System.Reflection;
 
 namespace RequestConverterAPI.Controllers
 {
-    public class UploadController : Controller
+    [ApiController]
+    public class Convert : ControllerBase
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpPost("UploadFile")]
-        public IActionResult UploadFile(IFormFile file)
+        [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
+        [HttpPost("Convert")]
+        public IActionResult UploadFile()
         {
             var RequestBundle = Request.Form.Files[0];
             List<IRequest> RequestList = new List<IRequest>();
