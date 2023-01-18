@@ -13,8 +13,8 @@ namespace RequestConverterAPI.Controllers
             return View();
         }
 
-        [HttpPost("UploadFile")]
-        public IActionResult UploadFile(IFormFile file)
+        [HttpPost("Convert")]
+        public IActionResult Convert(IFormFile file)
         {
             var RequestBundle = Request.Form.Files[0];
             List<IRequest> RequestList = new List<IRequest>();
