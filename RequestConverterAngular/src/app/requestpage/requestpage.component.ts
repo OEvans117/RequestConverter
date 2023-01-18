@@ -20,8 +20,8 @@ import { PythonRequestsFormatter } from '../services/languages/python/requests';
 export class RequestpageComponent {
   @Input() jsonResp: SRequest[];
   currentRequest: any;
-  currentLanguage: any;
-  currentTranslatedRequest: any = "";
+  currentLanguage: any = "requests";
+  @Input() currentTranslatedRequest:any;
 
   @ViewChild(CodemirrorComponent) codemirrorComponent: CodemirrorComponent | undefined;
 
@@ -32,9 +32,6 @@ export class RequestpageComponent {
   changeLanguage(language: string) {
     this.currentLanguage = language;
     this.currentTranslatedRequest = this.codeService.format(this.currentRequest, language)
-    //if (language.includes("py")) {
-    //  this.codeMirrorOptions["mode"] = "python";
-    //}
   }
 
   onSelected(value: string): void {

@@ -4,7 +4,7 @@
 
 <app-welcome-modal *ngIf="!this.jsonResp" (emitJson)="testy($event)"></app-welcome-modal>
 
-<requestpage *ngIf="this.jsonResp" [jsonResp]="this.jsonResp"></requestpage>
+<requestpage *ngIf="this.jsonResp" [jsonResp]="this.jsonResp" [currentTranslatedRequest]="this.currentTranslatedRequest"></requestpage>
 
 <script src="~/lib/dropzone/dropzone-min.js"></script>
 <script type="text/javascript">
