@@ -6,10 +6,11 @@ using System.IO.Compression;
 namespace RequestConverterAPI.Controllers
 {
     [ApiController]
-    public class Convert : ControllerBase
+    [Route("[controller]")]
+    public class WeatherForecastController : ControllerBase
     {
         [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
-        [HttpPost("Convert")]
+        [HttpPost("UploadFile")]
         public IActionResult UploadFile()
         {
             var RequestBundle = Request.Form.Files[0];
