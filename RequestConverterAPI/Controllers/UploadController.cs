@@ -14,6 +14,12 @@ namespace RequestConverterAPI.Controllers
             return View();
         }
 
+        [HttpGet("GetTest")]
+        public IActionResult GetTest()
+        {
+            return Ok("test");
+        }
+
         [HttpPost("UploadFile")]
         public IActionResult UploadFile(IFormFile file)
         {
