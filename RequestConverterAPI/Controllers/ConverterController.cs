@@ -7,7 +7,7 @@ namespace RequestConverterAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class ConverterController : ControllerBase
     {
         [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
         [HttpPost("UploadFile")]
