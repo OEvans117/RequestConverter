@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
 using RequestConverterAPI.Context;
+using RequestConverterAPI.Helpers;
 using RequestConverterAPI.Models;
 using System.IO.Compression;
 using System.Reflection;
@@ -39,7 +40,7 @@ namespace RequestConverterAPI.Controllers
         [HttpPost("Save")]
         public IActionResult Save(string ConversionResult)
         {
-            var convertedRequest = new ConvertedRequest() { Id = RandomString(), ConversionResult = ConversionResult };
+            var convertedRequest = new ConvertedRequest() { Id = RandomHelper.RandomString(), ConversionResult = ConversionResult };
 
             _context.ConvertedRequest.Add(convertedRequest);
             _context.SaveChanges();
@@ -56,14 +57,6 @@ namespace RequestConverterAPI.Controllers
             ConvertedRequest convertedRequest = _context.Find<ConvertedRequest>(Id);
 
             return convertedRequest == null ? NotFound() : Ok(convertedRequest.ConversionResult);
-        }
-
-        readonly Random random = new();
-        string RandomString(int length = 6)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray()).ToLower();
-        }
+        }       
     }
 }

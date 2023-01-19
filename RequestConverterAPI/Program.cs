@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<RequestConverterContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("RequestConverterDatabase")));
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDatabase")));
 
 var app = builder.Build();
 
