@@ -6,10 +6,10 @@ Very much early days on a web app that will allow you to upload request bundles 
 
 **Roadmap:**
 
+- Ability to save request bundle as link (rq.com/r/9OBAi1/1)
 - Ability to import Wireshark (currently only supports Fiddler files)
 - Include more programming languages (Java/Rust/Perl/Go/Kotlin...)
 - Add settings to change the programming output & theme etc.
-- Ability to save request bundle as link (rq.com/r/9OBAi1/1)
 - Ability to save request bundle to account (login/register features)
 - Recode RequestConverter in React, Vue & Blazor (learning experience)
 
