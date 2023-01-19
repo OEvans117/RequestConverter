@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<RequestConverterContext>(
-    options => options.UseMySQL(builder.Configuration.GetConnectionString("UbuntuDatabase")));
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("UbuntuDatabase")));
 
 var app = builder.Build();
 
