@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
+using RequestConverterAPI.Context;
 using RequestConverterAPI.Models;
 using System.IO.Compression;
 using System.Reflection;
@@ -8,10 +9,9 @@ namespace RequestConverterAPI.Controllers
 {
     public class RequestController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        private RequestConverterContext _context;
+
+        public RequestController(RequestConverterContext context) { _context = context; }
 
         [HttpPost("Convert")]
         public IActionResult Convert(IFormFile file)
@@ -34,6 +34,36 @@ namespace RequestConverterAPI.Controllers
                 }
             }
             return RequestList.Count == 0 ? NotFound() : Ok(RequestList);
+        }
+
+        [HttpPost("Save")]
+        public IActionResult Save(string ConversionResult)
+        {
+            var convertedRequest = new ConvertedRequest() { Id = RandomString(), ConversionResult = ConversionResult };
+
+            _context.ConvertedRequest.Add(convertedRequest);
+            _context.SaveChanges();
+
+            if(ConversionResult != null)
+                return Ok(convertedRequest.Id);
+            else
+                return StatusCode(500);
+        }
+
+        [HttpGet("Get")]
+        public IActionResult Get(string Id)
+        {
+            ConvertedRequest convertedRequest = _context.Find<ConvertedRequest>(Id);
+
+            return convertedRequest == null ? NotFound() : Ok(convertedRequest.ConversionResult);
+        }
+
+        readonly Random random = new();
+        string RandomString(int length = 6)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray()).ToLower();
         }
     }
 }
