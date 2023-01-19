@@ -38,8 +38,12 @@ namespace RequestConverterAPI.Controllers
         }
 
         [HttpPost("Save")]
-        public IActionResult Save(string ConversionResult)
+        public async Task<IActionResult> Save()
         {
+            string ConversionResult = string.Empty;
+            using (var sr = new StreamReader(Request.Body))
+                ConversionResult = await sr.ReadToEndAsync();
+
             var convertedRequest = new ConvertedRequest() { Id = RandomHelper.RandomString(), ConversionResult = ConversionResult };
 
             _context.ConvertedRequest.Add(convertedRequest);
