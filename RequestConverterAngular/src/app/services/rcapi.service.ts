@@ -11,11 +11,14 @@ export class RcapiService {
 
   constructor(private http: HttpClient, private codeService: CodeService) { }
 
-  ApiBaseUrl: string = "https://asp.frenziedsms.com/RequestConverter";
+  BaseUrl: string = "https://asp.frenziedsms.com/"
+  ApiBaseUrl: string = this.BaseUrl + "RequestConverter";
 
-  JsonResponse: string;
   RequestArray: SRequest[];
   CurrentTranslatedRequest: string;
+  StateID: string;
+  StateURL: string;
+  HasLoadedState: boolean = false;
 
   public ConvertFile(RequestFile: File) {
     const FileFormData = new FormData();
@@ -26,29 +29,24 @@ export class RcapiService {
     this.http.post(this.ApiBaseUrl + "/Convert", FileFormData, { headers })
       .pipe(catchError(this.HandleError)).subscribe(resp => {
       this.RequestArray = resp as SRequest[];
-      this.JsonResponse = resp as string;
       this.CurrentTranslatedRequest = this.codeService.format(this.RequestArray[0], "requests")
     });
   }
 
-  public SaveState(): string {
-    const headers = new HttpHeaders().append('Content-Type', 'text/plain');
-
-    this.http.post(this.ApiBaseUrl + "/Save", this.JsonResponse, { headers })
+  public SaveState() {
+    this.http.post(this.ApiBaseUrl + "/Save", this.RequestArray, { responseType:"text" })
       .pipe(catchError(this.HandleError)).subscribe(resp => {
-      return resp;
+        this.StateID = resp;
+        this.StateURL = window.location.href + "r/" + resp;
     });
-
-    return "Error";
   }
 
-  public GetState(id: string): string {
+  public SetState(id: string) {
     this.http.get(this.ApiBaseUrl + "/Get?Id=" + id)
       .pipe(catchError(this.HandleError)).subscribe(resp => {
-      return resp;
+        this.RequestArray = resp as SRequest[];
+        this.HasLoadedState = true;
     });
-
-    return "Error";
   }
 
   private HandleError(error: HttpErrorResponse) {

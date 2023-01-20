@@ -6,6 +6,7 @@ import { CodeFormatter, CodeService } from '../../services/code.service';
 import { CSharpHttpWebRequestFormatter } from '../../services/languages/csharp/httpwebrequest';
 import { PythonRequestsFormatter } from '../../services/languages/python/requests';
 import { RcapiService } from '../../services/rcapi.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'requestpage',
@@ -21,10 +22,11 @@ import { RcapiService } from '../../services/rcapi.service';
 export class RequestpageComponent {
   currentRequest: any;
   currentLanguage: any = "requests";
+  currentUrl: string;
 
   @ViewChild(CodemirrorComponent) codemirrorComponent: CodemirrorComponent | undefined;
 
-  constructor(public rcApi: RcapiService, private codeService: CodeService) {
+  constructor(public rcApi: RcapiService, private codeService: CodeService, private router: Router) {
     this.codemirrorComponent?.codeMirror?.setSize(null, 100);
   }
 

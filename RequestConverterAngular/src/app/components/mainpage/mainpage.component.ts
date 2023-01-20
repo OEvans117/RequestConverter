@@ -5,7 +5,6 @@ import { CSharpHttpWebRequestFormatter } from '../../services/languages/csharp/h
 import { PythonRequestsFormatter } from '../../services/languages/python/requests';
 import { RcapiService } from '../../services/rcapi.service';
 import { RouterModule, Routes } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
 import { Validators } from '@angular/forms';
 
 @Component({
@@ -19,7 +18,9 @@ import { Validators } from '@angular/forms';
 })
 
 export class MainpageComponent {
-  constructor(public rcApi: RcapiService, private route: ActivatedRoute, private location: Location) {
-    const regex = /\/r\/(\b\w{6,6})\b/gm;
+  constructor(public rcApi: RcapiService, private location: Location) {
+    let urlparams = this.location.path();
+    if (urlparams != "")
+      rcApi.SetState(urlparams.split('/')[2]);
   }
 }

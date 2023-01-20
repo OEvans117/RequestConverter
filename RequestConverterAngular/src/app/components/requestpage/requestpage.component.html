@@ -9,8 +9,9 @@
       <hr />
       <div class="sidebarcontent">
         <i class="sidebariconleft fa-solid fa-floppy-disk fa-xl"></i>
-        <p class="sidebartext" style="float: right;">Save (CTRL + S)</p>
+        <p class="sidebartext" style="float: right;" (click)="rcApi.HasLoadedState ? null: rcApi.SaveState()">Save (CTRL + S)</p>
       </div>
+      <p *ngIf="rcApi.StateID" style="color:white">Saved to: <a href="{{rcApi.StateURL}}" target="_blank">{{rcApi.StateURL}}</a> </p>
     </div>
 
     <div class="sidebarsection">
