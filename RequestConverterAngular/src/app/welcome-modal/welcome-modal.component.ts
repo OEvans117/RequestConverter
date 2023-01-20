@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
+import { RcapiService } from '../services/rcapi.service';
 
 @Component({
   selector: 'app-welcome-modal',
@@ -9,22 +10,14 @@ import { Output, EventEmitter } from '@angular/core';
 })
 export class WelcomeModalComponent {
 
-  @Output() emitJson = new EventEmitter<any>();
-
-  constructor(private http: HttpClient) { }
+  constructor(public rcApi: RcapiService) { }
 
   onFileSelected(event: any) {
 
-    const reqFile: File = event.target.files[0];
+    const RequestFile: File = event.target.files[0];
 
-    if (reqFile) {
-      const formData = new FormData();
-      formData.append('file', reqFile, reqFile.name);
-      const headers = new HttpHeaders().append('Content-Disposition', 'multipart/form-data');
-      this.http.post("https://asp.frenziedsms.com/RequestConverter/Convert", formData, { headers }).subscribe(resp => {
-        this.emitJson.emit(resp as SRequest[]);
-      });
-    }
+    if (RequestFile)
+      this.rcApi.ConvertFile(RequestFile);
   }
 }
 

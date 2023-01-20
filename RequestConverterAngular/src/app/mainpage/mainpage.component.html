@@ -2,9 +2,9 @@
 
 <div id="dropzone" class="dropzonecl"></div>
 
-<app-welcome-modal *ngIf="!this.jsonResp" (emitJson)="testy($event)"></app-welcome-modal>
+<app-welcome-modal *ngIf="!this.rcApi.RequestArray"></app-welcome-modal>
 
-<requestpage *ngIf="this.jsonResp" [jsonResp]="this.jsonResp" [currentTranslatedRequest]="this.currentTranslatedRequest"></requestpage>
+<requestpage *ngIf="this.rcApi.RequestArray"></requestpage>
 
 <script src="~/lib/dropzone/dropzone-min.js"></script>
 <script type="text/javascript">

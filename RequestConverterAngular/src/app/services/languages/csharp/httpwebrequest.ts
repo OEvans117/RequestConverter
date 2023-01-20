@@ -24,7 +24,6 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
 
     PythonResult += "using (var sr = new StreamReader(req.GetResponse().GetResponseStream()))\n";
     PythonResult += "    return sr.ReadToEnd();";
-
     return PythonResult;
   }
 }
