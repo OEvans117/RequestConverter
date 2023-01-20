@@ -13,14 +13,14 @@ Very much early days on a web app that will allow you to upload request bundles 
 - Ability to save request bundle to account (login/register features)
 - Recode RequestConverter in React, Vue & Blazor (learning experience)
 
-V2 (CSS Changes + React/Angular/Vue/Blazor Support):
+**V2 (CSS Changes + React/Angular/Vue/Blazor Support):**
 
 Figma design: https://www.figma.com/file/j06HFXXYLrRfZTDrXpxMpz/RequestConverterWeb?node-id=0%3A1&t=1I7EnYRZHwBPJCuM-1
 
 ![V2](https://i.imgur.com/ef7u3T7.png)
 ![V2](https://i.imgur.com/rBxRGaT.png)
 
-V1:
+**V1:**
 
 ![V1](https://i.imgur.com/qhNUIOb.png)
 ![V1](https://i.imgur.com/GOC3fS5.png)
