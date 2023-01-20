@@ -1,4 +1,4 @@
-**RequestConverter** - Convert request bundles from Fiddler, Burpsuite etc into clean, readable code. Current support for C# & Python
+**RequestConverter** - Convert request bundles from Fiddler, Wireshark etc into clean, readable code. Current support for C# & Python
 
 **Early production version**: https://requestconverter.web.app/
 
