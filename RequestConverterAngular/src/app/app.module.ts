@@ -12,8 +12,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 
 import { FormsModule } from '@angular/forms';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
-import { CodeService } from './services/code.service';
-import { RcapiService } from './services/rcapi.service';
 
 @NgModule({
   declarations: [
