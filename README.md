@@ -15,6 +15,8 @@ Very much early days on a web app that will allow you to upload request bundles 
 
 V2 (CSS Changes + React/Angular/Vue/Blazor Support):
 
+Figma design: https://www.figma.com/file/j06HFXXYLrRfZTDrXpxMpz/RequestConverterWeb?node-id=0%3A1&t=1I7EnYRZHwBPJCuM-1
+
 ![V2](https://i.imgur.com/ef7u3T7.png)
 ![V2](https://i.imgur.com/rBxRGaT.png)
 
