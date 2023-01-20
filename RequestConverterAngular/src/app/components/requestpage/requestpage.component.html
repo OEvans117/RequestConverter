@@ -7,9 +7,9 @@
         <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
       </div>
       <hr />
-      <div class="sidebarcontent">
+      <div class="sidebarcontent" (click)="rcApi.HasLoadedState ? null : rcApi.SaveState()">
         <i class="sidebariconleft fa-solid fa-floppy-disk fa-xl"></i>
-        <p class="sidebartext" style="float: right;" (click)="rcApi.HasLoadedState ? null: rcApi.SaveState()">Save (CTRL + S)</p>
+        <p class="sidebartext" style="float: right;">Save (CTRL + S)</p>
       </div>
     </div>
 

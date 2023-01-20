@@ -10,6 +10,7 @@
 @import "https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap";
 @import '~codemirror/lib/codemirror';
 @import '~codemirror/theme/material';
+@import 'notyf/notyf.min.css';
 
 {
   -moz-box-sizing: border-box;

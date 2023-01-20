@@ -16,15 +16,13 @@ export class PythonRequestsFormatter extends CodeFormatter {
     PythonResult += "])\n\n";
 
     if (request.requestType == RequestType.GET) {
-      PythonResult += "customReq = RequestSession.get('" + request.url + "', proxies =" +
-        " Account.ProxyDict, cookies = Account.CookieDict, headers = reqHeaders, verify = False)\n";
+      PythonResult += "customReq = RequestSession.get('" + request.url + "', headers = reqHeaders)\n";
       PythonResult += "customResponse = customReq.text";
     }
 
     if (request.requestType == RequestType.POST) {
       PythonResult += "reqBody = \"" + request.requestBody + "\"\n";
-      PythonResult += "customReq = RequestSession.post('" + request.url + "', data = reqBody, proxies =" +
-        " Account.ProxyDict, cookies = Account.CookieDict, headers = reqHeaders, verify = False)\n";
+      PythonResult += "customReq = RequestSession.post('" + request.url + "', data = reqBody, headers = reqHeaders)\n";
       PythonResult += "customResponse = customReq.text";
     }
 

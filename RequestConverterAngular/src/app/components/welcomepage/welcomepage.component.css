@@ -18,7 +18,7 @@
   font: inherit;
   cursor: pointer;
   outline: inherit;
-  width: 128px;
+  width: 143px;
   height: 21.65px;
   margin-right: 8px;
 }
@@ -27,9 +27,8 @@
   margin-top: 12px;
   padding: 20px;
   width: 407px;
-  text-align: -webkit-center;
+  text-align: center;
 }
-
 
 h3 {
   width: 55%;
@@ -38,6 +37,8 @@ h3 {
   line-height: 0.1em;
   margin: 10px 0 20px;
   margin-top: 20px;
+  margin: auto;
+  margin-bottom: 25px;
 }
 
 h3 span {
@@ -49,9 +50,11 @@ h3 span {
   width: 55%;
   padding: 8px;
   background-color: #4C5FF9;
+  margin: auto;
 }
 
 .folderimg {
   width: 92px;
   height: 78px;
+  margin-bottom: 10px;
 }

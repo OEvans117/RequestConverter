@@ -29,6 +29,8 @@
     "dropzone": "^6.0.0-beta.2",
     "font-awesome": "^4.7.0",
     "jest-editor-support": "*",
+    "ngx-toastr": "^16.0.2",
+    "notyf": "^3.10.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
