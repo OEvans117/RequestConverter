@@ -1,4 +1,4 @@
-import { RequestType, SRequest } from "../../../welcome-modal/welcome-modal.component";
+import { RequestType, SRequest } from "../../../components/welcomepage/welcomepage.component";
 import { CodeFormatter } from "../../code.service";
 
 export class CSharpHttpWebRequestFormatter extends CodeFormatter {
@@ -24,7 +24,6 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
 
     PythonResult += "using (var sr = new StreamReader(req.GetResponse().GetResponseStream()))\n";
     PythonResult += "    return sr.ReadToEnd();";
-
     return PythonResult;
   }
 }

@@ -1,5 +1,6 @@
 <div id="outer-container">
   <div id="sidebar" class="sidebar">
+
     <div class="sidebarsection">
       <div class="sidebartitle">
         <p class="sidebartext" style="float: right;">SAVE & SHARE</p>
@@ -8,8 +9,9 @@
       <hr />
       <div class="sidebarcontent">
         <i class="sidebariconleft fa-solid fa-floppy-disk fa-xl"></i>
-        <p class="sidebartext" style="float: right;">Save (CTRL + S)</p>
+        <p class="sidebartext" style="float: right;" (click)="rcApi.HasLoadedState ? null: rcApi.SaveState()">Save (CTRL + S)</p>
       </div>
+      <p *ngIf="rcApi.StateID" style="color:white">Saved to: <a href="{{rcApi.StateURL}}" target="_blank">{{rcApi.StateURL}}</a> </p>
     </div>
 
     <div class="sidebarsection">
@@ -36,12 +38,14 @@
       <hr />
       <div class="sidebarcontent">
         <select #teams (change)="onSelected(teams.value)" style="float: right; padding: 5px; margin: 5px 0px 5px 0px;" id="request-select">
-          <option [ngValue]="request" *ngFor="let request of jsonResp">{{request.url}}</option>
+          <option [ngValue]="request" *ngFor="let request of rcApi.RequestArray">{{request.url}}</option>
         </select>
       </div>
     </div>
+
   </div>
+</div>
   
-  <div id="content">
-    <ngx-codemirror [ngModel]="currentTranslatedRequest" id="codemirror"  [options]="codeMirrorOptions"></ngx-codemirror>  </div>
+<div id="content">
+    <ngx-codemirror [ngModel]="rcApi.CurrentTranslatedRequest" id="codemirror"  [options]="codeMirrorOptions"></ngx-codemirror>
 </div>
