@@ -55,6 +55,13 @@
   height: 17px;
 }
 
+.sidebarselect {
+  float: right;
+  padding: 5px;
+  margin: 5px 0px 5px 0px;
+  max-width: 100%;
+}
+
 hr {
   height: 1px;
   border: 0;

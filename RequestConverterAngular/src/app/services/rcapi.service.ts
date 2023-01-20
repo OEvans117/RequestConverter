@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { SRequest } from '../components/welcomepage/welcomepage.component';
 import { CodeService } from './code.service';
+import { Location } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RcapiService {
 
-  constructor(private http: HttpClient, private codeService: CodeService) { }
+  constructor(private http: HttpClient, private codeService: CodeService, private location: Location) { }
 
   BaseUrl: string = "https://asp.frenziedsms.com/"
   ApiBaseUrl: string = this.BaseUrl + "RequestConverter";
@@ -37,7 +38,7 @@ export class RcapiService {
     this.http.post(this.ApiBaseUrl + "/Save", this.RequestArray, { responseType:"text" })
       .pipe(catchError(this.HandleError)).subscribe(resp => {
         this.StateID = resp;
-        this.StateURL = window.location.href + "r/" + resp;
+        this.location.go("/r/" + resp);
     });
   }
 
