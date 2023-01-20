@@ -4,7 +4,7 @@ import { Output, EventEmitter } from '@angular/core';
 import { RcapiService } from '../../services/rcapi.service';
 
 @Component({
-  selector: 'app-welcomepage',
+  selector: 'welcomepage',
   templateUrl: './welcomepage.component.html',
   styleUrls: ['./welcomepage.component.css']
 })
@@ -18,6 +18,10 @@ export class WelcomepageComponent {
 
     if (RequestFile)
       this.rcApi.ConvertFile(RequestFile);
+  }
+
+  visitExample() {
+    location.href = window.location.href + "r/gncxkm";
   }
 }
 

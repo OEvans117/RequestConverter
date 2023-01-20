@@ -20,7 +20,9 @@ import { Validators } from '@angular/forms';
 export class MainpageComponent {
   constructor(public rcApi: RcapiService, private location: Location) {
     let urlparams = this.location.path();
-    if (urlparams != "")
+    if (urlparams != "") {
       rcApi.SetState(urlparams.split('/')[2]);
+    }
   }
+
 }

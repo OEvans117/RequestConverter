@@ -54,14 +54,24 @@ export class RcapiService {
   }
 
   public SetState(id: string) {
+    this.HasLoadedState = true;
     this.http.get(this.ApiBaseUrl + "/Get?Id=" + id)
-      .pipe(catchError(this.HandleError)).subscribe(resp => {
+      .pipe(catchError(this.HandleLoadStateError)).subscribe(resp => {
         this.RequestArray = resp as SRequest[];
         this.HasLoadedState = true;
     });
   }
 
   private HandleError(error: HttpErrorResponse) {
+    if (error.status === 0)
+      console.error('An error occurred:', error.error);
+    else
+      console.error(`Backend returned code ${error.status}, body was: `, error.error);
+    return throwError(() => new Error('Something bad happened; please try again later.'));
+  }
+
+  private HandleLoadStateError(error: HttpErrorResponse) {
+    this.HasLoadedState = false;
     if (error.status === 0)
       console.error('An error occurred:', error.error);
     else
