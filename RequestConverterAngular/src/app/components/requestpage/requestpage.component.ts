@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, Input, Pipe, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
-import { SRequest } from '../welcome-modal/welcome-modal.component';
-import { CodeFormatter, CodeService } from '../services/code.service';
-import { CSharpHttpWebRequestFormatter } from '../services/languages/csharp/httpwebrequest';
-import { PythonRequestsFormatter } from '../services/languages/python/requests';
-import { RcapiService } from '../services/rcapi.service';
+import { SRequest } from '../welcomepage/welcomepage.component';
+import { CodeFormatter, CodeService } from '../../services/code.service';
+import { CSharpHttpWebRequestFormatter } from '../../services/languages/csharp/httpwebrequest';
+import { PythonRequestsFormatter } from '../../services/languages/python/requests';
+import { RcapiService } from '../../services/rcapi.service';
 
 @Component({
   selector: 'requestpage',

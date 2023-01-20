@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { SRequest } from '../welcome-modal/welcome-modal.component';
+import { SRequest } from '../components/welcomepage/welcomepage.component';
 
 @Injectable({
   providedIn: 'root'

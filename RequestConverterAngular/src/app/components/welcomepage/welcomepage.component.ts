@@ -1,14 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
-import { RcapiService } from '../services/rcapi.service';
+import { RcapiService } from '../../services/rcapi.service';
 
 @Component({
-  selector: 'app-welcome-modal',
-  templateUrl: './welcome-modal.component.html',
-  styleUrls: ['./welcome-modal.component.css']
+  selector: 'app-welcomepage',
+  templateUrl: './welcomepage.component.html',
+  styleUrls: ['./welcomepage.component.css']
 })
-export class WelcomeModalComponent {
+export class WelcomepageComponent {
 
   constructor(public rcApi: RcapiService) { }
 

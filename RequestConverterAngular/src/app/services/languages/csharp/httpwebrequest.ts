@@ -1,4 +1,4 @@
-import { RequestType, SRequest } from "../../../welcome-modal/welcome-modal.component";
+import { RequestType, SRequest } from "../../../components/welcomepage/welcomepage.component";
 import { CodeFormatter } from "../../code.service";
 
 export class CSharpHttpWebRequestFormatter extends CodeFormatter {
