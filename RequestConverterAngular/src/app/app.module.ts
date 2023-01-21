@@ -15,6 +15,7 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { CodesettingsComponent } from './components/codesettings/codesettings.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ToastrModule } from 'ngx-toastr';
     MenuComponent,
     WelcomepageComponent,
     RequestpageComponent,
+    CodesettingsComponent,
   ],
   imports: [
     CodemirrorModule,

@@ -1,8 +1,12 @@
 import { RequestType, SRequest } from "../../../components/welcomepage/welcomepage.component";
-import { CodeFormatter } from "../../code.service";
+import { CodeFormatter } from "../code.service";
 
 export class CSharpHttpWebRequestFormatter extends CodeFormatter {
   constructor() { super('httpwebrequest'); }
+
+  csharp: string = "new";
+  async: boolean = false;
+
   format(request: SRequest): string {
     let PythonResult: string = "";
 

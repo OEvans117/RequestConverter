@@ -21,7 +21,7 @@
       <hr />
       <div class="sidebarcontent" (click)="changeLanguage('requests')">
         <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
-        <p class="sidebartext"  style="float: right;">Python - Requests</p>
+        <p class="sidebartext" style="float: right;">Python - Requests</p>
       </div>
       <div class="sidebarcontent" (click)="changeLanguage('httpwebrequest')">
         <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
@@ -31,7 +31,7 @@
 
     <div class="sidebarsection">
       <div class="sidebartitle">
-        <p class="sidebartext" style="float: right;">SETTINGS</p>
+        <p class="sidebartext" style="float: right;">MAIN SETTINGS</p>
         <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
       </div>
       <hr />
@@ -40,6 +40,15 @@
           <option [ngValue]="request" *ngFor="let request of rcApi.RequestArray">{{request.url}}</option>
         </select>
       </div>
+    </div>
+
+    <div class="sidebarsection">
+      <div class="sidebartitle">
+        <p class="sidebartext" style="float: right;">CODE SETTINGS</p>
+        <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
+      </div>
+      <hr />
+      <codesettings [childClass]="codeService.CurrentFormatter" [parentClass]="codeService"></codesettings>
     </div>
 
   </div>

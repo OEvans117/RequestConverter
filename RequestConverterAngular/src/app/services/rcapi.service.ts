@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { SRequest } from '../components/welcomepage/welcomepage.component';
-import { CodeService } from './code.service';
+import { CodeService } from './languages/code.service';
 import { Location } from '@angular/common';
 import { Notyf } from 'notyf';
 
@@ -45,11 +45,8 @@ export class RcapiService {
         this.HasLoadedState = true;
 
         this.location.go("/r/" + resp);
-        const notyf = new Notyf();
-        notyf.options.duration = 10000;
-        notyf.options.ripple = true;
-        notyf.options.position = { x: 'right', y: 'top' }
-        notyf.success('Succesfully saved state ✅');
+        new Notyf({ duration: 10000, ripple: true, position: { x: 'right', y: 'top' } })
+          .success("Succesfully saved state ✅")
     });
   }
 

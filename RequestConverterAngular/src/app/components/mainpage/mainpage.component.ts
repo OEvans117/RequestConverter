@@ -1,6 +1,6 @@
 import { Component, Input, Output } from '@angular/core';
 import { Location } from '@angular/common';
-import { CodeFormatter, CodeService } from '../../services/code.service';
+import { CodeFormatter, CodeService } from '../../services/languages/code.service';
 import { CSharpHttpWebRequestFormatter } from '../../services/languages/csharp/httpwebrequest';
 import { PythonRequestsFormatter } from '../../services/languages/python/requests';
 import { RcapiService } from '../../services/rcapi.service';
@@ -24,5 +24,4 @@ export class MainpageComponent {
       rcApi.SetState(urlparams.split('/')[2]);
     }
   }
-
 }

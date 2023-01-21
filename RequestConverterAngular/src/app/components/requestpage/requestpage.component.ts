@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject, Input, Pipe, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import { SRequest } from '../welcomepage/welcomepage.component';
-import { CodeFormatter, CodeService } from '../../services/code.service';
+import { CodeFormatter, CodeService } from '../../services/languages/code.service';
 import { CSharpHttpWebRequestFormatter } from '../../services/languages/csharp/httpwebrequest';
 import { PythonRequestsFormatter } from '../../services/languages/python/requests';
 import { RcapiService } from '../../services/rcapi.service';
@@ -26,8 +26,9 @@ export class RequestpageComponent {
 
   @ViewChild(CodemirrorComponent) codemirrorComponent: CodemirrorComponent | undefined;
 
-  constructor(public rcApi: RcapiService, private codeService: CodeService, private router: Router) {
+  constructor(public rcApi: RcapiService, public codeService: CodeService, private router: Router) {
     this.codemirrorComponent?.codeMirror?.setSize(null, 100);
+    this.rcApi.CurrentTranslatedRequest = this.codeService.format(this.rcApi.RequestArray[0], this.currentLanguage)
   }
 
   changeLanguage(language: string) {

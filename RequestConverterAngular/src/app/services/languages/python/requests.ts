@@ -1,8 +1,12 @@
 import { RequestType, SRequest } from "../../../components/welcomepage/welcomepage.component";
-import { CodeFormatter } from "../../code.service";
+import { CodeFormatter } from "../code.service";
 
 export class PythonRequestsFormatter extends CodeFormatter {
   constructor() { super('requests'); }
+
+  public test: boolean = false;
+  public haha: string = "not";
+
   format(request: SRequest): string {
     let PythonResult: string = "";
 
