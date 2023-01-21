@@ -8,7 +8,7 @@ import { RcapiService } from '../../services/rcapi.service';
   selector: 'codesettings',
   templateUrl: './codesettings.component.html',
   styleUrls: ['./codesettings.component.css'],
-  providers: [RcapiService, CodeService,
+  providers: [CodeService,
     { provide: CodeFormatter, useClass: PythonRequestsFormatter, multi: true },
     { provide: CodeFormatter, useClass: CSharpHttpWebRequestFormatter, multi: true },
   ],

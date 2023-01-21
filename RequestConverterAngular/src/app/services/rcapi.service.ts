@@ -6,9 +6,7 @@ import { CodeService } from './languages/code.service';
 import { Location } from '@angular/common';
 import { Notyf } from 'notyf';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class RcapiService {
 
   constructor(private http: HttpClient,

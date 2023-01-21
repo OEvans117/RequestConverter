@@ -2,9 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { SRequest } from '../../components/welcomepage/welcomepage.component';
 import { PythonRequestsFormatter } from './python/requests';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CodeService {
   constructor(@Inject(CodeFormatter) private formatters: CodeFormatter[]) { }
 
