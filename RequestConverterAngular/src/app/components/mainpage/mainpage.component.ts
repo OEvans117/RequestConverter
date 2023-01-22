@@ -11,7 +11,7 @@ import { Validators } from '@angular/forms';
   selector: 'mainpage',
   templateUrl: './mainpage.component.html',
   styleUrls: ['./mainpage.component.css'],
-  providers: [RcapiService, CodeService,
+  providers: [RcapiService,
     { provide: CodeFormatter, useClass: PythonRequestsFormatter, multi: true },
     { provide: CodeFormatter, useClass: CSharpHttpWebRequestFormatter, multi: true },
   ],

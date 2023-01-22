@@ -31,8 +31,10 @@ export class RcapiService {
 
     this.http.post(this.ApiBaseUrl + "/Convert", FileFormData, { headers })
       .pipe(catchError(this.HandleError)).subscribe(resp => {
-      this.RequestArray = resp as SRequest[];
-      this.CurrentTranslatedRequest = this.codeService.format(this.RequestArray[0], "requests")
+        this.RequestArray = resp as SRequest[];
+
+        this.codeService.CurrentRequest = 0;
+        this.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.RequestArray)
     });
   }
 

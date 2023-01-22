@@ -29,28 +29,7 @@
       </div>
     </div>
 
-    <div class="sidebarsection">
-      <div class="sidebartitle">
-        <p class="sidebartext" style="float: right;">MAIN SETTINGS</p>
-        <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
-      </div>
-      <hr />
-      <div class="sidebarcontent">
-        <select #teams (change)="onSelected(teams.value)" class="sidebarselect" id="request-select">
-          <option [ngValue]="request" *ngFor="let request of rcApi.RequestArray">{{request.url}}</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="sidebarsection">
-      <div class="sidebartitle">
-        <p class="sidebartext" style="float: right;">CODE SETTINGS</p>
-        <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
-      </div>
-      <hr />
-      <codesettings [childClass]="codeService.CurrentFormatter" [parentClass]="codeService"></codesettings>
-    </div>
-
+    <codesettings [childClass]="codeService.CurrentFormatter" [parentClass]="codeService"></codesettings>
   </div>
 </div>
   

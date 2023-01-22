@@ -7,7 +7,7 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
   csharp: string = "new";
   async: boolean = false;
 
-  format(request: SRequest): string {
+  request(request: SRequest): string {
     let PythonResult: string = "";
 
     PythonResult += "HttpWebRequest cbReq = WebRequest.CreateHttp(\"" + request.url + "\");\n\n";
@@ -28,6 +28,15 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
 
     PythonResult += "using (var sr = new StreamReader(req.GetResponse().GetResponseStream()))\n";
     PythonResult += "    return sr.ReadToEnd();";
+
     return PythonResult;
+  }
+
+  requests(request: SRequest[]): string {
+    return "test";
+  }
+
+  format(requests: SRequest[], index: number): string {
+    return "";
   }
 }

@@ -4,19 +4,31 @@ import { PythonRequestsFormatter } from './python/requests';
 
 @Injectable({ providedIn: 'root' })
 export class CodeService {
-  constructor(@Inject(CodeFormatter) private formatters: CodeFormatter[]) { }
+  constructor(@Inject(CodeFormatter) private formatters: CodeFormatter[]) { console.log("created!"); }
 
-  public RequestName: string | undefined = "yeah";
-  public ShowAllRequests: boolean = false;
+  // Public modifyable settings
+  public ShowAllRequests: boolean; // keep this as last for HTML
+  
+  // Private settings
+  public CurrentRequest: number = 0;
+  public CurrentLanguage: string;
   public CurrentFormatter: CodeFormatter | undefined;
 
-  format(request: SRequest, language: string): string {
+  format(language:string, RequestBundle: SRequest[]): string {
+
+    this.CurrentLanguage = language;
     this.CurrentFormatter = this.formatters.find(f => f.language === language);
-    return this.CurrentFormatter!.format(request);
+
+    if (this.ShowAllRequests)
+      return this.CurrentFormatter!.requests(RequestBundle);
+    else
+      return this.CurrentFormatter!.request(RequestBundle[this.CurrentRequest])
   }
 }
 
 export abstract class CodeFormatter {
   constructor(public language: string) { }
-  abstract format(request: SRequest): string;
+  abstract format(requests: SRequest[], index: number): string;
+  abstract requests(requests: SRequest[]): string;
+  abstract request(request: SRequest): string;
 }

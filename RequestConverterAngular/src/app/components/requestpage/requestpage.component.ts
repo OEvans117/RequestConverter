@@ -27,19 +27,15 @@ export class RequestpageComponent {
   @ViewChild(CodemirrorComponent) codemirrorComponent: CodemirrorComponent | undefined;
 
   constructor(public rcApi: RcapiService, public codeService: CodeService, private router: Router) {
+    this.codeService.CurrentLanguage = "requests";
     this.codemirrorComponent?.codeMirror?.setSize(null, 100);
-    this.rcApi.CurrentTranslatedRequest = this.codeService.format(this.rcApi.RequestArray[0], this.currentLanguage)
   }
 
+  // When you click on language buttons
   changeLanguage(language: string) {
-    this.currentLanguage = language;
-    this.rcApi.CurrentTranslatedRequest = this.codeService.format(this.currentRequest, language)
-  }
-
-  onSelected(value: string): void {
-    let requestObj = this.rcApi.RequestArray.find((j: { url: string; }) => j.url === value);
-    this.currentRequest = requestObj as SRequest;
-    this.rcApi.CurrentTranslatedRequest = this.codeService.format(this.currentRequest, this.currentLanguage)
+    if (this.codeService.CurrentLanguage != language) {
+      this.rcApi.CurrentTranslatedRequest = this.codeService.format(language, this.rcApi.RequestArray);
+    }
   }
 
   codeMirrorOptions: any = {
