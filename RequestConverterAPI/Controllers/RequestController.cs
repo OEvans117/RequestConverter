@@ -3,8 +3,11 @@ using Microsoft.Extensions.Hosting.Internal;
 using RequestConverterAPI.Context;
 using RequestConverterAPI.Helpers;
 using RequestConverterAPI.Models;
+using System.IO;
 using System.IO.Compression;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 
 namespace RequestConverterAPI.Controllers
 {
@@ -34,7 +37,8 @@ namespace RequestConverterAPI.Controllers
                         RequestList.Add(new FiddlerRequest(RequestSplit));
                 }
             }
-            return RequestList.Count == 0 ? NotFound() : Ok(RequestList);
+
+            return RequestList.Count == 0 ? NotFound() : Ok(CompressionHelper.Compress(ExtendedSerializerExtensions.Serialize(RequestList)));
         }
 
         [HttpPost("Save")]

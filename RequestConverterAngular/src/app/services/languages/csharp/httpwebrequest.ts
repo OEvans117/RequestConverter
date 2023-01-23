@@ -33,7 +33,7 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
   }
 
   requests(request: SRequest[]): string {
-    return "test";
+    return "Work in progress!";
   }
 
   format(requests: SRequest[], index: number): string {

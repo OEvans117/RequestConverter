@@ -1,38 +1,11 @@
-<div class="sidebarsection">
-  <div class="sidebartitle">
-    <p class="sidebartext" style="float: right;">MAIN SETTINGS</p>
-    <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
-  </div>
-  <hr />
-
-  <div class="sidebarcontent">
-    <p class="sidebartext">Show All Requests</p>
-    <input type="checkbox" (click)="this.codeService.ShowAllRequests = !this.codeService.ShowAllRequests; refreshCode()" class="sidebariconleft sidebarcheckbox">
+<div *ngFor="let prop of childProperties.slice(0, numberOfSettings)">
+  <div *ngIf="prop.type === 'string'" class="sidebarcontent">
+    <p class="sidebartext" style="width: 40%;">{{ addSpaceBetweenCapital(prop.name) }}</p>
+    <input class="sidebarinput" style="color:black" type="text" (keyup)="refreshCode()" [(ngModel)]="childClass[prop.name]">
   </div>
 
-  <div class="sidebarcontent">
-    <select #teams (change)="onSelected(teams.value)" class="sidebarselect" id="request-select">
-      <option [ngValue]="request" *ngFor="let request of rcApi.RequestArray">{{request.url}}</option>
-    </select>
-  </div>
-</div>
-
-<div class="sidebarsection">
-  <div class="sidebartitle">
-    <p class="sidebartext" style="float: right;">CODE SETTINGS</p>
-    <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
-  </div>
-  <hr />
-
-  <div *ngFor="let prop of childProperties">
-    <div *ngIf="prop.type === 'string'" class="sidebarcontent">
-      <p class="sidebartext">{{ addSpaceBetweenCapital(prop.name) }}</p>
-      <input class="sidebariconleft" style="color:black" type="text" (change)="refreshCode()" [(ngModel)]="childClass[prop.name]">
-    </div>
-
-    <div *ngIf="prop.type === 'boolean'" class="sidebarcontent">
-      <p class="sidebartext">{{ addSpaceBetweenCapital(prop.name) }}</p>
-      <input type="checkbox" [(ngModel)]="childClass[prop.name]" class="sidebariconleft sidebarcheckbox">
-    </div>
+  <div *ngIf="prop.type === 'boolean'" class="sidebarcontent">
+    <p class="sidebartext">{{ addSpaceBetweenCapital(prop.name) }}</p>
+    <input type="checkbox" [(ngModel)]="childClass[prop.name]" class="sidebariconleft sidebarcheckbox">
   </div>
 </div>

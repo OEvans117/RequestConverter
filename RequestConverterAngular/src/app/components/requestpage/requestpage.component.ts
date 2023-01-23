@@ -7,16 +7,13 @@ import { CSharpHttpWebRequestFormatter } from '../../services/languages/csharp/h
 import { PythonRequestsFormatter } from '../../services/languages/python/requests';
 import { RcapiService } from '../../services/rcapi.service';
 import { Router } from '@angular/router';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'requestpage',
   templateUrl: './requestpage.component.html',
   styleUrls: ['./requestpage.component.css'],
   encapsulation: ViewEncapsulation.None,
-  providers: [CodeService,
-    { provide: CodeFormatter, useClass: PythonRequestsFormatter, multi: true },
-    { provide: CodeFormatter, useClass: CSharpHttpWebRequestFormatter, multi: true },
-  ]
 })
 
 export class RequestpageComponent {
@@ -26,9 +23,21 @@ export class RequestpageComponent {
 
   @ViewChild(CodemirrorComponent) codemirrorComponent: CodemirrorComponent | undefined;
 
-  constructor(public rcApi: RcapiService, public codeService: CodeService, private router: Router) {
-    this.codeService.CurrentLanguage = "requests";
+  constructor(public rcApi: RcapiService,
+    public codeService: CodeService,
+    private router: Router,
+    public settings: SettingsService) {
     this.codemirrorComponent?.codeMirror?.setSize(null, 100);
+  }
+
+  refreshCode() {
+    this.rcApi.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.rcApi.RequestArray)
+  }
+
+  // When you select a URL from the option
+  onSelected(value: string): void {
+    this.codeService.CurrentRequest = this.rcApi.RequestArray.findIndex((j: { url: string; }) => j.url === value);
+    this.refreshCode();
   }
 
   // When you click on language buttons

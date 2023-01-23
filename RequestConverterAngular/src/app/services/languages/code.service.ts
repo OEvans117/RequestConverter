@@ -4,14 +4,14 @@ import { PythonRequestsFormatter } from './python/requests';
 
 @Injectable({ providedIn: 'root' })
 export class CodeService {
-  constructor(@Inject(CodeFormatter) private formatters: CodeFormatter[]) { console.log("created!"); }
+  constructor(@Inject(CodeFormatter) private formatters: CodeFormatter[]) { }
 
   // Public modifyable settings
   public ShowAllRequests: boolean; // keep this as last for HTML
   
   // Private settings
   public CurrentRequest: number = 0;
-  public CurrentLanguage: string;
+  public CurrentLanguage: string = "requests";
   public CurrentFormatter: CodeFormatter | undefined;
 
   format(language:string, RequestBundle: SRequest[]): string {

@@ -1,1 +1,5 @@
-<mainpage></mainpage>
+<menu></menu>
+
+<welcomepage *ngIf="!this.rcApi.RequestArray && !this.rcApi.HasLoadedState"></welcomepage>
+
+<requestpage *ngIf="this.rcApi.RequestArray"></requestpage>

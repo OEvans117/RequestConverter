@@ -9,7 +9,7 @@
 }
 
 .sidebarsection {
-  margin-top: 25%;
+  margin-top: 20%;
   margin-left: 10%;
   margin-right: 10%;
 }
@@ -50,6 +50,12 @@
   margin-left: 6%;
 }
 
+.sidebarinput {
+  align-self: center;
+  color: black;
+  width: 60%;
+}
+
 .sidebarcheckbox {
   width: 17px;
   height: 17px;
@@ -67,7 +73,7 @@ hr {
   border: 0;
   border-top: 5px solid #FFFFFF;
   opacity: 15%;
-  margin-top: -2%
+  margin-top: -5px;
 }
 
 .CodeMirror {

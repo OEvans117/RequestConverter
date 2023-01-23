@@ -11,11 +11,19 @@ import { CSharpHttpWebRequestFormatter } from './services/languages/csharp/httpw
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [CodeService,
+  providers: [RcapiService, CodeService, 
     { provide: CodeFormatter, useClass: PythonRequestsFormatter, multi: true },
     { provide: CodeFormatter, useClass: CSharpHttpWebRequestFormatter, multi: true },
   ],
 })
 export class AppComponent {
-
+  constructor(private codeService: CodeService,
+    public rcApi: RcapiService,
+    private location: Location) {
+    codeService.CurrentFormatter = new PythonRequestsFormatter();
+    let urlparams = this.location.path();
+    if (urlparams != "") {
+      rcApi.SetState(urlparams.split('/')[2]);
+    }
+  }
 }

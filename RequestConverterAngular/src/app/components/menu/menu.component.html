@@ -1,16 +1,19 @@
 <header>
   <nav id="main-navbar">
     <ul>
-      <li>
+      <li (click)="goHome()">
         <a href="#">File</a>
       </li>
-      <li>
+      <li (click)="goHome()">
         <a href="#">Edit</a>
       </li>
-      <li>
+      <li (click)="this.settings.LaunchPreferences = !this.settings.LaunchPreferences;">
+        <a href="#">Preferences</a>
+      </li>
+      <li (click)="goHome()">
         <a href="#">View</a>
       </li>
-      <li>
+      <li (click)="goHome()">
         <a href="#">About</a>
       </li>
     </ul>

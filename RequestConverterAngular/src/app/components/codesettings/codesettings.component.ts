@@ -9,10 +9,7 @@ import { SRequest } from '../welcomepage/welcomepage.component';
   selector: 'codesettings',
   templateUrl: './codesettings.component.html',
   styleUrls: ['./codesettings.component.css'],
-  providers: [CodeService,
-    { provide: CodeFormatter, useClass: PythonRequestsFormatter, multi: true },
-    { provide: CodeFormatter, useClass: CSharpHttpWebRequestFormatter, multi: true },
-  ],
+  
 })
 export class CodesettingsComponent implements OnChanges {
 
@@ -20,6 +17,13 @@ export class CodesettingsComponent implements OnChanges {
     public codeService: CodeService) {
     //this.rcApi.CurrentTranslatedRequest = this.codeService.format()
   }
+
+  numSequence(n: number): Array<any> {
+    return this.childProperties.slice(0, n);
+  }
+
+  requestedSettings: any;
+  @Input() numberOfSettings: any;
 
   @Input() parentClass: any;
   @Input() childClass: any;
@@ -30,15 +34,8 @@ export class CodesettingsComponent implements OnChanges {
     this.rcApi.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.rcApi.RequestArray)
   }
 
-  // When you select a URL from the option
-  onSelected(value: string): void {
-    this.codeService.CurrentRequest = this.rcApi.RequestArray.findIndex((j: { url: string; }) => j.url === value);
-    this.refreshCode();
-  }
-
   ngOnInit() {
-    this.parentProperties = Object.keys(this.parentClass)
-      .filter(p => p != "CurrentFormatter" && p != "formatters" && p != "CurrentLanguage")
+    this.parentClass = Object.keys(this.parentClass)
       .map(prop => {
         return {
           name: prop,

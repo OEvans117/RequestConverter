@@ -23,6 +23,10 @@ export class WelcomepageComponent {
   visitExample() {
     location.href = window.location.href + "r/gncxkm";
   }
+
+  visitUrl(value: string) {
+    location.href = value;
+  }
 }
 
 export interface SRequest {
