@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
+using Newtonsoft.Json;
 using RequestConverterAPI.Context;
 using RequestConverterAPI.Helpers;
 using RequestConverterAPI.Models;
@@ -18,7 +19,7 @@ namespace RequestConverterAPI.Controllers
         public RequestController(RequestConverterContext context) { _context = context; }
 
         [HttpPost("Convert")]
-        public IActionResult Convert(IFormFile file)
+        public async Task<IActionResult> ConvertAsync(IFormFile file)
         {
             var RequestBundle = Request.Form.Files[0];
             List<IRequest> RequestList = new List<IRequest>();
@@ -38,7 +39,7 @@ namespace RequestConverterAPI.Controllers
                 }
             }
 
-            return RequestList.Count == 0 ? NotFound() : Ok(CompressionHelper.Compress(ExtendedSerializerExtensions.Serialize(RequestList)));
+            return RequestList.Count == 0 ? NotFound() : Ok(RequestList);
         }
 
         [HttpPost("Save")]
@@ -48,7 +49,10 @@ namespace RequestConverterAPI.Controllers
             using (var sr = new StreamReader(Request.Body))
                 ConversionResult = await sr.ReadToEndAsync();
 
-            var convertedRequest = new ConvertedRequest() { Id = RandomHelper.RandomString(), ConversionResult = ConversionResult };
+            var CompressedResult = await Compression.ToBrotliAsync(JsonConvert.SerializeObject(ConversionResult)
+                ,CompressionLevel.SmallestSize);
+
+            var convertedRequest = new ConvertedRequest() { Id = RandomHelper.RandomString(), ConversionResult = CompressedResult.Result.Value };
 
             _context.ConvertedRequest.Add(convertedRequest);
             _context.SaveChanges();
@@ -60,11 +64,13 @@ namespace RequestConverterAPI.Controllers
         }
 
         [HttpGet("Get")]
-        public IActionResult Get(string Id)
+        public async Task<IActionResult> GetAsync(string Id)
         {
             ConvertedRequest convertedRequest = _context.Find<ConvertedRequest>(Id);
 
-            return convertedRequest == null ? NotFound() : Ok(convertedRequest.ConversionResult);
-        }       
+            var CompressedResult = await Compression.FromBrotliAsync(convertedRequest.ConversionResult);
+
+            return convertedRequest == null ? NotFound() : Ok(CompressedResult);
+        }
     }
 }

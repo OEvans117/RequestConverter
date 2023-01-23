@@ -1,36 +1,87 @@
-﻿using RequestConverterAPI.Models;
-using System.IO.Compression;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System.IO.Compression;
+using System.Text;
 
-namespace RequestConverterAPI.Helpers
+public static class Compression
 {
-    public class CompressionHelper
+    public static async Task<CompressionResult> ToGzipAsync(this string value, CompressionLevel level = CompressionLevel.Fastest)
     {
-        public static string Compress(byte[] bytes)
-        {
-            using (var memoryStream = new MemoryStream())
-            {
-                using (var brotliStream = new BrotliStream(memoryStream, CompressionLevel.SmallestSize))
-                {
-                    brotliStream.Write(bytes, 0, bytes.Length);
-                }
-                return Convert.ToBase64String(memoryStream.ToArray());
-            }
-        }
+        var bytes = Encoding.Unicode.GetBytes(value);
+        await using var input = new MemoryStream(bytes);
+        await using var output = new MemoryStream();
+        await using var stream = new GZipStream(output, level);
 
-        public static string Decompress(byte[] bytes)
-        {
-            using (var memoryStream = new MemoryStream(bytes))
-            {
-                using (var outputStream = new MemoryStream())
-                {
-                    using (var decompressStream = new BrotliStream(memoryStream, CompressionMode.Decompress))
-                    {
-                        decompressStream.CopyTo(outputStream);
-                    }
-                    return Convert.ToBase64String(outputStream.ToArray());
-                }
-            }
-        }
+        await input.CopyToAsync(stream);
+
+        var result = output.ToArray();
+
+        return new CompressionResult(
+            new CompressionValue(value, bytes.Length),
+            new CompressionValue(Convert.ToBase64String(result), result.Length),
+            level,
+            "Gzip");
+    }
+
+    public static async Task<CompressionResult> ToBrotliAsync(this string value, CompressionLevel level = CompressionLevel.Fastest)
+    {
+        var bytes = Encoding.Unicode.GetBytes(value);
+        await using var input = new MemoryStream(bytes);
+        await using var output = new MemoryStream();
+        await using var stream = new BrotliStream(output, level);
+
+        await input.CopyToAsync(stream);
+        await stream.FlushAsync();
+
+        var result = output.ToArray();
+
+        return new CompressionResult(
+            new CompressionValue(value, bytes.Length),
+            new CompressionValue(Convert.ToBase64String(result), result.Length),
+            level,
+            "Brotli"
+        );
+    }
+
+    public static async Task<string> FromGzipAsync(this string value)
+    {
+        var bytes = Convert.FromBase64String(value);
+        await using var input = new MemoryStream(bytes);
+        await using var output = new MemoryStream();
+        await using var stream = new GZipStream(input, CompressionMode.Decompress);
+
+        await stream.CopyToAsync(output);
+        await stream.FlushAsync();
+
+        return Encoding.Unicode.GetString(output.ToArray());
+    }
+
+    public static async Task<string> FromBrotliAsync(this string value)
+    {
+        var bytes = Convert.FromBase64String(value);
+        await using var input = new MemoryStream(bytes);
+        await using var output = new MemoryStream();
+        await using var stream = new BrotliStream(input, CompressionMode.Decompress);
+
+        await stream.CopyToAsync(output);
+
+        return Encoding.Unicode.GetString(output.ToArray());
     }
 }
+
+public record CompressionResult(
+    CompressionValue Original,
+    CompressionValue Result,
+    CompressionLevel Level,
+    string Kind
+)
+{
+    public int Difference =>
+        Original.Size - Result.Size;
+
+    public decimal Percent =>
+      Math.Abs(Difference / (decimal)Original.Size);
+}
+
+public record CompressionValue(
+    string Value,
+    int Size
+);
