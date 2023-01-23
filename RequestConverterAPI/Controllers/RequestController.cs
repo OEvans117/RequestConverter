@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
-using Newtonsoft.Json;
 using RequestConverterAPI.Context;
 using RequestConverterAPI.Helpers;
 using RequestConverterAPI.Models;
@@ -9,6 +8,7 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Text.Json;
 
 namespace RequestConverterAPI.Controllers
 {
@@ -19,7 +19,7 @@ namespace RequestConverterAPI.Controllers
         public RequestController(RequestConverterContext context) { _context = context; }
 
         [HttpPost("Convert")]
-        public async Task<IActionResult> ConvertAsync(IFormFile file)
+        public IActionResult ConvertAsync(IFormFile file)
         {
             var RequestBundle = Request.Form.Files[0];
             List<IRequest> RequestList = new List<IRequest>();
@@ -49,7 +49,7 @@ namespace RequestConverterAPI.Controllers
             using (var sr = new StreamReader(Request.Body))
                 ConversionResult = await sr.ReadToEndAsync();
 
-            var CompressedResult = await Compression.ToBrotliAsync(JsonConvert.SerializeObject(ConversionResult)
+            var CompressedResult = await Compression.ToBrotliAsync(JsonSerializer.Serialize(ConversionResult)
                 ,CompressionLevel.SmallestSize);
 
             var convertedRequest = new ConvertedRequest() { Id = RandomHelper.RandomString(), ConversionResult = CompressedResult.Result.Value };

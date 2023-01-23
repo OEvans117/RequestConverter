@@ -6,9 +6,9 @@ namespace RequestConverterAPI.Models
     public class ConvertedRequest
     {
         [Key]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [Required]
-        public string ConversionResult { get; set; }
+        public string? ConversionResult { get; set; }
     }
 }
