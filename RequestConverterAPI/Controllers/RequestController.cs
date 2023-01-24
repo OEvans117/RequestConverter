@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Hosting.Internal;
+using Newtonsoft.Json;
 using RequestConverterAPI.Context;
 using RequestConverterAPI.Helpers;
 using RequestConverterAPI.Models;
@@ -9,6 +11,8 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace RequestConverterAPI.Controllers
 {
@@ -49,8 +53,7 @@ namespace RequestConverterAPI.Controllers
             using (var sr = new StreamReader(Request.Body))
                 ConversionResult = await sr.ReadToEndAsync();
 
-            var CompressedResult = await Compression.ToBrotliAsync(JsonSerializer.Serialize(ConversionResult)
-                ,CompressionLevel.SmallestSize);
+            var CompressedResult = await Compression.ToBrotliAsync(ConversionResult ,CompressionLevel.SmallestSize);
 
             var convertedRequest = new ConvertedRequest() { Id = RandomHelper.RandomString(), ConversionResult = CompressedResult.Result.Value };
 
@@ -68,9 +71,11 @@ namespace RequestConverterAPI.Controllers
         {
             ConvertedRequest convertedRequest = _context.Find<ConvertedRequest>(Id);
 
-            var CompressedResult = await Compression.FromBrotliAsync(convertedRequest.ConversionResult);
+            var CompressedResult = await Compression.FromBrotliAsync(value: convertedRequest.ConversionResult);
 
-            return convertedRequest == null ? NotFound() : Ok(CompressedResult);
+            var obj = JsonConvert.DeserializeObject(CompressedResult);
+
+            return convertedRequest == null ? NotFound() : Ok(JsonConvert.SerializeObject(obj));
         }
     }
 }
