@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Hosting.Internal;
-using Newtonsoft.Json;
 using RequestConverterAPI.Context;
 using RequestConverterAPI.Helpers;
 using RequestConverterAPI.Models;
@@ -73,9 +72,7 @@ namespace RequestConverterAPI.Controllers
 
             var CompressedResult = await Compression.FromBrotliAsync(value: convertedRequest.ConversionResult);
 
-            var obj = JsonConvert.DeserializeObject(CompressedResult);
-
-            return convertedRequest == null ? NotFound() : Ok(JsonConvert.SerializeObject(obj));
+            return convertedRequest == null ? NotFound() : Ok(CompressedResult);
         }
     }
 }
