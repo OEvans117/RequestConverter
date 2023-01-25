@@ -32,7 +32,7 @@ namespace RequestConverterAPI.Controllers
         {
             var RequestBundle = Request.Form.Files[0];
 
-            List<IRequest> RequestList = new List<IRequest>();
+            List<SingleRequest> RequestList = new List<SingleRequest>();
 
             string PathExtension = Path.GetExtension(RequestBundle.FileName);
 
@@ -68,7 +68,9 @@ namespace RequestConverterAPI.Controllers
                 }
             }
 
-            return RequestList.Count == 0 ? NotFound() : Ok(RequestList);
+            var JsonResult = JsonSerializer.Serialize(RequestList, new JsonSerializerOptions { IncludeFields = true, WriteIndented = true });
+
+            return RequestList.Count == 0 ? NotFound() : Ok(JsonResult);
         }
 
         [HttpPost("Save")]

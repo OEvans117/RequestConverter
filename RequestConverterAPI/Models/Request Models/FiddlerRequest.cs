@@ -1,10 +1,11 @@
-﻿using System.Net;
+﻿using RequestConverterAPI.Models.HarFile;
+using System.Net;
 using System.Text.RegularExpressions;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace RequestConverterAPI.Models
 {
-    public class FiddlerRequest : IRequest
+    public class FiddlerRequest : SingleRequest
     {
         public FiddlerRequest(string[] RequestSplit)
         {
@@ -22,7 +23,7 @@ namespace RequestConverterAPI.Models
             bool CookieHeaderExists = CookieHeader.Count != 0;
             if (CookieHeaderExists)
                 foreach (var elems in CookieHeader.First().Replace("Cookie: ", "").Split("; "))
-                    Cookies.Add(new Tuple<string, string>(elems.Split('=')[0], elems.Split('=')[1]));
+                    Cookies.Add(MakeLiteral((elems.Split('=')[0], elems.Split('=')[1])));
 
             // Header shouldn't be defined by index1:count-1 because in a POST request,
             // or a request where there isn't a cookie, it will fail.
@@ -51,7 +52,7 @@ namespace RequestConverterAPI.Models
             // Add headers
             var HeaderList = ReqSplit.GetRange(1, ReqSplit.Count - IndexOfPostBody);
             foreach (var elems in HeaderList)
-                Headers.Add(new Tuple<string, string>(elems.Split(": ")[0], elems.Split(": ")[1]));
+                Headers.Add(MakeLiteral((elems.Split(": ")[0], elems.Split(": ")[1])));
         }
     }
 }

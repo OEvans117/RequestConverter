@@ -1,4 +1,6 @@
-﻿namespace RequestConverterAPI.Models
+﻿using System.Net;
+
+namespace RequestConverterAPI.Models
 {
     public class IRequest
     {
@@ -9,6 +11,22 @@
         public List<Tuple<string, string>> Headers { get; set; } = new List<Tuple<string, string>>();
 
         public List<Tuple<string, string>> Cookies { get; set; } = new List<Tuple<string, string>>();
+
+        public string? RequestBody { get; set; }
+
+        public RequestType RequestType { get; set; }
+    }
+
+    public abstract class SingleRequest
+    {
+        public Guid RequestID { get; set; } = Guid.NewGuid();
+
+        public string? Url { get; set; }
+
+        public (string, string) MakeLiteral((string, string) tuple) => (tuple.Item1.Replace("\"", "\\\""), tuple.Item2.Replace("\"", "\\\""));
+
+        public List<(string, string)> Headers = new List<(string, string)>();
+        public List<(string, string)> Cookies = new List<(string, string)>();
 
         public string? RequestBody { get; set; }
 
