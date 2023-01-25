@@ -36,6 +36,7 @@ export class CodesettingsComponent implements OnChanges {
 
   ngOnInit() {
     this.parentClass = Object.keys(this.parentClass)
+      .filter(key => !(typeof key === 'string' && key.charAt(0) === '_'))
       .map(prop => {
         return {
           name: prop,
@@ -47,6 +48,7 @@ export class CodesettingsComponent implements OnChanges {
     if (changes['childClass'] && changes['childClass'].currentValue) {
       this.childProperties = Object.keys(changes['childClass'].currentValue)
         .filter(p => p != "language")
+        .filter(key => !(typeof key === 'string' && key.charAt(0) === '_'))
         .map(prop => {
           return {
             name: prop,

@@ -8,6 +8,7 @@ import { PythonRequestsFormatter } from '../../services/languages/python/request
 import { RcapiService } from '../../services/rcapi.service';
 import { Router } from '@angular/router';
 import { SettingsService } from '../../services/settings.service';
+import { AppModule } from '../../app.module';
 
 @Component({
   selector: 'requestpage',
@@ -47,8 +48,13 @@ export class RequestpageComponent {
     }
   }
 
+  resetRequests(): void {
+    this.rcApi.RequestArray = [];
+    this.rcApi.HasLoadedState = true;
+  }
+
   codeMirrorOptions: any = {
-    mode: 'python',
+    mode: 'text/x-csharp',
     autoRefresh: true,
     styleActiveLine: true,
     lineNumbers: true,

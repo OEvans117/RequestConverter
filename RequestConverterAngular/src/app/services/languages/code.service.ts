@@ -7,8 +7,9 @@ export class CodeService {
   constructor(@Inject(CodeFormatter) private formatters: CodeFormatter[]) { }
 
   // Public modifyable settings
-  public ShowAllRequests: boolean; // keep this as last for HTML
-  
+  public ShowAllRequests: boolean = true; // keep this as last for HTML
+  public FunctionWrap: boolean = true; // wrap requests around functions;
+
   // Private settings
   public CurrentRequest: number = 0;
   public CurrentLanguage: string = "requests";
@@ -22,13 +23,22 @@ export class CodeService {
     if (this.ShowAllRequests)
       return this.CurrentFormatter!.requests(RequestBundle);
     else
-      return this.CurrentFormatter!.request(RequestBundle[this.CurrentRequest])
+      return this.CurrentFormatter!.request(RequestBundle[this.CurrentRequest], this.FunctionWrap)
   }
 }
 
 export abstract class CodeFormatter {
   constructor(public language: string) { }
-  abstract format(requests: SRequest[], index: number): string;
+
+  public Result: string[] = [];
+  public _Indent: string = "";
+  public SetResult = (value: string) => this.Result.push(this._Indent + value);
+  public GetResult(value: string[]): string {
+    this.Result = [];
+    this._Indent = "";
+    return value.join("\n")
+  }
+
   abstract requests(requests: SRequest[]): string;
-  abstract request(request: SRequest): string;
+  abstract request(request: SRequest, functionwrap: boolean): string;
 }

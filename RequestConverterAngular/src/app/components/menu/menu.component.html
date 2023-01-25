@@ -1,20 +1,20 @@
 <header>
   <nav id="main-navbar">
     <ul>
-      <li (click)="goHome()">
-        <a href="#">File</a>
+      <li>
+        <a (click)="goHome()" href="">File</a>
       </li>
-      <li (click)="goHome()">
-        <a href="#">Edit</a>
+      <li>
+        <a (click)="goHome()" href="">Edit</a>
       </li>
-      <li (click)="this.settings.LaunchPreferences = !this.settings.LaunchPreferences;">
-        <a href="#">Preferences</a>
+      <li>
+        <a style="cursor:pointer" (click)="this.settings.LaunchPreferences = !this.settings.LaunchPreferences;">Preferences</a>
       </li>
-      <li (click)="goHome()">
-        <a href="#">View</a>
+      <li>
+        <a (click)="goHome()" href="">View</a>
       </li>
-      <li (click)="goHome()">
-        <a href="#">About</a>
+      <li>
+        <a (click)="goHome()" href="">About</a>
       </li>
     </ul>
   </nav>

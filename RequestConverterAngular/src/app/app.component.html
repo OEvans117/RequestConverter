@@ -1,5 +1,5 @@
 <menu></menu>
 
-<welcomepage *ngIf="!this.rcApi.RequestArray && !this.rcApi.HasLoadedState"></welcomepage>
+<welcomepage *ngIf="this.rcApi.RequestArray.length == 0 && !this.rcApi.HasLoadedState"></welcomepage>
 
-<requestpage *ngIf="this.rcApi.RequestArray"></requestpage>
+<requestpage *ngIf="this.rcApi.RequestArray.length > 0"></requestpage>

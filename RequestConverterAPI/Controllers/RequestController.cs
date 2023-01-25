@@ -4,14 +4,19 @@ using Microsoft.Extensions.Hosting.Internal;
 using RequestConverterAPI.Context;
 using RequestConverterAPI.Helpers;
 using RequestConverterAPI.Models;
+using RequestConverterAPI.Models.Request_Models;
+using System;
+using System.Dynamic;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RequestConverterAPI.Controllers
 {
@@ -25,20 +30,38 @@ namespace RequestConverterAPI.Controllers
         public IActionResult ConvertAsync(IFormFile file)
         {
             var RequestBundle = Request.Form.Files[0];
+
             List<IRequest> RequestList = new List<IRequest>();
-            using (var stream = RequestBundle.OpenReadStream())
-            using (var archive = new ZipArchive(stream))
+
+            string PathExtension = Path.GetExtension(RequestBundle.FileName);
+
+            if (PathExtension == ".saz")
             {
-                foreach (ZipArchiveEntry entry in archive.Entries.Where(x => x.Name.Contains("_c")))
+                using (var stream = RequestBundle.OpenReadStream())
+                using (var archive = new ZipArchive(stream))
                 {
-                    string[] RequestSplit;
+                    foreach (ZipArchiveEntry entry in archive.Entries.Where(x => x.Name.Contains("_c")))
+                    {
+                        string[] RequestSplit;
 
-                    using (var sr = new StreamReader(entry.Open()))
-                        RequestSplit = sr.ReadToEnd().Replace("\"", @"\""").Split("\r\n");
+                        using (var sr = new StreamReader(entry.Open()))
+                            RequestSplit = sr.ReadToEnd().Replace("\"", @"\""").Split("\r\n");
 
-                    // Fix this to accept IRequest instead
-                    if (!RequestSplit[0].Contains("CONNECT"))
-                        RequestList.Add(new FiddlerRequest(RequestSplit));
+                        // Fix this to accept IRequest instead
+                        if (!RequestSplit[0].Contains("CONNECT"))
+                            RequestList.Add(new FiddlerRequest(RequestSplit));
+                    }
+                }
+            }
+
+            if(PathExtension == ".har")
+            {
+                using (var stream = RequestBundle.OpenReadStream())
+                using (var sr = new StreamReader(stream))
+                {
+                    var JSONData = JsonSerializer.Deserialize<Temperatures>(sr.ReadToEnd());
+                    foreach (var entry in JSONData.Log.Entries)
+                        RequestList.Add(new HarRequest(entry));
                 }
             }
 

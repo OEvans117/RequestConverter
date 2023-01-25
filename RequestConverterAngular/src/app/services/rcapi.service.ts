@@ -17,7 +17,7 @@ export class RcapiService {
   BaseUrl: string = "https://asp.frenziedsms.com/"
   ApiBaseUrl: string = this.BaseUrl + "RequestConverter";
 
-  RequestArray: SRequest[];
+  RequestArray: SRequest[] = [];
   CurrentTranslatedRequest: string;
   StateID: string;
   StateURL: string;

@@ -8,68 +8,43 @@ export class PythonRequestsFormatter extends CodeFormatter {
   public RequestName: string = "reqName";
   public ResponseName: string = "respName";
 
-  request(request: SRequest): string {
-    let PythonResult: string = "";
+  request(request: SRequest, functionwrap: boolean): string {
 
-    PythonResult += this.HeaderName + " = OrderedDict([";
-    PythonResult += "\n";
+    if (functionwrap) {
+      this.SetResult("def req_" + request.requestID.split('-')[0] + "():")
+      this._Indent = "    ";
+    }
 
-    request.headers.forEach(function (header) {
-      PythonResult += "    (\"" + header.item1 + "\", \"" + header.item2 + "\"),\n"
+    this.SetResult(this.HeaderName + " = OrderedDict([");
+
+    request.headers.forEach( (header) => {
+      this.SetResult("    (\"" + header.item1 + "\", \"" + header.item2 + "\"),");
     });
 
-    PythonResult += "])\n\n";
+    this.SetResult("])\n");
 
     if (request.requestType == RequestType.GET) {
-      PythonResult += this.RequestName + " = RequestSession.get('" + request.url + "', headers = reqHeaders)\n";
-      PythonResult += this.ResponseName + " = customReq.text";
+      this.SetResult(this.RequestName + " = RequestSession.get('" + request.url + "', headers = reqHeaders)");
+      this.SetResult(this.ResponseName + " = customReq.text");
     }
 
     if (request.requestType == RequestType.POST) {
-      PythonResult += "reqBody = \"" + request.requestBody + "\"\n";
-      PythonResult += this.RequestName + " = RequestSession.post('" + request.url + "', data = reqBody, headers = reqHeaders)\n";
-      PythonResult += this.ResponseName + " = customReq.text";
+      this.SetResult("reqBody = \"" + request.requestBody + "\"");
+      this.SetResult(this.RequestName + " = RequestSession.post('" + request.url + "', data = reqBody, headers = reqHeaders)");
+      this.SetResult(this.ResponseName + " = customReq.text");
     }
 
-    return PythonResult;
+    return this.GetResult(this.Result);
   }
 
   requests(requests: SRequest[]): string {
 
-    let PythonResult: string = "";
-    let RequestIndex: number = 0;
+    let requeststrings: string[] = [];
 
     requests.forEach(request => {
-      RequestIndex += 1;
-
-      PythonResult += "def Method" + RequestIndex.toString() + "():\n";
-      PythonResult += "    " + this.HeaderName + " = OrderedDict([";
-      PythonResult += "\n";
-
-      request.headers.forEach(function (header) {
-        PythonResult += "        (\"" + header.item1 + "\", \"" + header.item2 + "\"),\n"
-      });
-
-      PythonResult += "    ])\n\n";
-
-      if (request.requestType == RequestType.GET) {
-        PythonResult += "    " + this.RequestName + " = RequestSession.get('" + request.url + "', headers = reqHeaders)\n";
-        PythonResult += "    " + this.ResponseName + " = customReq.text";
-      }
-
-      if (request.requestType == RequestType.POST) {
-        PythonResult += "    reqBody = \"" + request.requestBody + "\"\n";
-        PythonResult += "    " + this.RequestName + " = RequestSession.post('" + request.url + "', data = reqBody, headers = reqHeaders)\n";
-        PythonResult += "    " + this.ResponseName + " = customReq.text";
-      }
-
-      PythonResult += "\n\n";
+      requeststrings.push(this.request(request, true) + "\n");
     })
 
-    return PythonResult;
-  }
-
-  format(requests: SRequest[], index: number): string {
-    return "";
+    return this.GetResult(requeststrings);
   }
 }

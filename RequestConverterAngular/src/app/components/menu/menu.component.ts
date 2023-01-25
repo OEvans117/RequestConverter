@@ -11,7 +11,8 @@ import { SRequest } from '../welcomepage/welcomepage.component';
 export class MenuComponent {
   constructor(public settings: SettingsService,
     public rcApi: RcapiService) { }
-  goHome() {
-    this.rcApi.RequestArray;
-  }
+    goHome() {
+      this.rcApi.RequestArray;
+    }
+
 }
