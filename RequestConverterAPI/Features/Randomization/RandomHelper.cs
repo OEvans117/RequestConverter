@@ -1,4 +1,4 @@
-﻿namespace RequestConverterAPI.Helpers
+﻿namespace RequestConverterAPI.Features.Randomization
 {
     public static class RandomHelper
     {

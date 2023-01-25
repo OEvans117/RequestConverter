@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using RequestConverterAPI.Context;
 using Microsoft.EntityFrameworkCore;
+using RequestConverterAPI.Features.RequestAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<RequestConverterContext>(
     options => options.UseSqlServer(builder.Configuration["ConnectionString"]));
+builder.Services.AddScoped<RequestConverterContext>();
+builder.Services.AddScoped<RequestAnalyser>();
 
 var app = builder.Build();
 

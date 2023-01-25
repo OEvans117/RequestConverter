@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Hosting.Internal;
 using RequestConverterAPI.Context;
-using RequestConverterAPI.Helpers;
+using RequestConverterAPI.Features.Randomization;
+using RequestConverterAPI.Features.RequestAnalysis;
+using RequestConverterAPI.Features.RequestConversion;
 using RequestConverterAPI.Models;
 using RequestConverterAPI.Models.HarFile;
 using RequestConverterAPI.Models.Request_Models;
@@ -24,53 +26,25 @@ namespace RequestConverterAPI.Controllers
     public class RequestController : Controller
     {
         private RequestConverterContext _context;
+        private RequestsFileConverter _rfc;
+        private RequestAnalyser _ra;
 
-        public RequestController(RequestConverterContext context) { _context = context; }
+        public RequestController(RequestConverterContext context,
+            RequestsFileConverter rfc,
+            RequestAnalyser ra) { _context = context; _rfc = rfc; _ra = ra; }
 
         [HttpPost("Convert")]
         public IActionResult ConvertAsync(IFormFile file)
         {
-            var RequestBundle = Request.Form.Files[0];
+            var RequestList = _rfc.ConvertRequestsToList(Request.Form.Files[0]);
 
-            List<SingleRequest> RequestList = new List<SingleRequest>();
+            var RequestListJson = JsonSerializer.Serialize(RequestList, new JsonSerializerOptions { IncludeFields = true, WriteIndented = true });
 
-            string PathExtension = Path.GetExtension(RequestBundle.FileName);
+            // analyse request
 
-            if (PathExtension == ".saz")
-            {
-                using (var stream = RequestBundle.OpenReadStream())
-                using (var archive = new ZipArchive(stream))
-                {
-                    foreach (ZipArchiveEntry entry in archive.Entries.Where(x => x.Name.Contains("_c")))
-                    {
-                        string[] RequestSplit;
+            _ra.AnalyseRequestBundle(RequestList, RequestListJson);
 
-                        using (var sr = new StreamReader(entry.Open()))
-                            RequestSplit = sr.ReadToEnd().Replace("\"", @"\""").Split("\r\n");
-
-                        // Fix this to accept IRequest instead
-                        if (!RequestSplit[0].Contains("CONNECT"))
-                            RequestList.Add(new FiddlerRequest(RequestSplit));
-                    }
-                }
-            }
-
-            if(PathExtension == ".har")
-            {
-                using (var stream = RequestBundle.OpenReadStream())
-                using (var sr = new StreamReader(stream))
-                {
-                    var JSONData = JsonSerializer.Deserialize<HarJson>(sr.ReadToEnd());
-
-                    if(JSONData != null)
-                        foreach (var entry in JSONData.Log.Entries)
-                            RequestList.Add(new HarRequest(entry));
-                }
-            }
-
-            var JsonResult = JsonSerializer.Serialize(RequestList, new JsonSerializerOptions { IncludeFields = true, WriteIndented = true });
-
-            return RequestList.Count == 0 ? NotFound() : Ok(JsonResult);
+            return RequestList.Count == 0 ? NotFound() : Ok(RequestListJson);
         }
 
         [HttpPost("Save")]
