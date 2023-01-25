@@ -11,20 +11,20 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
   request(request: SRequest, functionwrap: boolean): string {
 
     if (functionwrap) {
-      this.SetResult("public string req_" + request.requestID.split('-')[0] + "()")
+      this.SetResult("public string req_" + request.RequestID.split('-')[0] + "()")
       this.SetResult("{");
       this._Indent = "    ";
     }
 
-    if (request.requestType == RequestType.POST) {
-      this.SetResult("string postBody = \"" + request.requestBody + "\";");
+    if (request.RequestType == RequestType.POST) {
+      this.SetResult("string postBody = \"" + request.RequestBody + "\";");
       this.SetResult("byte[] postBytes = Encoding.UTF8.GetBytes(postBody);\n");
     }
 
-    this.SetResult("HttpWebRequest " + this.RequestName + " = WebRequest.CreateHttp(\"" + request.url + "\");\n")
+    this.SetResult("HttpWebRequest " + this.RequestName + " = WebRequest.CreateHttp(\"" + request.Url + "\");\n")
 
-    this.SetResult(this.RequestName + ".Method = \"" + RequestType[request.requestType] + "\";")
-    request.headers.forEach((header) => {
+    this.SetResult(this.RequestName + ".Method = \"" + RequestType[request.RequestType] + "\";")
+    request.Headers.forEach((header) => {
 
       // Check if we've added a custom header to continue the loop
       let AddedCustom = false;
@@ -32,15 +32,15 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
       // Loop through default header values as they are not as simple as Add()
       ["Accept", "Connection", "Content-Type", "Except", "Host", "Referer", "Transfer-Encoding", "User-Agent"]
         .forEach((customheader => {
-        if (customheader.replace("-", "") == header.item1) {
-          this.SetResult(this.RequestName + "." + header.item1 + " = \"" + header.item2 + "\";");
+        if (customheader.replace("-", "") == header.Item1) {
+          this.SetResult(this.RequestName + "." + header.Item1 + " = \"" + header.Item2 + "\";");
           AddedCustom = true;
           return;
         }
         }));
 
       // Add ContentLength property if header is set & request is POST.
-      if (request.requestType == RequestType.POST && header.item1 == "Content-Length") {
+      if (request.RequestType == RequestType.POST && header.Item1 == "Content-Length") {
         this.SetResult(this.RequestName + ".ContentLength = postBytes.Length;");
         AddedCustom = true;
       }
@@ -48,7 +48,7 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
       if (AddedCustom)
         return;
 
-      this.SetResult(this.RequestName + ".Headers.Add(\"" + header.item1 + "\", \"" + header.item2 + "\");");
+      this.SetResult(this.RequestName + ".Headers.Add(\"" + header.Item1 + "\", \"" + header.Item2 + "\");");
     });
 
     if (this.ProxyString != "" && this.ProxyString.includes(":") && this.ProxyString.split(':').length > 0) {
@@ -73,7 +73,7 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
 
     this.SetResult("");
 
-    if (request.requestType == RequestType.POST) {
+    if (request.RequestType == RequestType.POST) {
       this.SetResult("using(Stream requestBody = " + this.RequestName + ".GetRequestStream())");
       this.SetResult("    requestBody.Write(postBytes, 0, postBytes.Length);\n");
     }

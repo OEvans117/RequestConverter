@@ -36,8 +36,8 @@ export class RequestpageComponent {
   }
 
   // When you select a URL from the option
-  onSelected(value: string): void {
-    this.codeService.CurrentRequest = this.rcApi.RequestArray.findIndex((j: { url: string; }) => j.url === value);
+  onSelected(): void {
+    this.codeService.CurrentRequest = this.rcApi.RequestArray.findIndex((j: { RequestID: string; }) => j.RequestID === this.currentRequest.RequestID);
     this.refreshCode();
   }
 

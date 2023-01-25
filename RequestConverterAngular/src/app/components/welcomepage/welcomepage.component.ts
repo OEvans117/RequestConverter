@@ -30,12 +30,12 @@ export class WelcomepageComponent {
 }
 
 export interface SRequest {
-  cookies: Array<{ item1: string, item2: string }>;
-  headers: Array<{ item1: string, item2: string }>;
-  requestBody: string;
-  requestID: string;
-  requestType: RequestType;
-  url: string;
+  Cookies: Array<{ Item1: string, Item2: string }>;
+  Headers: Array<{ Item1: string, Item2: string }>;
+  RequestBody: string;
+  RequestID: string;
+  RequestType: RequestType;
+  Url: string;
 }
 
 export enum RequestType {

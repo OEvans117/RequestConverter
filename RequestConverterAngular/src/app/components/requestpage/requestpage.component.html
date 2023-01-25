@@ -46,8 +46,8 @@
         <input type="checkbox" (click)="this.codeService.ShowAllRequests = !this.codeService.ShowAllRequests; refreshCode()" [checked]="this.codeService.ShowAllRequests" class="sidebariconleft sidebarcheckbox">
       </div>
       <div class="sidebarcontent" *ngIf="!this.codeService.ShowAllRequests">
-        <select #teams (change)="onSelected(teams.value)" class="sidebarselect" id="request-select">
-          <option [ngValue]="request" *ngFor="let request of rcApi.RequestArray">{{request.url}}</option>
+        <select [(ngModel)]="currentRequest" (change)="onSelected()" class="sidebarselect" id="request-select">
+          <option [ngValue]="r" *ngFor="let r of rcApi.RequestArray">{{r.Url}}</option>
         </select>
       </div>
       <div class="sidebarcontent" *ngIf="!this.codeService.ShowAllRequests">

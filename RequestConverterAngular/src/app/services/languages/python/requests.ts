@@ -11,26 +11,25 @@ export class PythonRequestsFormatter extends CodeFormatter {
   request(request: SRequest, functionwrap: boolean): string {
 
     if (functionwrap) {
-      this.SetResult("def req_" + request.requestID.split('-')[0] + "():")
+      this.SetResult("def req_" + request.RequestID.split('-')[0] + "():")
       this._Indent = "    ";
     }
 
     this.SetResult(this.HeaderName + " = OrderedDict([");
 
-    request.headers.forEach( (header) => {
-      this.SetResult("    (\"" + header.item1 + "\", \"" + header.item2 + "\"),");
+    request.Headers.forEach( (header) => {
+      this.SetResult("    (\"" + header.Item1 + "\", \"" + header.Item2 + "\"),");
     });
 
     this.SetResult("])\n");
 
-    if (request.requestType == RequestType.GET) {
-      this.SetResult(this.RequestName + " = RequestSession.get('" + request.url + "', headers = reqHeaders)");
+    if (request.RequestType == RequestType.POST) {
+      this.SetResult("reqBody = \"" + request.RequestBody + "\"");
+      this.SetResult(this.RequestName + " = RequestSession.post('" + request.Url + "', data = reqBody, headers = reqHeaders)");
       this.SetResult(this.ResponseName + " = customReq.text");
     }
-
-    if (request.requestType == RequestType.POST) {
-      this.SetResult("reqBody = \"" + request.requestBody + "\"");
-      this.SetResult(this.RequestName + " = RequestSession.post('" + request.url + "', data = reqBody, headers = reqHeaders)");
+    else {
+      this.SetResult(this.RequestName + " = RequestSession." + RequestType[request.RequestType].toLowerCase() + "('" + request.Url + "', headers = reqHeaders)");
       this.SetResult(this.ResponseName + " = customReq.text");
     }
 
