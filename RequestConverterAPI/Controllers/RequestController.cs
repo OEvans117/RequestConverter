@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting.Internal;
 using RequestConverterAPI.Context;
 using RequestConverterAPI.Helpers;
 using RequestConverterAPI.Models;
+using RequestConverterAPI.Models.HarFile;
 using RequestConverterAPI.Models.Request_Models;
 using System;
 using System.Dynamic;
@@ -59,9 +60,11 @@ namespace RequestConverterAPI.Controllers
                 using (var stream = RequestBundle.OpenReadStream())
                 using (var sr = new StreamReader(stream))
                 {
-                    var JSONData = JsonSerializer.Deserialize<Temperatures>(sr.ReadToEnd());
-                    foreach (var entry in JSONData.Log.Entries)
-                        RequestList.Add(new HarRequest(entry));
+                    var JSONData = JsonSerializer.Deserialize<HarJson>(sr.ReadToEnd());
+
+                    if(JSONData != null)
+                        foreach (var entry in JSONData.Log.Entries)
+                            RequestList.Add(new HarRequest(entry));
                 }
             }
 

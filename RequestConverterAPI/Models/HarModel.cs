@@ -1,4 +1,4 @@
-﻿namespace RequestConverterAPI.Models
+﻿namespace RequestConverterAPI.Models.HarFile
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@
     using System.Text.Json.Serialization;
     using System.Globalization;
 
-    public partial class Temperatures
+    public partial class HarJson
     {
         [JsonPropertyName("log")]
         public Log Log { get; set; }

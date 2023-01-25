@@ -1,4 +1,6 @@
-﻿namespace RequestConverterAPI.Models.Request_Models
+﻿using RequestConverterAPI.Models.HarFile;
+
+namespace RequestConverterAPI.Models.Request_Models
 {
     public class HarRequest : IRequest
     {
