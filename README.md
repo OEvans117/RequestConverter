@@ -12,7 +12,12 @@ Very much early days on a web app that will allow you to upload request bundles 
 1. JSON class & object generation from response
 2. Regex creation for identified ids (header, body...) from response data
 - ~~Ability to import .HAR (currently only supports Fiddler files)~~ ✅
-- Include more programming languages (Java/Rust/Perl/Go/Kotlin...)
+- Add more languages:
+1. Java
+2. Rust
+3. Perl
+4. Go
+5. Kotlin
 - Add settings to change the programming output & theme etc.
 - Ability to save request bundle to account (login/register features)
 - Recode RequestConverter in React, Vue & Blazor (learning experience)
