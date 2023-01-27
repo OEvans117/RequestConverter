@@ -13,7 +13,7 @@ namespace RequestConverterAPI.Models
         public FiddlerRequest(string[] RequestSplit, string[] ResponseSplit)
         {
             this.RequestSplit = RequestSplit;
-            this.RequestSplit = ResponseSplit;
+            this.ResponseSplit = ResponseSplit;
 
             SetRequestInfo();
             SetResponseInfo();
