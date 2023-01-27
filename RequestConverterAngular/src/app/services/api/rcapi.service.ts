@@ -16,8 +16,9 @@ export class RcapiService {
     private rcSettings: SettingsService
     ) { }
 
-  BaseUrl: string = "https://asp.frenziedsms.com/"
-  ApiBaseUrl: string = this.BaseUrl + "RequestConverter";
+  //BaseUrl: string = "https://asp.frenziedsms.com/"
+  //ApiBaseUrl: string = this.BaseUrl + "RequestConverter";
+  ApiBaseUrl: string = "https://localhost:7027"
 
   CurrentTranslatedRequest: string;
   StateID: string;
@@ -40,7 +41,7 @@ export class RcapiService {
   }
 
   public SaveState() {
-    this.http.post(this.ApiBaseUrl + "/Save", this.rcSettings.RequestArray, { responseType:"text" })
+    this.http.post(this.ApiBaseUrl + "/Save", this.rcSettings.UnescapedRequestArray, { responseType:"text" })
       .pipe(catchError(this.HandleError)).subscribe(resp => {
         this.HasLoadedState = true;
         this.StateID = resp;
