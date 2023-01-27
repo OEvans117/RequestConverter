@@ -77,7 +77,7 @@ namespace RequestConverterAPI.Controllers
 
             var CompressedResult = await Compression.FromBrotliAsync(value: convertedRequest.ConversionResult);
 
-            return convertedRequest == null ? NotFound() : Ok(CompressedResult);
+            return convertedRequest == null ? NotFound() : Content(CompressedResult, "application/json");
         }
     }
 }
