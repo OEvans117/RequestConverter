@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CodeFormatter, CodeService } from '../../services/languages/code.service';
-import { CSharpHttpWebRequestFormatter } from '../../services/languages/csharp/httpwebrequest';
-import { PythonRequestsFormatter } from '../../services/languages/python/requests';
-import { RcapiService } from '../../services/rcapi.service';
+import { CodeFormatter, CodeService } from '../../services/code/code.service';
+import { CSharpHttpWebRequestFormatter } from '../../services/code/languages/csharp/httpwebrequest';
+import { PythonRequestsFormatter } from '../../services/code/languages/python/requests';
+import { RcapiService } from '../../services/api/rcapi.service';
+import { SettingsService } from '../../services/settings.service';
 import { SRequest } from '../welcomepage/welcomepage.component';
 
 @Component({
@@ -14,7 +15,8 @@ import { SRequest } from '../welcomepage/welcomepage.component';
 export class CodesettingsComponent implements OnChanges {
 
   constructor(public rcApi: RcapiService,
-    public codeService: CodeService) {
+    public codeService: CodeService,
+    public rcSettings: SettingsService) {
     //this.rcApi.CurrentTranslatedRequest = this.codeService.format()
   }
 
@@ -31,7 +33,7 @@ export class CodesettingsComponent implements OnChanges {
   childProperties: any[];
 
   refreshCode() {
-    this.rcApi.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.rcApi.RequestArray)
+    this.rcSettings.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.rcSettings.RequestArray)
   }
 
   ngOnInit() {

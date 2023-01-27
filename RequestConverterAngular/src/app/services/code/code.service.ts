@@ -1,6 +1,6 @@
 import { Component, Inject, Injectable, Input } from '@angular/core';
 import { SRequest } from '../../components/welcomepage/welcomepage.component';
-import { PythonRequestsFormatter } from './python/requests';
+import { PythonRequestsFormatter } from './languages/python/requests';
 
 @Injectable({ providedIn: 'root' })
 export class CodeService {
@@ -19,10 +19,6 @@ export class CodeService {
     this.CurrentLanguage = language;
     this.CurrentFormatter = this.formatters.find(c => c.language === language);
     this.CurrentFormatter?.ResetFunctionNames();
-
-    // Replace new lines with \n
-    if (RequestBundle[this.CurrentRequest].RequestBody != null)
-      RequestBundle[this.CurrentRequest].RequestBody = RequestBundle[this.CurrentRequest].RequestBody.replace(/\r?\n/g, "\\n");
 
     if (this.ShowAllRequests)
       return this.CurrentFormatter!.requests(RequestBundle);

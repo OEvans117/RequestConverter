@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
-import { RcapiService } from '../../services/rcapi.service';
+import { RcapiService } from '../../services/api/rcapi.service';
 import { SRequest } from '../welcomepage/welcomepage.component';
 
 @Component({
@@ -10,9 +10,10 @@ import { SRequest } from '../welcomepage/welcomepage.component';
 })
 export class MenuComponent {
   constructor(public settings: SettingsService,
-    public rcApi: RcapiService) { }
+    public rcApi: RcapiService,
+    private rcSettings: SettingsService) { }
     goHome() {
-      this.rcApi.RequestArray;
+      this.rcSettings.RequestArray;
     }
 
 }

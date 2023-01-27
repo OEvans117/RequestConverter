@@ -38,13 +38,16 @@ namespace RequestConverterAPI.Controllers
         {
             var RequestList = _rfc.ConvertRequestsToList(Request.Form.Files[0]);
 
-            var RequestListJson = JsonSerializer.Serialize(RequestList, new JsonSerializerOptions { IncludeFields = true, WriteIndented = true });
+            var RequestListJson = JsonSerializer.Serialize(RequestList, new JsonSerializerOptions { 
+                IncludeFields = true, 
+                WriteIndented = true,
+            });
 
             // analyse request
 
             // _ra.AnalyseRequestBundle(RequestList, RequestListJson);
 
-            return RequestList.Count == 0 ? NotFound() : Ok(RequestListJson);
+            return RequestList.Count == 0 ? NotFound() : Content(RequestListJson, "application/json");
         }
 
         [HttpPost("Save")]

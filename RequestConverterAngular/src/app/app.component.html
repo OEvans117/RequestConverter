@@ -1,5 +1,5 @@
 <menu></menu>
 
-<welcomepage *ngIf="this.rcApi.RequestArray.length == 0 "></welcomepage>
+<welcomepage *ngIf="this.rcSettings.RequestArray.length == 0 && this.UrlParameters.length < 2"></welcomepage>
 
-<requestpage *ngIf="this.rcApi.RequestArray.length > 0"></requestpage>
+<requestpage *ngIf="this.rcSettings.RequestArray.length > 0"></requestpage>

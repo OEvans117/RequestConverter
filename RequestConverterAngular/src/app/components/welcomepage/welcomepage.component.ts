@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
-import { RcapiService } from '../../services/rcapi.service';
+import { RcapiService } from '../../services/api/rcapi.service';
 
 @Component({
   selector: 'welcomepage',

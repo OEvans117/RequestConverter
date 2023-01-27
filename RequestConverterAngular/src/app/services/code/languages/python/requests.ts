@@ -1,5 +1,5 @@
-import { RequestType, SRequest } from "../../../components/welcomepage/welcomepage.component";
-import { CodeFormatter, CodeService } from "../code.service";
+import { RequestType, SRequest } from "../../../../components/welcomepage/welcomepage.component";
+import { CodeFormatter, CodeService } from "../../code.service";
 
 export class PythonRequestsFormatter extends CodeFormatter {
   constructor() { super('requests'); }

@@ -36,11 +36,11 @@ namespace RequestConverterAPI.Features.RequestConversion
                 {
                     string[] RequestSplit;
                     using (var sr = new StreamReader(RequestEntry[i].Open()))
-                        RequestSplit = sr.ReadToEnd().Replace("\"", @"\""").Split("\r\n");
+                        RequestSplit = sr.ReadToEnd().Split("\r\n");
 
                     string[] ResponseSplit;
                     using (var sr = new StreamReader(ResponseEntry[i].Open()))
-                        ResponseSplit = sr.ReadToEnd().Replace("\"", @"\""").Split("\r\n");
+                        ResponseSplit = sr.ReadToEnd().Split("\r\n");
 
                     if (!RequestSplit[0].Contains("CONNECT"))
                         RequestList.Add(new FiddlerRequest(RequestSplit, ResponseSplit));

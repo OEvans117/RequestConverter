@@ -1,10 +1,11 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
-import { SRequest } from '../components/welcomepage/welcomepage.component';
-import { CodeService } from './languages/code.service';
+import { SRequest } from '../../components/welcomepage/welcomepage.component';
+import { CodeService } from '../code/code.service';
 import { Location } from '@angular/common';
 import { Notyf } from 'notyf';
+import { SettingsService } from '../settings.service';
 
 @Injectable({ providedIn: 'root' })
 export class RcapiService {
@@ -12,12 +13,12 @@ export class RcapiService {
   constructor(private http: HttpClient,
     private codeService: CodeService,
     private location: Location,
+    private rcSettings: SettingsService
     ) { }
 
   BaseUrl: string = "https://asp.frenziedsms.com/"
   ApiBaseUrl: string = this.BaseUrl + "RequestConverter";
 
-  RequestArray: SRequest[] = [];
   CurrentTranslatedRequest: string;
   StateID: string;
   StateURL: string;
@@ -31,15 +32,15 @@ export class RcapiService {
 
     this.http.post(this.ApiBaseUrl + "/Convert", FileFormData, { headers })
       .pipe(catchError(this.HandleError)).subscribe(resp => {
-        this.RequestArray = resp as SRequest[];
+        this.rcSettings.RequestArray = resp as SRequest[];
 
         this.codeService.CurrentRequest = 0;
-        this.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.RequestArray)
+        this.rcSettings.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.rcSettings.RequestArray)
     });
   }
 
   public SaveState() {
-    this.http.post(this.ApiBaseUrl + "/Save", this.RequestArray, { responseType:"text" })
+    this.http.post(this.ApiBaseUrl + "/Save", this.rcSettings.RequestArray, { responseType:"text" })
       .pipe(catchError(this.HandleError)).subscribe(resp => {
         this.HasLoadedState = true;
         this.StateID = resp;
@@ -49,13 +50,13 @@ export class RcapiService {
     });
   }
 
-  public async SetState(id: string) {
-    return new Promise(resolve => this.http.get(this.ApiBaseUrl + "/Get?Id=" + id)
+  public SetState(id: string) {
+    this.http.get(this.ApiBaseUrl + "/Get?Id=" + id)
       .pipe(catchError(this.HandleLoadStateError)).subscribe(resp => {
         this.HasLoadedState = true;
-        this.RequestArray = resp as SRequest[];
-        this.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.RequestArray)
-    }));
+        this.rcSettings.RequestArray = resp as SRequest[];
+        this.rcSettings.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.rcSettings.RequestArray)
+    });
   }
 
   private HandleError(error: HttpErrorResponse) {

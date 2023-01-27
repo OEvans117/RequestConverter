@@ -1,6 +1,6 @@
 import { forEach } from "jszip";
-import { RequestType, SRequest } from "../../../components/welcomepage/welcomepage.component";
-import { CodeFormatter } from "../code.service";
+import { RequestType, SRequest } from "../../../../components/welcomepage/welcomepage.component";
+import { CodeFormatter } from "../../code.service";
 
 export class CSharpHttpWebRequestFormatter extends CodeFormatter {
   constructor() { super('httpwebrequest'); }

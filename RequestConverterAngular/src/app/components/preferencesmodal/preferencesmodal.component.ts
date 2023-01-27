@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CodeService } from '../../services/languages/code.service';
+import { CodeService } from '../../services/code/code.service';
 import { SettingsService } from '../../services/settings.service';
 
 @Component({
