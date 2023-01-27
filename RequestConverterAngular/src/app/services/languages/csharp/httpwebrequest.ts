@@ -8,10 +8,10 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
   RequestName: string = "HttpReq";
   ProxyString: string = "";
 
-  request(request: SRequest, functionwrap: boolean): string {
+  request(request: SRequest): string {
 
-    if (functionwrap) {
-      this.SetResult("public string req_" + request.RequestID.split('-')[0] + "()")
+    if (this.FunctionWrap) {
+      this.SetResult("public string req_" + this.GetFunctionName(request.Url) + "()")
       this.SetResult("{");
       this._Indent = "    ";
     }
@@ -85,14 +85,14 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
     this.SetResult("    return reader.ReadToEnd();");
     this.SetResult("}");
 
-    if (functionwrap) {
+    if (this.FunctionWrap) {
       this._Indent = "";
       this.SetResult("}");
     }
 
-    console.log(this.Result);
+    console.log(this._Result);
 
-    return this.GetResult(this.Result);
+    return this.GetResult(this._Result);
   }
 
   requests(requests: SRequest[]): string {
@@ -100,7 +100,7 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
     let requeststrings: string[] = [];
 
     requests.forEach(request => {
-      requeststrings.push(this.request(request, true) + "\n");
+      requeststrings.push(this.request(request) + "\n");
     })
 
     return this.GetResult(requeststrings);

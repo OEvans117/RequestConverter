@@ -21,7 +21,7 @@ export class WelcomepageComponent {
   }
 
   visitExample() {
-    location.href = window.location.href + "r/gncxkm";
+    location.href = window.location.href + "r/uezu51";
   }
 
   visitUrl(value: string) {

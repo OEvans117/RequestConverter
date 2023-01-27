@@ -42,7 +42,7 @@ namespace RequestConverterAPI.Controllers
 
             // analyse request
 
-            _ra.AnalyseRequestBundle(RequestList, RequestListJson);
+            // _ra.AnalyseRequestBundle(RequestList, RequestListJson);
 
             return RequestList.Count == 0 ? NotFound() : Ok(RequestListJson);
         }

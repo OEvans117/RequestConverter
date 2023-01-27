@@ -41,22 +41,21 @@ export class RcapiService {
   public SaveState() {
     this.http.post(this.ApiBaseUrl + "/Save", this.RequestArray, { responseType:"text" })
       .pipe(catchError(this.HandleError)).subscribe(resp => {
-        this.StateID = resp;
         this.HasLoadedState = true;
-
+        this.StateID = resp;
         this.location.go("/r/" + resp);
         new Notyf({ duration: 10000, ripple: true, position: { x: 'right', y: 'top' } })
           .success("Succesfully saved state ✅")
     });
   }
 
-  public SetState(id: string) {
-    this.HasLoadedState = true;
-    this.http.get(this.ApiBaseUrl + "/Get?Id=" + id)
+  public async SetState(id: string) {
+    return new Promise(resolve => this.http.get(this.ApiBaseUrl + "/Get?Id=" + id)
       .pipe(catchError(this.HandleLoadStateError)).subscribe(resp => {
-        this.RequestArray = resp as SRequest[];
         this.HasLoadedState = true;
-    });
+        this.RequestArray = resp as SRequest[];
+        this.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.RequestArray)
+    }));
   }
 
   private HandleError(error: HttpErrorResponse) {

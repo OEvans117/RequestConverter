@@ -50,10 +50,6 @@
           <option [ngValue]="r" *ngFor="let r of rcApi.RequestArray">{{r.Url}}</option>
         </select>
       </div>
-      <div class="sidebarcontent" *ngIf="!this.codeService.ShowAllRequests">
-        <p class="sidebartext">Wrap functions</p>
-        <input type="checkbox" (click)="this.codeService.FunctionWrap = !this.codeService.FunctionWrap; refreshCode()" [checked]="this.codeService.FunctionWrap" class="sidebariconleft sidebarcheckbox">
-      </div>
     </div>
 
     <!--<div class="sidebarsection">

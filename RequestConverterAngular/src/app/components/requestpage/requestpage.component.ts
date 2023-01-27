@@ -9,6 +9,7 @@ import { RcapiService } from '../../services/rcapi.service';
 import { Router } from '@angular/router';
 import { SettingsService } from '../../services/settings.service';
 import { AppModule } from '../../app.module';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'requestpage',
@@ -27,7 +28,8 @@ export class RequestpageComponent {
   constructor(public rcApi: RcapiService,
     public codeService: CodeService,
     private router: Router,
-    public settings: SettingsService) {
+    public settings: SettingsService,
+    private location: Location,) {
     this.codemirrorComponent?.codeMirror?.setSize(null, 100);
   }
 
@@ -49,6 +51,7 @@ export class RequestpageComponent {
   }
 
   resetRequests(): void {
+    this.location.go("")
     this.rcApi.RequestArray = [];
     this.rcApi.HasLoadedState = true;
   }

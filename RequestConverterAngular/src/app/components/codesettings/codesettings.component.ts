@@ -35,12 +35,13 @@ export class CodesettingsComponent implements OnChanges {
   }
 
   ngOnInit() {
-    this.parentClass = Object.keys(this.parentClass)
+    this.parentProperties = Object.keys(this.parentClass)
       .filter(key => !(typeof key === 'string' && key.charAt(0) === '_'))
       .map(prop => {
         return {
           name: prop,
-          type: typeof this.parentClass[prop]
+          type: typeof this.parentClass[prop],
+          value: this.parentClass[prop]
         };
       });
   }
@@ -52,7 +53,8 @@ export class CodesettingsComponent implements OnChanges {
         .map(prop => {
           return {
             name: prop,
-            type: typeof changes['childClass'].currentValue[prop]
+            type: typeof changes['childClass'].currentValue[prop],
+            value: changes['childClass'].currentValue[prop]
           };
         });
     }

@@ -7,7 +7,29 @@ namespace RequestConverterAPI.Models
 {
     public class FiddlerRequest : SingleRequest
     {
-        public FiddlerRequest(string[] RequestSplit)
+        private string[] RequestSplit { get; set; }
+        private string[] ResponseSplit { get; set; }
+
+        public FiddlerRequest(string[] RequestSplit, string[] ResponseSplit)
+        {
+            this.RequestSplit = RequestSplit;
+            this.RequestSplit = ResponseSplit;
+
+            SetRequestInfo();
+            SetResponseInfo();
+        }
+
+        public override void SetRequestInfo()
+        {
+            // Add headers
+            var ResponseHeaders = ResponseSplit.ToList().GetRange(1, ResponseSplit.Length - 3);
+            foreach (var elems in ResponseHeaders)
+                ResponseData.Headers.Add((elems.Split(": ")[0], elems.Split(": ")[1]));
+
+            ResponseData.Body = ResponseHeaders.Last();
+        }
+
+        public override void SetResponseInfo()
         {
             // Fiddler has 1 blank line on GET requests and 2 blank lines on POST
             // Make sure you remove them at the start, but leave blank lines in the
@@ -23,7 +45,7 @@ namespace RequestConverterAPI.Models
             bool CookieHeaderExists = CookieHeader.Count != 0;
             if (CookieHeaderExists)
                 foreach (var elems in CookieHeader.First().Replace("Cookie: ", "").Split("; "))
-                    Cookies.Add(MakeLiteral((elems.Split('=')[0], elems.Split('=')[1])));
+                    Cookies.Add((elems.Split('=')[0], elems.Split('=')[1]));
 
             // Header shouldn't be defined by index1:count-1 because in a POST request,
             // or a request where there isn't a cookie, it will fail.
@@ -50,9 +72,9 @@ namespace RequestConverterAPI.Models
             }
 
             // Add headers
-            var HeaderList = ReqSplit.GetRange(1, ReqSplit.Count - IndexOfPostBody);
-            foreach (var elems in HeaderList)
-                Headers.Add(MakeLiteral((elems.Split(": ")[0], elems.Split(": ")[1])));
+            var RequestHeaders = ReqSplit.GetRange(1, ReqSplit.Count - IndexOfPostBody);
+            foreach (var elems in RequestHeaders)
+                Headers.Add((elems.Split(": ")[0], elems.Split(": ")[1]));
         }
     }
 }

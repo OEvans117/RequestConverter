@@ -5,11 +5,13 @@ namespace RequestConverterAPI.Models
 {
     public abstract class SingleRequest
     {
+        public abstract void SetRequestInfo();
+
+        public abstract void SetResponseInfo();
+
         public Guid RequestID { get; set; } = Guid.NewGuid();
 
         public string? Url { get; set; }
-
-        public (string, string) MakeLiteral((string, string) tuple) => (tuple.Item1.Replace("\"", "\\\""), tuple.Item2.Replace("\"", "\\\""));
 
         public List<(string, string)> Headers = new List<(string, string)>();
         public List<(string, string)> Cookies = new List<(string, string)>();
@@ -19,7 +21,7 @@ namespace RequestConverterAPI.Models
         public RequestType RequestType { get; set; }
 
         [JsonIgnore]
-        public SingleResponse ResponseData { get; set; }
+        public SingleResponse ResponseData { get; set; } = new SingleResponse();
     }
 
     public class SingleResponse

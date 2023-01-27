@@ -1,6 +1,7 @@
 ﻿using Microsoft.OpenApi.Extensions;
 using RequestConverterAPI.Models;
 using RequestConverterAPI.Models.HarFile;
+using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -20,11 +21,12 @@ namespace RequestConverterAPI.Features.RequestAnalysis
 
             // Loop backwards as the last request will most likely contains
             // acquired IDs from the requests that came before it.
-            for (RequestIndex = RequestList.Count(); RequestIndex --> 0;)
+
+            for (RequestIndex = RequestList.Count - 1; RequestIndex >= 0; RequestIndex--)
             {
                 var requestAnalysis = AnalyseRequest(RequestList[RequestIndex]);
 
-                if(requestAnalysis is FoundMatch)
+                if (requestAnalysis is FoundMatch)
                 {
                     Debug.WriteLine(requestAnalysis.MatchText);
                 }
@@ -53,7 +55,7 @@ namespace RequestConverterAPI.Features.RequestAnalysis
             foreach (var currentRequestHeader in Tuple)
             {
                 // Probably not an ID if shorter than 6 characters
-                if (currentRequestHeader.Item2.Length < 6)
+                if (currentRequestHeader.Item2.Length < 6 || !currentRequestHeader.Item2.All(char.IsLetterOrDigit))
                     continue;
 
                 if (JsonString.Contains(currentRequestHeader.Item2))
@@ -62,16 +64,19 @@ namespace RequestConverterAPI.Features.RequestAnalysis
 
                     int AnalysisIndex;
 
-                    for (AnalysisIndex = RequestIndex - 1; RequestIndex-- > 0;)
+                    for (AnalysisIndex = RequestIndex - 1 - 1; AnalysisIndex >= 0; AnalysisIndex--)
                     {
                         // Loop through request body first
                         // this might be null if so make changes!
 
-                        var responseBodyMatch = Regex.Match(RequestList[AnalysisIndex].ResponseData.Body, @".{20}(" + currentRequestHeader.Item2 + ").{20}");
-                        if (responseBodyMatch.Success)
+                        if(RequestList[AnalysisIndex].ResponseData.Body != null)
                         {
-                            string RespBody = $"Found {currentRequestHeader.Item2} in response body. Location: {responseBodyMatch.Value}";
-                            return new FoundMatch(currentRequestHeader.Item2, Type.ResponseBody, RequestList[AnalysisIndex], RespBody);
+                            var responseBodyMatch = Regex.Match(RequestList[AnalysisIndex].ResponseData.Body, @".{20}(" + currentRequestHeader.Item2 + ").{20}");
+                            if (responseBodyMatch.Success)
+                            {
+                                string RespBody = $"Found {currentRequestHeader.Item2} in response body. Location: {RequestList[AnalysisIndex].Url}: [{responseBodyMatch.Value}]";
+                                return new FoundMatch(Type.ResponseBody, RequestList[AnalysisIndex], RespBody);
+                            }
                         }
 
                         // then cookies
@@ -79,7 +84,10 @@ namespace RequestConverterAPI.Features.RequestAnalysis
                         foreach (var previousRequestCookies in RequestList[AnalysisIndex].ResponseData.Cookies)
                         {
                             if (previousRequestCookies.Item2.Contains(currentRequestHeader.Item2))
-                                return new FoundMatch(currentRequestHeader.Item2, Type.ResponseCookie, RequestList[AnalysisIndex]);
+                            {
+                                string RespCookie = $"Found {currentRequestHeader.Item2} in cookies. Location: {RequestList[AnalysisIndex].Url}: [{previousRequestCookies.Item1}:{previousRequestCookies.Item2}]";
+                                return new FoundMatch(Type.ResponseCookie, RequestList[AnalysisIndex], RespCookie);
+                            }
                         }
 
                         // then headers
@@ -87,7 +95,10 @@ namespace RequestConverterAPI.Features.RequestAnalysis
                         foreach (var previousRequestHeader in RequestList[AnalysisIndex].ResponseData.Headers)
                         {
                             if (previousRequestHeader.Item2.Contains(currentRequestHeader.Item2))
-                                return new FoundMatch(currentRequestHeader.Item2, Type.ResponseHeader, RequestList[AnalysisIndex]);
+                            {
+                                string RespHeader = $"Found {currentRequestHeader.Item2} in header. Location: {RequestList[AnalysisIndex].Url}: [{previousRequestHeader.Item1}:{previousRequestHeader.Item2}]";
+                                return new FoundMatch(Type.ResponseHeader, RequestList[AnalysisIndex], RespHeader);
+                            }
                         }
                     }
                 }
@@ -111,15 +122,11 @@ namespace RequestConverterAPI.Features.RequestAnalysis
 
     public class FoundMatch: IFound
     {
-        public FoundMatch(string Match, Type matchType, SingleRequest requestFoundIn, string MatchText = "")
+        public FoundMatch(Type matchType, SingleRequest requestFoundIn, string MatchText = "")
         {
             MatchType = matchType;
             RequestFoundIn = requestFoundIn;
-
-            if(matchType == Type.ResponseBody)
-                this.MatchText = MatchText;
-            else
-                this.MatchText = $"Found \"{Match}\" match in { MatchType.GetDisplayName() } in the {RequestFoundIn.Url} request.";
+            this.MatchText = MatchText;
         }
 
         Type MatchType { get; set; }

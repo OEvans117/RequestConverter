@@ -20,6 +20,7 @@ namespace RequestConverterAPI.Features.RequestConversion
             {
                 ".saz" => ConvertFiddler(),
                 ".har" => ConvertHar(),
+                _ => throw new NotImplementedException(),
             };
         }
 
@@ -28,15 +29,21 @@ namespace RequestConverterAPI.Features.RequestConversion
             using (var stream = RequestBundle.OpenReadStream())
             using (var archive = new ZipArchive(stream))
             {
-                foreach (ZipArchiveEntry entry in archive.Entries.Where(x => x.Name.Contains("_c")))
+                List<ZipArchiveEntry> RequestEntry = archive.Entries.Where(x => x.Name.Contains("_c")).ToList();
+                List<ZipArchiveEntry> ResponseEntry = archive.Entries.Where(x => x.Name.Contains("_s")).ToList();
+
+                for(int i = 0; i < RequestEntry.Count; i++)
                 {
                     string[] RequestSplit;
-
-                    using (var sr = new StreamReader(entry.Open()))
+                    using (var sr = new StreamReader(RequestEntry[i].Open()))
                         RequestSplit = sr.ReadToEnd().Replace("\"", @"\""").Split("\r\n");
 
+                    string[] ResponseSplit;
+                    using (var sr = new StreamReader(ResponseEntry[i].Open()))
+                        ResponseSplit = sr.ReadToEnd().Replace("\"", @"\""").Split("\r\n");
+
                     if (!RequestSplit[0].Contains("CONNECT"))
-                        RequestList.Add(new FiddlerRequest(RequestSplit));
+                        RequestList.Add(new FiddlerRequest(RequestSplit, ResponseSplit));
                 }
             }
 

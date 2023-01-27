@@ -6,6 +6,6 @@
 
   <div *ngIf="prop.type === 'boolean'" class="sidebarcontent">
     <p class="sidebartext">{{ addSpaceBetweenCapital(prop.name) }}</p>
-    <input type="checkbox" [(ngModel)]="childClass[prop.name]" class="sidebariconleft sidebarcheckbox">
+    <input type="checkbox" [checked]="prop.value" (click)="childClass[prop.name] = !childClass[prop.name]; refreshCode()" class="sidebariconleft sidebarcheckbox">
   </div>
 </div>
