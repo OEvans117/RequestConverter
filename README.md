@@ -8,6 +8,7 @@ Very much early days on a web app that will allow you to upload request bundles 
 
 - ~~Ability to save request bundle as link (rq.com/r/9OBAi1/1)~~ ✅
 - ~~Compress stored JSON data~~ (reduced by half with BROTLI) ✅
+- ~~Automatic method name generation~~ ✅
 - API Analysis & Automation: 
 1. JSON class & object generation from response
 2. Regex creation for identified ids (header, body...) from response data
