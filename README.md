@@ -4,9 +4,9 @@
 
 **Features**
 
+* Analyse Http Requests & Websockets
 * Store request bundles (SQL server) rq.com/r/xyz
 * Brotli compression (reducing JSON by half)
-* Analyse Http Requests & Websockets
 * Multiple file types
 * * .HAR
 * * .SAZ
