@@ -1,4 +1,4 @@
-**RequestConverter** - Convert request bundles from Fiddler, Wireshark etc into clean, readable code. Current support for C# & Python
+**RequestConverter** - Convert HTTP Requests & Websockets from Fiddler, Chrome etc into clean, readable code. Current support for C# & Python
 
 **Early production version**: https://requestconverter.com/ | https://requestconverter.com/r/uezu51
 
@@ -20,12 +20,14 @@ Very much early days on a web app that will allow you to upload request bundles 
 * Code generation
 * * HTTP Request & Websockets
 * * Python
+* * * Change req/resp/header names
 * * C#
+* * * Add proxy
+* * * Change request name
 * * Method name generation
 * * Custom preferences
 * * * Wrap with class
 * * * Wrap with method
-* * * Change variable names
 * API analysis (identify IDs previously used in other requests)
 
 **Roadmap:**
