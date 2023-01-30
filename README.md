@@ -2,8 +2,6 @@
 
 **Early production version**: https://requestconverter.com/ | https://requestconverter.com/r/uezu51
 
-Very much early days on a web app that will allow you to upload request bundles (such as .SAZ on Fiddler) and view them in different programming languages on the user interface, with abilities and options to modify data output.
-
 **Features**
 
 * Store request bundles (SQL server) rq.com/r/xyz
