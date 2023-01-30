@@ -1,11 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
-import { SRequest } from '../../components/welcomepage/welcomepage.component';
 import { CodeService } from '../code/code.service';
 import { Location } from '@angular/common';
 import { Notyf } from 'notyf';
 import { SettingsService } from '../settings.service';
+import { isDevMode } from '@angular/core';
+import { SRequest } from '../request/request';
 
 @Injectable({ providedIn: 'root' })
 export class RcapiService {
@@ -13,12 +14,14 @@ export class RcapiService {
   constructor(private http: HttpClient,
     private codeService: CodeService,
     private location: Location,
-    private rcSettings: SettingsService
-    ) { }
+    private rcSettings: SettingsService)
+  {
+    if (isDevMode())
+      this.ApiBaseUrl = "https://localhost:7027"
+  }
 
-  //BaseUrl: string = "https://asp.frenziedsms.com/"
-  //ApiBaseUrl: string = this.BaseUrl + "RequestConverter";
-  ApiBaseUrl: string = "https://localhost:7027"
+  BaseUrl: string = "https://asp.frenziedsms.com/"
+  ApiBaseUrl: string = this.BaseUrl + "RequestConverter";
 
   CurrentTranslatedRequest: string;
   StateID: string;

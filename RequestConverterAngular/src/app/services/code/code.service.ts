@@ -1,5 +1,5 @@
 import { Component, Inject, Injectable, Input } from '@angular/core';
-import { SRequest } from '../../components/welcomepage/welcomepage.component';
+import { SRequest } from '../request/request';
 import { PythonRequestsFormatter } from './languages/python/requests';
 
 @Injectable({ providedIn: 'root' })
@@ -20,6 +20,9 @@ export class CodeService {
     this.CurrentFormatter = this.formatters.find(c => c.language === language);
     this.CurrentFormatter?.ResetFunctionNames();
 
+    // If show all requests, set class wrap to true. Otherwise, to false.
+    this.ShowAllRequests ? this.CurrentFormatter!.ClassWrap = true : this.CurrentFormatter!.ClassWrap = false;
+
     if (this.ShowAllRequests)
       return this.CurrentFormatter!.requests(RequestBundle);
     else
@@ -30,6 +33,8 @@ export class CodeService {
 export abstract class CodeFormatter {
   constructor(public language: string) { }
 
+  public ClassWrap: boolean = true;
+  public ClassName: string = "CustomRequests";
   public FunctionWrap: boolean = true;
 
   private _FunctionNames:string[] = [];

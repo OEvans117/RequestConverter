@@ -4,7 +4,6 @@ import { CSharpHttpWebRequestFormatter } from '../../services/code/languages/csh
 import { PythonRequestsFormatter } from '../../services/code/languages/python/requests';
 import { RcapiService } from '../../services/api/rcapi.service';
 import { SettingsService } from '../../services/settings.service';
-import { SRequest } from '../welcomepage/welcomepage.component';
 
 @Component({
   selector: 'codesettings',

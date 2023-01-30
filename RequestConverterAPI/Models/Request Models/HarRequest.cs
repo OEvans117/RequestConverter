@@ -26,7 +26,17 @@ namespace RequestConverterAPI.Models.Request_Models
             foreach (var cookie in harEntry.Request.Cookies)
                 Cookies.Add((cookie.Name, cookie.Value));
             if (harEntry.Request.PostData != null)
-                RequestBody = harEntry.Request.PostData.Text;
+            {
+                if(harEntry.Request.PostData.MimeType == "application/x-www-form-urlencoded")
+                {
+                    foreach(var entry in harEntry.Request.PostData.Params)
+                        RequestBody += entry.Name + "=" + entry.Value + "&";
+
+                    RequestBody = RequestBody.Substring(0, RequestBody.Length - 1);
+                }
+                else
+                    RequestBody = harEntry.Request.PostData.Text;
+            }
 
             Enum.TryParse(harEntry.Request.Method.ToUpper(), out RequestType ReqType);
             RequestType = ReqType;

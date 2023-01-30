@@ -1,5 +1,5 @@
 import { forEach } from "jszip";
-import { RequestType, SRequest } from "../../../../components/welcomepage/welcomepage.component";
+import { Multipart, MultipartType, RequestBody, RequestBodyTypes, RequestType, SRequest } from "../../../request/request";
 import { CodeFormatter } from "../../code.service";
 
 export class CSharpHttpWebRequestFormatter extends CodeFormatter {
@@ -11,14 +11,35 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
   request(request: SRequest): string {
 
     if (this.FunctionWrap) {
-      this.SetResult("public string req_" + this.GetFunctionName(request.Url) + "()")
-      this.SetResult("{");
-      this._Indent = "    ";
+
+      if (this.ClassWrap) {
+        this._Indent = "    ";
+        this.SetResult("public string req_" + this.GetFunctionName(request.Url) + "()")
+        this.SetResult("{");
+        this._Indent = "        ";
+      }
+      else {
+        this.SetResult("public string req_" + this.GetFunctionName(request.Url) + "()")
+        this.SetResult("{");
+        this._Indent = "    ";
+      }
     }
 
     if (request.RequestType == RequestType.POST) {
-      this.SetResult("string postBody = \"" + request.RequestBody + "\";");
-      this.SetResult("byte[] postBytes = Encoding.UTF8.GetBytes(postBody);\n");
+
+      if (request.RequestBodyInfo.Type == RequestBodyTypes.MULTIPART) {
+        this.SetResult("var boundary = \"------------------------\" + DateTime.Now.Ticks;");
+        this.SetResult("var newLine = Environment.NewLine;");
+        this.SetResult("var propFormat = \"--\" + boundary + newLine + \"Content-Disposition: form-data; name=\"{0}\" + newLine + newLine + \"{1}\" + newLine;");
+        this.SetResult("var fileHeaderFormat = \"--\" + boundary + newLine + \"Content-Disposition: form-data; name=\"file\"; filename=\"{0}\" + newLine;\n");
+      }
+      else {
+        this.SetResult("string postBody = \"" + request.RequestBody + "\";");
+
+        request.RequestBodyInfo.Type == RequestBodyTypes.XWWWFORMURLENCODED ?
+          this.SetResult("byte[] postBytes = Encoding.UTF8.GetBytes(HttpUtility.UrlEncode(postBody));\n") :
+          this.SetResult("byte[] postBytes = Encoding.UTF8.GetBytes(postBody);\n");
+      }
     }
 
     this.SetResult("HttpWebRequest " + this.RequestName + " = WebRequest.CreateHttp(\"" + request.Url + "\");\n")
@@ -29,15 +50,26 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
       // Check if we've added a custom header to continue the loop
       let AddedCustom = false;
 
+      // Set the content-type header automatically as you will add info to it.
+      // future copy Fiddler/HAR request boundary so that you get the exact same format.
+      // 1. study if all boundaries use that format
+      // 2. build a regex that captures the last value
+      if (request.RequestBodyInfo.Type == RequestBodyTypes.MULTIPART && header.Item1.toLowerCase() == "content-type") {
+        this.SetResult(this.RequestName + ".ContentType = \"multipart/form-data; boundary=\" + boundary;");
+        return;
+      }
+
       // Loop through default header values as they are not as simple as Add()
       ["Accept", "Connection", "Content-Type", "Except", "Host", "Referer", "Transfer-Encoding", "User-Agent"]
         .forEach((customheader => {
-        if (customheader.replace("-", "") == header.Item1) {
-          this.SetResult(this.RequestName + "." + header.Item1 + " = \"" + header.Item2 + "\";");
+
+        // why replace - ?
+        if (customheader == header.Item1) {
+          this.SetResult(this.RequestName + "." + header.Item1.replace("-", "") + " = \"" + header.Item2 + "\";");
           AddedCustom = true;
           return;
         }
-        }));
+      }));
 
       // Add ContentLength property if header is set & request is POST.
       if (request.RequestType == RequestType.POST && header.Item1 == "Content-Length") {
@@ -74,8 +106,28 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
     this.SetResult("");
 
     if (request.RequestType == RequestType.POST) {
-      this.SetResult("using(Stream requestBody = " + this.RequestName + ".GetRequestStream())");
-      this.SetResult("    requestBody.Write(postBytes, 0, postBytes.Length);\n");
+
+      if (request.RequestBodyInfo.Type == RequestBodyTypes.MULTIPART) {
+        const multipart = request.RequestBodyInfo as Multipart;
+        this.SetResult("using(Stream requestBody = " + this.RequestName + ".GetRequestStream())");
+        this.SetResult("{");
+        this.SetResult("    var reqWriter = new StreamWriter(reqStream);");
+        multipart.FormData.forEach(mpfd => {
+          if (mpfd.Type == MultipartType.Property) {
+            this.SetResult("    reqWriter.Write(string.Format(propFormat, \"" + mpfd.Name + "\", \"" + mpfd.Value + "\"));");
+          }
+          else if (mpfd.Type == MultipartType.FileHeader) {
+            this.SetResult("    reqWriter.Write(string.Format(fileHeaderFormat, \"" + mpfd.Filename + "\"));");
+          }
+        })
+        this.SetResult("    reqWriter.Write(\"--\" + boundary + \"--\");");
+        this.SetResult("    reqWriter.Flush();");
+        this.SetResult("}\n");
+      }
+      else {
+        this.SetResult("using(Stream requestBody = " + this.RequestName + ".GetRequestStream())");
+        this.SetResult("    requestBody.Write(postBytes, 0, postBytes.Length);\n");
+      }
     }
 
     this.SetResult("using(HttpWebResponse response = (HttpWebResponse)" + this.RequestName + ".GetResponse())");
@@ -86,7 +138,12 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
     this.SetResult("}");
 
     if (this.FunctionWrap) {
-      this._Indent = "";
+      if (this.ClassWrap) {
+        this._Indent = "    ";
+      }
+      else {
+        this._Indent = "";
+      }
       this.SetResult("}");
     }
 
@@ -99,9 +156,17 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
 
     let requeststrings: string[] = [];
 
+    if (this.ClassWrap) {
+      this.SetResult("public class " + this.ClassName);
+      this.SetResult("{");
+      this._Indent = "    ";
+    }
+
     requests.forEach(request => {
       requeststrings.push(this.request(request) + "\n");
     })
+
+    this.SetResult("}");
 
     return this.GetResult(requeststrings);
   }

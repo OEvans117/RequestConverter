@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, Input, Pipe, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
-import { SRequest } from '../welcomepage/welcomepage.component';
 import { CodeFormatter, CodeService } from '../../services/code/code.service';
 import { CSharpHttpWebRequestFormatter } from '../../services/code/languages/csharp/httpwebrequest';
 import { PythonRequestsFormatter } from '../../services/code/languages/python/requests';

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { RcapiService } from '../../services/api/rcapi.service';
-import { SRequest } from '../welcomepage/welcomepage.component';
 
 @Component({
   selector: 'menu',
@@ -15,5 +14,4 @@ export class MenuComponent {
     goHome() {
       this.rcSettings.RequestArray;
     }
-
 }

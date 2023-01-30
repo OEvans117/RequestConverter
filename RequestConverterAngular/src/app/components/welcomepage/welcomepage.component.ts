@@ -21,31 +21,10 @@ export class WelcomepageComponent {
   }
 
   visitExample() {
-    location.href = window.location.href + "r/9lxgf6";
+    location.href = window.location.href + "r/jq2mse";
   }
 
   visitUrl(value: string) {
     location.href = value;
   }
-}
-
-export interface SRequest {
-  Cookies: Array<{ Item1: string, Item2: string }>;
-  Headers: Array<{ Item1: string, Item2: string }>;
-  RequestBody: string;
-  RequestID: string;
-  RequestType: RequestType;
-  Url: string;
-}
-
-export enum RequestType {
-  GET,
-  HEAD,
-  POST,
-  PUT,
-  DELETE,
-  CONNECT,
-  OPTIONS,
-  TRACE,
-  PATCH
 }
