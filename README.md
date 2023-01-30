@@ -4,15 +4,35 @@
 
 Very much early days on a web app that will allow you to upload request bundles (such as .SAZ on Fiddler) and view them in different programming languages on the user interface, with abilities and options to modify data output.
 
+**Features**
+
+* Store request bundles (SQL server) rq.com/r/xyz
+* Brotli compression (reducing JSON by half)
+* Analyse & generate code for HTTP Requests
+* Multiple file types
+* * .HAR
+* * .SAZ
+* Request body
+* * Detect POST text, json
+* * Detect Multipart data
+* * Detect XWWWUrlFormEncoded data
+* * Escape strings when needed
+* Code generation
+* * Python
+* * C#
+* * Method name generation
+* * Custom preferences
+* * * Wrap with class
+* * * Wrap with method
+* * * Change variable names
+* Detect WebSockets
+* API analysis (identify IDs previously used in other requests)
+
 **Roadmap:**
 
-- ~~Ability to save request bundle as link (rq.com/r/9OBAi1/1)~~ ✅
-- ~~Compress stored JSON data~~ (reduced by half with BROTLI) ✅
-- ~~Automatic method name generation~~ ✅
 - API Analysis & Automation: 
 1. JSON class & object generation from response
 2. Regex creation for identified ids (header, body...) from response data
-- ~~Ability to import .HAR (currently only supports Fiddler files)~~ ✅
 - Add more languages:
 1. Java
 2. Rust
@@ -21,7 +41,6 @@ Very much early days on a web app that will allow you to upload request bundles 
 5. Kotlin
 - Add settings to change the programming output & theme etc.
 - Ability to save request bundle to account (login/register features)
-- Recode RequestConverter in React, Vue & Blazor (learning experience)
 
 **V2 (CSS Changes + React/Angular/Vue/Blazor Support):**
 
