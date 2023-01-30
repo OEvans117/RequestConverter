@@ -6,7 +6,7 @@
 
 * Store request bundles (SQL server) rq.com/r/xyz
 * Brotli compression (reducing JSON by half)
-* Analyse & generate code for HTTP Requests
+* Analyse Http Requests & Websockets
 * Multiple file types
 * * .HAR
 * * .SAZ
@@ -16,7 +16,6 @@
 * * Detect XWWWUrlFormEncoded data
 * * Escape strings when needed
 * Code generation
-* * HTTP Request & Websockets
 * * Python
 * * * Change req/resp/header names
 * * C#
