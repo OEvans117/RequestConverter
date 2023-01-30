@@ -18,6 +18,7 @@ Very much early days on a web app that will allow you to upload request bundles 
 * * Detect XWWWUrlFormEncoded data
 * * Escape strings when needed
 * Code generation
+* * HTTP Request & Websockets
 * * Python
 * * C#
 * * Method name generation
@@ -25,7 +26,6 @@ Very much early days on a web app that will allow you to upload request bundles 
 * * * Wrap with class
 * * * Wrap with method
 * * * Change variable names
-* Detect WebSockets
 * API analysis (identify IDs previously used in other requests)
 
 **Roadmap:**
