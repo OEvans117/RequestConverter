@@ -11,7 +11,6 @@ export class PythonRequestsFormatter extends CodeFormatter {
   request(request: SRequest): string {
 
     if (this.FunctionWrap) {
-
       if (this.ClassWrap) {
         this._Indent = "    ";
         this.SetResult("def req_" + this.GetFunctionName(request.Url) + "():")
@@ -77,19 +76,116 @@ export class PythonRequestsFormatter extends CodeFormatter {
     return this.GetResult(this._Result);
   }
 
+  websocket(request: SRequest): string {
+    let functionName = this.GetFunctionName(request.Url)
+
+    if (this.FunctionWrap) {
+      if (this.ClassWrap) {
+        this._Indent = "    ";
+        this.SetResult("def ws_" + functionName + "(self):")
+        this._Indent = "        ";
+      }
+      else {
+        this.SetResult("def ws_" + functionName + "():")
+        this._Indent = "    ";
+      }
+    }
+
+    let funcNameToLower = functionName.toLowerCase()
+
+    // Websocket contains headers, so create dict.
+    if (request.Headers.length > 1) {
+      this.SetResult(funcNameToLower + "_headers = {")
+      request.Headers.forEach(header => {
+        this.SetResult("    \"" + header.Item1 + "\": \"" + header.Item2 + "\",")
+      })
+      this.SetResult("}\n")
+    }
+
+    // Initialize, subscribe to events & start
+    let onOpenFuncName = "on_open_" + funcNameToLower
+    let onMessageFuncName = "on_message_" + funcNameToLower
+    let onErrorFuncName = "on_error_" + funcNameToLower
+    let onCloseFuncName = "on_close_" + funcNameToLower
+
+    // Modify based on headers, cookies...
+    let websocketAppInitialization = "ws = websocket.WebSocketApp(\"" + request.Url + "\",";
+
+    // Websocket contains headers, so append string.
+    if (request.Headers.length > 1) {
+      websocketAppInitialization += " header=" + funcNameToLower + "_headers, ";
+    }
+
+    // Websocket contains cookies, so add them (this is the format).
+    if (request.Cookies.length > 1) {
+      websocketAppInitialization += "cookie=\"";
+      request.Cookies.forEach(c => websocketAppInitialization += c.Item1 + "=" + c.Item2 + ";");
+      websocketAppInitialization += "\", ";
+    }
+
+    this.SetResult(websocketAppInitialization);
+
+    if (this.ClassWrap) {
+      this.SetResult("    on_open=self." + onOpenFuncName + ",")
+      this.SetResult("    on_message=self." + onMessageFuncName + ",")
+      this.SetResult("    on_error=self." + onErrorFuncName + ",")
+      this.SetResult("    on_close=self." + onCloseFuncName + ",)")
+    }
+    else {
+      this.SetResult("    on_open=" + onOpenFuncName + ",")
+      this.SetResult("    on_message=" + onMessageFuncName + ",")
+      this.SetResult("    on_error=" + onErrorFuncName + ",")
+      this.SetResult("    on_close=" + onCloseFuncName + ",)")
+    }
+    this.SetResult("ws.run_forever()\n")
+
+    // If class wrap, make the indent big, otherwise small.
+    this.ClassWrap ? this._Indent = "    " : this._Indent = ""
+
+    // Define events
+    this.SetResult("def " + onOpenFuncName + "(ws, message):")
+    this.SetResult("    print(message)")
+    this.SetResult("def " + onMessageFuncName + "(ws, error):")
+    this.SetResult("    print(error)")
+    this.SetResult("def " + onErrorFuncName + "(ws, close_status_code, close_msg):")
+    this.SetResult("    print(\"Websocket closed\")")
+    this.SetResult("def " + onCloseFuncName + "(ws, message):")
+    this.SetResult("    print(\"Websocket opened\")")
+
+    return this.GetResult(this._Result);
+  }
+
   requests(requests: SRequest[]): string {
 
     let requeststrings: string[] = [];
 
     if (this.ClassWrap) {
-      this.SetResult("import requests")
-      this.SetResult("from collections import OrderedDict\n")
+
+      let hasWebsocket = (requests.some(r => r.RequestType == RequestType.WEBSOCKET))
+      let hasHttpRequest = (requests.some(r => r.RequestType != RequestType.WEBSOCKET))
+
+      // only add if there is a http request
+      if (hasHttpRequest) {
+        this.SetResult("import requests")
+        this.SetResult("from collections import OrderedDict\n")
+      }
+
+      // only add if there is a websocket
+      if (hasWebsocket) {
+        this.SetResult("import websocket\n")
+      }
+
       this.SetResult("class " + this.ClassName + ":");
       this._Indent = "    ";
     }
 
     requests.forEach(request => {
-      requeststrings.push(this.request(request) + "\n");
+      if (request.RequestType == RequestType.WEBSOCKET) {
+        requeststrings.push(this.websocket(request) + "\n");
+      }
+      else {
+        requeststrings.push(this.request(request) + "\n");
+      }
     })
 
     return this.GetResult(requeststrings);

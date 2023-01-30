@@ -11,7 +11,6 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
   request(request: SRequest): string {
 
     if (this.FunctionWrap) {
-
       if (this.ClassWrap) {
         this._Indent = "    ";
         this.SetResult("public string req_" + this.GetFunctionName(request.Url) + "()")
@@ -147,11 +146,57 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
       this.SetResult("}");
     }
 
-    console.log(this._Result);
-
     return this.GetResult(this._Result);
   }
 
+  websocket(request: SRequest): string {
+
+    let functionName = this.GetFunctionName(request.Url)
+
+    if (this.FunctionWrap) {
+      if (this.ClassWrap) {
+        this._Indent = "    ";
+        this.SetResult("public async Task ws_" + this.GetFunctionName(request.Url) + "()")
+        this.SetResult("{");
+        this._Indent = "        ";
+      }
+      else {
+        this.SetResult("public async Task ws_" + this.GetFunctionName(request.Url) + "()")
+        this.SetResult("{");
+        this._Indent = "    ";
+      }
+    }
+
+    this.SetResult("var ws = new ClientWebSocket();");
+
+    request.Headers.forEach(header => {
+      this.SetResult("ws.Options.SetRequestHeader(\"" + header.Item1 + "\", \"" + header.Item2 + "\");");
+    })
+
+    this.SetResult("");
+
+    request.Cookies.forEach(cookie => {
+      this.SetResult("ws.Options.Cookies.Add(new Cookie(\"" + cookie.Item1 + "\", \"" + cookie.Item2 + "\"));");
+    })
+
+    this.SetResult("");
+
+    this.SetResult("var cts = new CancellationTokenSource();");
+    this.SetResult("await ws.ConnectAsync(new Uri(\"" + request.Url + "\"), cts.Token);");
+
+    if (this.FunctionWrap) {
+      if (this.ClassWrap) {
+        this._Indent = "    ";
+      }
+      else {
+        this._Indent = "";
+      }
+      this.SetResult("}");
+    }
+
+    return this.GetResult(this._Result);
+  }
+  
   requests(requests: SRequest[]): string {
 
     let requeststrings: string[] = [];
@@ -163,7 +208,12 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
     }
 
     requests.forEach(request => {
-      requeststrings.push(this.request(request) + "\n");
+      if (request.RequestType == RequestType.WEBSOCKET) {
+        requeststrings.push(this.websocket(request) + "\n");
+      }
+      else {
+        requeststrings.push(this.request(request) + "\n");
+      }
     })
 
     this.SetResult("}");

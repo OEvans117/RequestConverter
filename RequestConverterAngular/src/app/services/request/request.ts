@@ -9,6 +9,19 @@ export interface SRequest {
   Url: string;
 }
 
+export enum RequestType {
+  GET,
+  HEAD,
+  POST,
+  PUT,
+  DELETE,
+  CONNECT,
+  OPTIONS,
+  TRACE,
+  PATCH,
+  WEBSOCKET
+}
+
 export abstract class RequestBody {
   Type: RequestBodyTypes;
   public BodyString: string;
@@ -76,14 +89,3 @@ export enum MultipartType {
   FileHeader
 }
 
-export enum RequestType {
-  GET,
-  HEAD,
-  POST,
-  PUT,
-  DELETE,
-  CONNECT,
-  OPTIONS,
-  TRACE,
-  PATCH
-}

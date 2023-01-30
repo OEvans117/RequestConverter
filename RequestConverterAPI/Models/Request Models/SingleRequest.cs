@@ -43,6 +43,7 @@ namespace RequestConverterAPI.Models
         CONNECT,
         OPTIONS,
         TRACE,
-        PATCH
+        PATCH,
+        WEBSOCKET
     }
 }

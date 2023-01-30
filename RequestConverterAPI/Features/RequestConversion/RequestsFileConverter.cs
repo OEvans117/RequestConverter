@@ -3,6 +3,8 @@ using RequestConverterAPI.Models.Request_Models;
 using RequestConverterAPI.Models;
 using System.IO.Compression;
 using System.Text.Json;
+using System.Net.WebSockets;
+using System.Text;
 
 namespace RequestConverterAPI.Features.RequestConversion
 {
@@ -38,12 +40,24 @@ namespace RequestConverterAPI.Features.RequestConversion
                     using (var sr = new StreamReader(RequestEntry[i].Open()))
                         RequestSplit = sr.ReadToEnd().Split("\r\n");
 
+                    // We don't want to parse connects.
+                    if (RequestSplit[0].Contains("CONNECT"))
+                        continue;
+
                     string[] ResponseSplit;
                     using (var sr = new StreamReader(ResponseEntry[i].Open()))
                         ResponseSplit = sr.ReadToEnd().Split("\r\n");
 
-                    if (!RequestSplit[0].Contains("CONNECT"))
-                        RequestList.Add(new FiddlerRequest(RequestSplit, ResponseSplit));
+                    var FiddlerRequest = new FiddlerRequest(RequestSplit, ResponseSplit);
+
+                    // Set request as websocket if contains x_w.txt and upgrade websocket header
+                    if(archive.Entries.Any(x => x.Name.Contains("_w")) 
+                        && FiddlerRequest.Headers.Any(h => h.Item1 == "Upgrade" && h.Item2 == "websocket"))
+                    {
+                        FiddlerRequest.RequestType = RequestType.WEBSOCKET;
+                    }
+
+                    RequestList.Add(FiddlerRequest);
                 }
             }
 
