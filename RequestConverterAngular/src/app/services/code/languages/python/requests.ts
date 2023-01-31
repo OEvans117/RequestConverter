@@ -7,7 +7,6 @@ export class PythonRequestsFormatter extends CodeFormatter {
   public HeaderName: string = "reqHeaders";
   public RequestName: string = "reqName";
   public ResponseName: string = "respName";
-  public ProxyString:string = "";
 
   request(request: SRequest): string {
 
