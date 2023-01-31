@@ -2,7 +2,7 @@ import { Multipart, MultipartType, RequestBody, RequestBodyTypes, RequestType, S
 import { CodeFormatter, CodeService } from "../../code.service";
 
 export class PythonRequestsFormatter extends CodeFormatter {
-  constructor() { super('requests'); }
+  constructor() { super('requests', 'python'); }
 
   public HeaderName: string = "reqHeaders";
   public RequestName: string = "reqName";
@@ -12,82 +12,82 @@ export class PythonRequestsFormatter extends CodeFormatter {
 
     if (this.FunctionWrap) {
       if (this.ClassWrap) {
-        this._Indent = "    ";
-        this.SetResult("def req_" + this.GetFunctionName(request.Url) + "():")
-        this._Indent = "        ";
+        this.extensions._Indent = "    ";
+        this.extensions.SetResult("def req_" + this.extensions.GetFunctionName(request.Url) + "():")
+        this.extensions._Indent = "        ";
       }
       else {
-        this.SetResult("def req_" + this.GetFunctionName(request.Url) + "():")
-        this._Indent = "    ";
+        this.extensions.SetResult("def req_" + this.extensions.GetFunctionName(request.Url) + "():")
+        this.extensions._Indent = "    ";
       }
     }
 
-    this.SetResult(this.HeaderName + " = OrderedDict([");
+    this.extensions.SetResult(this.HeaderName + " = OrderedDict([");
 
     request.Headers.forEach((header) => {
       // In python, files = formData will already set the header automatically.
       if (request.RequestBodyInfo.Type == RequestBodyTypes.MULTIPART && header.Item1.toLowerCase() == "content-type")
         return;
 
-      this.SetResult("    (\"" + header.Item1 + "\", \"" + header.Item2 + "\"),");
+      this.extensions.SetResult("    (\"" + header.Item1 + "\", \"" + header.Item2 + "\"),");
     });
 
-    this.SetResult("])\n");
+    this.extensions.SetResult("])\n");
 
     if (request.RequestType == RequestType.POST) {
 
       if (request.RequestBodyInfo.Type == RequestBodyTypes.MULTIPART) {
         let multipart = (request.RequestBodyInfo as Multipart);
 
-        this.SetResult("formData = (");
+        this.extensions.SetResult("formData = (");
 
         multipart.FormData.forEach(mpfd => {
           if (mpfd.Type == MultipartType.Property) {
-            this.SetResult("    (\"" + mpfd.Name + "\", (None, \"" + mpfd.Value + "\")),");
+            this.extensions.SetResult("    (\"" + mpfd.Name + "\", (None, \"" + mpfd.Value + "\")),");
           }
           else if (mpfd.Type == MultipartType.FileHeader) {
-            this.SetResult("    (\"file\", (" + mpfd.Name + ", open('" + mpfd.Name + "'))),");
+            this.extensions.SetResult("    (\"file\", (" + mpfd.Name + ", open('" + mpfd.Name + "'))),");
           }
         })
 
-        this.SetResult(")");
+        this.extensions.SetResult(")");
 
-        this.SetResult(this.RequestName + " = requests.post('" + request.Url + "', files = formData, headers = reqHeaders)");
+        this.extensions.SetResult(this.RequestName + " = requests.post('" + request.Url + "', files = formData, headers = reqHeaders)");
       }
       else if (request.RequestBodyInfo.Type == RequestBodyTypes.XWWWFORMURLENCODED) {
         let xwwwformurlencoded = (request.RequestBodyInfo as XWUrlFormEncoded);
-        this.SetResult("reqBody = {")
+        this.extensions.SetResult("reqBody = {")
         xwwwformurlencoded.FormData.forEach(data =>
-          this.SetResult("    \"" + data.Name + ": \"" + data.Value + "\","));
-        this.SetResult("}")
-        this.SetResult(this.RequestName + " = requests.post('" + request.Url + "', data = reqBody, headers = reqHeaders)");
+          this.extensions.SetResult("    \"" + data.Name + ": \"" + data.Value + "\","));
+        this.extensions.SetResult("}")
+        this.extensions.SetResult(this.RequestName + " = requests.post('" + request.Url + "', data = reqBody, headers = reqHeaders)");
       }
       else {
-        this.SetResult("reqBody = \"" + request.RequestBody + "\"");
-        this.SetResult(this.RequestName + " = requests.post('" + request.Url + "', data = reqBody, headers = reqHeaders)");
+        this.extensions.SetResult("reqBody = \"" + request.RequestBody + "\"");
+        this.extensions.SetResult(this.RequestName + " = requests.post('" + request.Url + "', data = reqBody, headers = reqHeaders)");
       }
     }
     else {
-      this.SetResult(this.RequestName + " = requests." + RequestType[request.RequestType].toLowerCase() + "('" + request.Url + "', headers = reqHeaders)");
+      this.extensions.SetResult(this.RequestName + " = requests." + RequestType[request.RequestType].toLowerCase() + "('" + request.Url + "', headers = reqHeaders)");
     }
 
-    this.SetResult(this.ResponseName + " = reqName.text");
+    this.extensions.SetResult(this.ResponseName + " = reqName.text");
 
-    return this.GetResult(this._Result);
+    return this.extensions.GetResult(this.extensions._Result);
   }
 
   websocket(request: SRequest): string {
-    let functionName = this.GetFunctionName(request.Url)
+    let functionName = this.extensions.GetFunctionName(request.Url)
 
     if (this.FunctionWrap) {
       if (this.ClassWrap) {
-        this._Indent = "    ";
-        this.SetResult("def ws_" + functionName + "(self):")
-        this._Indent = "        ";
+        this.extensions._Indent = "    ";
+        this.extensions.SetResult("def ws_" + functionName + "(self):")
+        this.extensions._Indent = "        ";
       }
       else {
-        this.SetResult("def ws_" + functionName + "():")
-        this._Indent = "    ";
+        this.extensions.SetResult("def ws_" + functionName + "():")
+        this.extensions._Indent = "    ";
       }
     }
 
@@ -95,11 +95,11 @@ export class PythonRequestsFormatter extends CodeFormatter {
 
     // Websocket contains headers, so create dict.
     if (request.Headers.length > 1) {
-      this.SetResult(funcNameToLower + "_headers = {")
+      this.extensions.SetResult(funcNameToLower + "_headers = {")
       request.Headers.forEach(header => {
-        this.SetResult("    \"" + header.Item1 + "\": \"" + header.Item2 + "\",")
+        this.extensions.SetResult("    \"" + header.Item1 + "\": \"" + header.Item2 + "\",")
       })
-      this.SetResult("}\n")
+      this.extensions.SetResult("}\n")
     }
 
     // Initialize, subscribe to events & start
@@ -123,36 +123,36 @@ export class PythonRequestsFormatter extends CodeFormatter {
       websocketAppInitialization += "\", ";
     }
 
-    this.SetResult(websocketAppInitialization);
+    this.extensions.SetResult(websocketAppInitialization);
 
     if (this.ClassWrap) {
-      this.SetResult("    on_open=self." + onOpenFuncName + ",")
-      this.SetResult("    on_message=self." + onMessageFuncName + ",")
-      this.SetResult("    on_error=self." + onErrorFuncName + ",")
-      this.SetResult("    on_close=self." + onCloseFuncName + ",)")
+      this.extensions.SetResult("    on_open=self." + onOpenFuncName + ",")
+      this.extensions.SetResult("    on_message=self." + onMessageFuncName + ",")
+      this.extensions.SetResult("    on_error=self." + onErrorFuncName + ",")
+      this.extensions.SetResult("    on_close=self." + onCloseFuncName + ",)")
     }
     else {
-      this.SetResult("    on_open=" + onOpenFuncName + ",")
-      this.SetResult("    on_message=" + onMessageFuncName + ",")
-      this.SetResult("    on_error=" + onErrorFuncName + ",")
-      this.SetResult("    on_close=" + onCloseFuncName + ",)")
+      this.extensions.SetResult("    on_open=" + onOpenFuncName + ",")
+      this.extensions.SetResult("    on_message=" + onMessageFuncName + ",")
+      this.extensions.SetResult("    on_error=" + onErrorFuncName + ",")
+      this.extensions.SetResult("    on_close=" + onCloseFuncName + ",)")
     }
-    this.SetResult("ws.run_forever()\n")
+    this.extensions.SetResult("ws.run_forever()\n")
 
     // If class wrap, make the indent big, otherwise small.
-    this.ClassWrap ? this._Indent = "    " : this._Indent = ""
+    this.ClassWrap ? this.extensions._Indent = "    " : this.extensions._Indent = ""
 
     // Define events
-    this.SetResult("def " + onOpenFuncName + "(ws, message):")
-    this.SetResult("    print(message)")
-    this.SetResult("def " + onMessageFuncName + "(ws, error):")
-    this.SetResult("    print(error)")
-    this.SetResult("def " + onErrorFuncName + "(ws, close_status_code, close_msg):")
-    this.SetResult("    print(\"Websocket closed\")")
-    this.SetResult("def " + onCloseFuncName + "(ws, message):")
-    this.SetResult("    print(\"Websocket opened\")")
+    this.extensions.SetResult("def " + onOpenFuncName + "(ws, message):")
+    this.extensions.SetResult("    print(message)")
+    this.extensions.SetResult("def " + onMessageFuncName + "(ws, error):")
+    this.extensions.SetResult("    print(error)")
+    this.extensions.SetResult("def " + onErrorFuncName + "(ws, close_status_code, close_msg):")
+    this.extensions.SetResult("    print(\"Websocket closed\")")
+    this.extensions.SetResult("def " + onCloseFuncName + "(ws, message):")
+    this.extensions.SetResult("    print(\"Websocket opened\")")
 
-    return this.GetResult(this._Result);
+    return this.extensions.GetResult(this.extensions._Result);
   }
 
   all(requests: SRequest[]): string {
@@ -166,17 +166,17 @@ export class PythonRequestsFormatter extends CodeFormatter {
 
       // only add if there is a http request
       if (hasHttpRequest) {
-        this.SetResult("import requests")
-        this.SetResult("from collections import OrderedDict\n")
+        this.extensions.SetResult("import requests")
+        this.extensions.SetResult("from collections import OrderedDict\n")
       }
 
       // only add if there is a websocket
       if (hasWebsocket) {
-        this.SetResult("import websocket\n")
+        this.extensions.SetResult("import websocket\n")
       }
 
-      this.SetResult("class " + this.ClassName + ":");
-      this._Indent = "    ";
+      this.extensions.SetResult("class " + this.ClassName + ":");
+      this.extensions._Indent = "    ";
     }
 
     requests.forEach(request => {
@@ -188,6 +188,6 @@ export class PythonRequestsFormatter extends CodeFormatter {
       }
     })
 
-    return this.GetResult(requeststrings);
+    return this.extensions.GetResult(requeststrings);
   }
 }

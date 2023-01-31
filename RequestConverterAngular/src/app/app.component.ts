@@ -12,7 +12,7 @@ import { RcapiService } from './services/api/rcapi.service';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [RcapiService, CodeService, 
+  providers: [ RcapiService, CodeService, 
     { provide: CodeFormatter, useClass: PythonRequestsFormatter, multi: true },
     { provide: CodeFormatter, useClass: CSharpHttpWebRequestFormatter, multi: true },
   ],

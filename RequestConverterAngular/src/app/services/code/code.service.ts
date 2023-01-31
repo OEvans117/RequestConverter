@@ -1,5 +1,7 @@
 import { Component, Inject, Injectable, Input } from '@angular/core';
 import { RequestType, SRequest } from '../request/request';
+import { CSharpWebsocketFormatter } from './languages/csharp/csharpwebsocket';
+import { PythonWebsocketFormatter } from './languages/python/pythonwebsocket';
 import { PythonRequestsFormatter } from './languages/python/requests';
 
 @Injectable({ providedIn: 'root' })
@@ -7,7 +9,7 @@ export class CodeService {
   constructor(@Inject(CodeFormatter) private formatters: CodeFormatter[]) { }
 
   // Public modifyable settings
-  public ShowAllRequests: boolean = true; // keep this as last for HTML
+  public ShowAllRequests: boolean = true;
 
   // Private settings
   public CurrentRequest: number = 0;
@@ -17,8 +19,8 @@ export class CodeService {
   format(language:string, RequestBundle: SRequest[]): string {
 
     this.CurrentLanguage = language;
-    this.CurrentFormatter = this.formatters.find(c => c.language === language);
-    this.CurrentFormatter?.ResetFunctionNames();
+    this.CurrentFormatter = this.formatters.find(c => c.name === language);
+    this.CurrentFormatter?.extensions.ResetFunctionNames();
 
     // If show all requests, set class wrap to true. Otherwise, to false.
     this.ShowAllRequests ? this.CurrentFormatter!.ClassWrap = true : this.CurrentFormatter!.ClassWrap = false;
@@ -30,14 +32,19 @@ export class CodeService {
   }
 }
 
-export abstract class CodeFormatter {
-  constructor(public language: string) { }
+export class FormatterExtensions {
+  // Functions for code creation
+  public _Result: string[] = [];
+  public _Indent: string = "";
+  public SetResult = (value: string) => this._Result.push(this._Indent + value);
+  public GetResult(value: string[]): string {
+    this._Result = [];
+    this._Indent = "";
+    return value.join("\n")
+  }
 
-  public ClassWrap: boolean = true;
-  public ClassName: string = "CustomRequests";
-  public FunctionWrap: boolean = true;
-
-  private _FunctionNames:string[] = [];
+  // Get names for functions
+  private _FunctionNames: string[] = [];
   public GetFunctionName(url: string): string {
 
     url = url.replace(/^(https?|ftp):\/\/*/, ''); // remove the protocol/scheme
@@ -70,20 +77,38 @@ export abstract class CodeFormatter {
   }
   public ResetFunctionNames = () => this._FunctionNames = [];
 
-  public _Result: string[] = [];
-  public _Indent: string = "";
-  public SetResult = (value: string) => this._Result.push(this._Indent + value);
-  public GetResult(value: string[]): string {
-    this._Result = [];
-    this._Indent = "";
-    return value.join("\n")
+  // Function to return websockets
+  private _Websockets: WebsocketFormatter[] = [
+    new CSharpWebsocketFormatter(),
+    new PythonWebsocketFormatter()]
+  public GetWebsocketString(request: SRequest, language: string): string {
+    return this._Websockets.find(w => w.language == language)!.getWebsocketString(request);
   }
+}
+
+export abstract class WebsocketFormatter {
+  constructor(public language: string) { console.log("created instance! (check if many are being created so change to singleton in that case)") }
+
+  getWebsocketString(request: SRequest): string {
+    return this.FormatterExtensions.GetResult(this.FormatterExtensions._Result);
+  }
+  FormatterExtensions: FormatterExtensions = new FormatterExtensions();
+}
+
+export abstract class CodeFormatter {
+  constructor(public name: string, public language: string) { }
+
+  public ClassWrap: boolean = true;
+  public ClassName: string = "CustomRequests";
+  public FunctionWrap: boolean = true;
+
+  public extensions = new FormatterExtensions();
 
   abstract all(requests: SRequest[]): string;
   single(request: SRequest): string {
     // if request is websocket, return ws, otherwise req
     return request.RequestType == RequestType.WEBSOCKET
-      ? this.websocket(request) : this.request(request);
+      ? this.extensions.GetWebsocketString(request, this.language) : this.request(request);
   }
   abstract request(request: SRequest): string;
   abstract websocket(request: SRequest): string;
