@@ -76,40 +76,40 @@ export class FormatterExtensions {
     return urlString;
   }
   public ResetFunctionNames = () => this._FunctionNames = [];
-
-  // Function to return websockets
-  private _Websockets: WebsocketFormatter[] = [
-    new CSharpWebsocketFormatter(),
-    new PythonWebsocketFormatter()]
-  public GetWebsocketString(request: SRequest, language: string): string {
-    return this._Websockets.find(w => w.language == language)!.getWebsocketString(request);
-  }
 }
 
-export abstract class WebsocketFormatter {
-  constructor(public language: string) { console.log("created instance! (check if many are being created so change to singleton in that case)") }
-
-  getWebsocketString(request: SRequest): string {
-    return this.FormatterExtensions.GetResult(this.FormatterExtensions._Result);
+export class FormatterOptions {
+  public constructor(ClassWrap: boolean, ClassName: string, FunctionWrap: boolean) {
+    this.ClassWrap = ClassWrap,
+      this.ClassName = ClassName,
+      this.FunctionWrap = FunctionWrap
   }
-  FormatterExtensions: FormatterExtensions = new FormatterExtensions();
+  public ClassWrap: boolean = true;
+  public ClassName: string = "CustomRequests";
+  public FunctionWrap: boolean = true;
 }
 
 export abstract class CodeFormatter {
-  constructor(public name: string, public language: string) { }
-
+  constructor(public name: string, public wsformatter: WebsocketFormatter) { }
+  
   public ClassWrap: boolean = true;
   public ClassName: string = "CustomRequests";
   public FunctionWrap: boolean = true;
 
+  public options = new FormatterOptions(
+    true, "CustomClass", true);
   public extensions = new FormatterExtensions();
 
   abstract all(requests: SRequest[]): string;
-  single(request: SRequest): string {
-    // if request is websocket, return ws, otherwise req
-    return request.RequestType == RequestType.WEBSOCKET
-      ? this.extensions.GetWebsocketString(request, this.language) : this.request(request);
-  }
   abstract request(request: SRequest): string;
-  abstract websocket(request: SRequest): string;
+  single(request: SRequest): string {
+    return request.RequestType == RequestType.WEBSOCKET
+      ? this.wsformatter.GetWebsocketString(request, this.options)
+      : this.request(request);
+  }
+}
+
+export interface WebsocketFormatter {
+  GetWebsocketString(request: SRequest, options: FormatterOptions): string;
+  FormatterExtensions: FormatterExtensions;
 }

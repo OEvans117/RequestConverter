@@ -1,8 +1,9 @@
 import { Multipart, MultipartType, RequestBody, RequestBodyTypes, RequestType, SRequest, XWUrlFormData, XWUrlFormEncoded } from "../../../request/request";
 import { CodeFormatter, CodeService } from "../../code.service";
+import { PythonWebsocketFormatter } from "./pythonwebsocket";
 
 export class PythonRequestsFormatter extends CodeFormatter {
-  constructor() { super('requests', 'python'); }
+  constructor() { super('requests', new PythonWebsocketFormatter()); }
 
   public HeaderName: string = "reqHeaders";
   public RequestName: string = "reqName";
@@ -75,86 +76,6 @@ export class PythonRequestsFormatter extends CodeFormatter {
 
     return this.extensions.GetResult(this.extensions._Result);
   }
-
-  websocket(request: SRequest): string {
-    let functionName = this.extensions.GetFunctionName(request.Url)
-
-    if (this.FunctionWrap) {
-      if (this.ClassWrap) {
-        this.extensions._Indent = "    ";
-        this.extensions.SetResult("def ws_" + functionName + "(self):")
-        this.extensions._Indent = "        ";
-      }
-      else {
-        this.extensions.SetResult("def ws_" + functionName + "():")
-        this.extensions._Indent = "    ";
-      }
-    }
-
-    let funcNameToLower = functionName.toLowerCase()
-
-    // Websocket contains headers, so create dict.
-    if (request.Headers.length > 1) {
-      this.extensions.SetResult(funcNameToLower + "_headers = {")
-      request.Headers.forEach(header => {
-        this.extensions.SetResult("    \"" + header.Item1 + "\": \"" + header.Item2 + "\",")
-      })
-      this.extensions.SetResult("}\n")
-    }
-
-    // Initialize, subscribe to events & start
-    let onOpenFuncName = "on_open_" + funcNameToLower
-    let onMessageFuncName = "on_message_" + funcNameToLower
-    let onErrorFuncName = "on_error_" + funcNameToLower
-    let onCloseFuncName = "on_close_" + funcNameToLower
-
-    // Modify based on headers, cookies...
-    let websocketAppInitialization = "ws = websocket.WebSocketApp(\"" + request.Url + "\",";
-
-    // Websocket contains headers, so append string.
-    if (request.Headers.length > 1) {
-      websocketAppInitialization += " header=" + funcNameToLower + "_headers, ";
-    }
-
-    // Websocket contains cookies, so add them (this is the format).
-    if (request.Cookies.length > 1) {
-      websocketAppInitialization += "cookie=\"";
-      request.Cookies.forEach(c => websocketAppInitialization += c.Item1 + "=" + c.Item2 + ";");
-      websocketAppInitialization += "\", ";
-    }
-
-    this.extensions.SetResult(websocketAppInitialization);
-
-    if (this.ClassWrap) {
-      this.extensions.SetResult("    on_open=self." + onOpenFuncName + ",")
-      this.extensions.SetResult("    on_message=self." + onMessageFuncName + ",")
-      this.extensions.SetResult("    on_error=self." + onErrorFuncName + ",")
-      this.extensions.SetResult("    on_close=self." + onCloseFuncName + ",)")
-    }
-    else {
-      this.extensions.SetResult("    on_open=" + onOpenFuncName + ",")
-      this.extensions.SetResult("    on_message=" + onMessageFuncName + ",")
-      this.extensions.SetResult("    on_error=" + onErrorFuncName + ",")
-      this.extensions.SetResult("    on_close=" + onCloseFuncName + ",)")
-    }
-    this.extensions.SetResult("ws.run_forever()\n")
-
-    // If class wrap, make the indent big, otherwise small.
-    this.ClassWrap ? this.extensions._Indent = "    " : this.extensions._Indent = ""
-
-    // Define events
-    this.extensions.SetResult("def " + onOpenFuncName + "(ws, message):")
-    this.extensions.SetResult("    print(message)")
-    this.extensions.SetResult("def " + onMessageFuncName + "(ws, error):")
-    this.extensions.SetResult("    print(error)")
-    this.extensions.SetResult("def " + onErrorFuncName + "(ws, close_status_code, close_msg):")
-    this.extensions.SetResult("    print(\"Websocket closed\")")
-    this.extensions.SetResult("def " + onCloseFuncName + "(ws, message):")
-    this.extensions.SetResult("    print(\"Websocket opened\")")
-
-    return this.extensions.GetResult(this.extensions._Result);
-  }
-
   all(requests: SRequest[]): string {
 
     let requeststrings: string[] = [];
@@ -181,7 +102,7 @@ export class PythonRequestsFormatter extends CodeFormatter {
 
     requests.forEach(request => {
       if (request.RequestType == RequestType.WEBSOCKET) {
-        requeststrings.push(this.websocket(request) + "\n");
+        requeststrings.push(this.wsformatter.GetWebsocketString(request, this.options));
       }
       else {
         requeststrings.push(this.request(request) + "\n");

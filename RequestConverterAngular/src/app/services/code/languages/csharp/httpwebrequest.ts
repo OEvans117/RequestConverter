@@ -4,11 +4,10 @@ import { CodeFormatter } from "../../code.service";
 import { CSharpWebsocketFormatter } from "./csharpwebsocket";
 
 export class CSharpHttpWebRequestFormatter extends CodeFormatter {
-  constructor() { super('httpwebrequest', 'csharp'); }
+  constructor() { super('httpwebrequest', new CSharpWebsocketFormatter()); }
 
   RequestName: string = "HttpReq";
   ProxyString: string = "";
-  CSharpWebsocketFormatter = new CSharpWebsocketFormatter();
 
   request(request: SRequest): string {
 
@@ -150,55 +149,6 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
 
     return this.extensions.GetResult(this.extensions._Result);
   }
-
-  websocket(request: SRequest): string {
-
-    let functionName = this.extensions.GetFunctionName(request.Url)
-
-    if (this.FunctionWrap) {
-      if (this.ClassWrap) {
-        this.extensions._Indent = "    ";
-        this.extensions.SetResult("public async Task ws_" + this.extensions.GetFunctionName(request.Url) + "()")
-        this.extensions.SetResult("{");
-        this.extensions._Indent = "        ";
-      }
-      else {
-        this.extensions.SetResult("public async Task ws_" + this.extensions.GetFunctionName(request.Url) + "()")
-        this.extensions.SetResult("{");
-        this.extensions._Indent = "    ";
-      }
-    }
-
-    this.extensions.SetResult("var ws = new ClientWebSocket();");
-
-    request.Headers.forEach(header => {
-      this.extensions.SetResult("ws.Options.SetRequestHeader(\"" + header.Item1 + "\", \"" + header.Item2 + "\");");
-    })
-
-    this.extensions.SetResult("");
-
-    request.Cookies.forEach(cookie => {
-      this.extensions.SetResult("ws.Options.Cookies.Add(new Cookie(\"" + cookie.Item1 + "\", \"" + cookie.Item2 + "\"));");
-    })
-
-    this.extensions.SetResult("");
-
-    this.extensions.SetResult("var cts = new CancellationTokenSource();");
-    this.extensions.SetResult("await ws.ConnectAsync(new Uri(\"" + request.Url + "\"), cts.Token);");
-
-    if (this.FunctionWrap) {
-      if (this.ClassWrap) {
-        this.extensions._Indent = "    ";
-      }
-      else {
-        this.extensions._Indent = "";
-      }
-      this.extensions.SetResult("}");
-    }
-
-    return this.extensions.GetResult(this.extensions._Result);
-  }
-  
   all(requests: SRequest[]): string {
 
     let requeststrings: string[] = [];
@@ -211,7 +161,7 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
 
     requests.forEach(request => {
       if (request.RequestType == RequestType.WEBSOCKET) {
-        requeststrings.push(this.websocket(request) + "\n");
+        requeststrings.push(this.wsformatter.GetWebsocketString(request, this.options))
       }
       else {
         requeststrings.push(this.request(request) + "\n");
