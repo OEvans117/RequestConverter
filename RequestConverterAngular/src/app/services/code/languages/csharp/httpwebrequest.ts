@@ -11,22 +11,7 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
 
   request(request: SRequest): string {
 
-    if (this.FunctionWrap) {
-      if (this.ClassWrap) {
-        this.extensions._Indent = "    ";
-        this.extensions.SetResult("public string req_" + this.extensions.GetFunctionName(request.Url) + "()")
-        this.extensions.SetResult("{");
-        this.extensions._Indent = "        ";
-      }
-      else {
-        this.extensions.SetResult("public string req_" + this.extensions.GetFunctionName(request.Url) + "()")
-        this.extensions.SetResult("{");
-        this.extensions._Indent = "    ";
-      }
-    }
-
     if (request.RequestType == RequestType.POST) {
-
       if (request.RequestBodyInfo.Type == RequestBodyTypes.MULTIPART) {
         this.extensions.SetResult("var boundary = \"------------------------\" + DateTime.Now.Ticks;");
         this.extensions.SetResult("var newLine = Environment.NewLine;");
@@ -35,7 +20,6 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
       }
       else {
         this.extensions.SetResult("string postBody = \"" + request.RequestBody + "\";");
-
         request.RequestBodyInfo.Type == RequestBodyTypes.XWWWFORMURLENCODED ?
           this.extensions.SetResult("byte[] postBytes = Encoding.UTF8.GetBytes(HttpUtility.UrlEncode(postBody));\n") :
           this.extensions.SetResult("byte[] postBytes = Encoding.UTF8.GetBytes(postBody);\n");
@@ -84,7 +68,6 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
     });
 
     if (this.ProxyString != "" && this.ProxyString.includes(":") && this.ProxyString.split(':').length > 0) {
-
       let proxyIP = this.ProxyString.split(':')[0];
       let proxyPort = this.ProxyString.split(':')[1];
 
@@ -137,27 +120,15 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
     this.extensions.SetResult("    return reader.ReadToEnd();");
     this.extensions.SetResult("}");
 
-    if (this.FunctionWrap) {
-      if (this.ClassWrap) {
-        this.extensions._Indent = "    ";
-      }
-      else {
-        this.extensions._Indent = "";
-      }
-      this.extensions.SetResult("}");
-    }
-
     return this.extensions.GetResult(this.extensions._Result);
   }
   all(requests: SRequest[]): string {
 
     let requeststrings: string[] = [];
 
-    if (this.ClassWrap) {
-      this.extensions.SetResult("public class " + this.ClassName);
-      this.extensions.SetResult("{");
-      this.extensions._Indent = "    ";
-    }
+    this.extensions.SetResult("public class " + this.ClassName);
+    this.extensions.SetResult("{");
+    this.extensions._Indent = "    ";
 
     requests.forEach(request => {
       if (request.RequestType == RequestType.WEBSOCKET) {
