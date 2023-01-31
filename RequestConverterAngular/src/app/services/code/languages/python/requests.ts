@@ -7,6 +7,7 @@ export class PythonRequestsFormatter extends CodeFormatter {
   public HeaderName: string = "reqHeaders";
   public RequestName: string = "reqName";
   public ResponseName: string = "respName";
+  public ProxyString: string = "";
 
   request(request: SRequest): string {
 
@@ -155,7 +156,7 @@ export class PythonRequestsFormatter extends CodeFormatter {
     return this.GetResult(this._Result);
   }
 
-  requests(requests: SRequest[]): string {
+  all(requests: SRequest[]): string {
 
     let requeststrings: string[] = [];
 

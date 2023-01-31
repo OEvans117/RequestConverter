@@ -197,7 +197,7 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
     return this.GetResult(this._Result);
   }
   
-  requests(requests: SRequest[]): string {
+  all(requests: SRequest[]): string {
 
     let requeststrings: string[] = [];
 

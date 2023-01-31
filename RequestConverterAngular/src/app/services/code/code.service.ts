@@ -1,5 +1,5 @@
 import { Component, Inject, Injectable, Input } from '@angular/core';
-import { SRequest } from '../request/request';
+import { RequestType, SRequest } from '../request/request';
 import { PythonRequestsFormatter } from './languages/python/requests';
 
 @Injectable({ providedIn: 'root' })
@@ -24,9 +24,9 @@ export class CodeService {
     this.ShowAllRequests ? this.CurrentFormatter!.ClassWrap = true : this.CurrentFormatter!.ClassWrap = false;
 
     if (this.ShowAllRequests)
-      return this.CurrentFormatter!.requests(RequestBundle);
+      return this.CurrentFormatter!.all(RequestBundle);
     else
-      return this.CurrentFormatter!.request(RequestBundle[this.CurrentRequest])
+      return this.CurrentFormatter!.single(RequestBundle[this.CurrentRequest])
   }
 }
 
@@ -79,6 +79,12 @@ export abstract class CodeFormatter {
     return value.join("\n")
   }
 
-  abstract requests(requests: SRequest[]): string;
+  abstract all(requests: SRequest[]): string;
+  single(request: SRequest): string {
+    // if request is websocket, return ws, otherwise req
+    return request.RequestType == RequestType.WEBSOCKET
+      ? this.websocket(request) : this.request(request);
+  }
   abstract request(request: SRequest): string;
+  abstract websocket(request: SRequest): string;
 }
