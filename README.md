@@ -4,43 +4,43 @@
 
 <details>
   <summary>Features</summary>
-* Analyse Http Requests & Websockets
-* Store request bundles (SQL server) rq.com/r/xyz
-* Brotli compression (reducing JSON by half)
-* Multiple file types
-* * .HAR
-* * .SAZ
-* Request body
-* * Detect POST text, json
-* * Detect Multipart data
-* * Detect XWWWUrlFormEncoded data
-* * Escape strings when needed
-* Code generation
-* * Python
-* * * Change req/resp/header names
-* * C#
-* * * Add proxy
-* * * Change request name
-* * Method name generation
-* * Custom preferences
-* * * Wrap with class
-* * * Wrap with method
-* API analysis (identify IDs previously used in other requests)
+  ### Added
+  * Analyse Http Requests & Websockets
+  * Store request bundles (SQL server) rq.com/r/xyz
+  * Brotli compression (reducing JSON by half)
+  * Multiple file types
+  * * .HAR
+  * * .SAZ
+  * Request body
+  * * Detect POST text, json
+  * * Detect Multipart data
+  * * Detect XWWWUrlFormEncoded data
+  * * Escape strings when needed
+  * Code generation
+  * * Python
+  * * * Change req/resp/header names
+  * * C#
+  * * * Add proxy
+  * * * Change request name
+  * * Method name generation
+  * * Custom preferences
+  * * * Wrap with class
+  * * * Wrap with method
+  * API analysis (identify IDs previously used in other requests)
+  
+  ### Roadmap
+  - API Analysis & Automation: 
+  1. JSON class & object generation from response
+  2. Regex creation for identified ids (header, body...) from response data
+  - Add more languages:
+  1. Java
+  2. Rust
+  3. Perl
+  4. Go
+  5. Kotlin
+  - Add settings to change the programming output & theme etc.
+  - Ability to save request bundle to account (login/register features)
 </details>
-
-**Roadmap:**
-
-- API Analysis & Automation: 
-1. JSON class & object generation from response
-2. Regex creation for identified ids (header, body...) from response data
-- Add more languages:
-1. Java
-2. Rust
-3. Perl
-4. Go
-5. Kotlin
-- Add settings to change the programming output & theme etc.
-- Ability to save request bundle to account (login/register features)
 
 **V2 (CSS Changes + React/Angular/Vue/Blazor Support):**
 
