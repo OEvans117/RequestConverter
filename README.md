@@ -2,30 +2,31 @@
 
 **Early production version**: https://requestconverter.com/ | https://requestconverter.com/r/uezu51
 
-**Features**
-
-* Analyse Http Requests & Websockets
-* Store request bundles (SQL server) rq.com/r/xyz
-* Brotli compression (reducing JSON by half)
-* Multiple file types
-* * .HAR
-* * .SAZ
-* Request body
-* * Detect POST text, json
-* * Detect Multipart data
-* * Detect XWWWUrlFormEncoded data
-* * Escape strings when needed
-* Code generation
-* * Python
-* * * Change req/resp/header names
-* * C#
-* * * Add proxy
-* * * Change request name
-* * Method name generation
-* * Custom preferences
-* * * Wrap with class
-* * * Wrap with method
-* API analysis (identify IDs previously used in other requests)
+<details>
+  <summary>Features</summary>
+  * Analyse Http Requests & Websockets
+  * Store request bundles (SQL server) rq.com/r/xyz
+  * Brotli compression (reducing JSON by half)
+  * Multiple file types
+  * * .HAR
+  * * .SAZ
+  * Request body
+  * * Detect POST text, json
+  * * Detect Multipart data
+  * * Detect XWWWUrlFormEncoded data
+  * * Escape strings when needed
+  * Code generation
+  * * Python
+  * * * Change req/resp/header names
+  * * C#
+  * * * Add proxy
+  * * * Change request name
+  * * Method name generation
+  * * Custom preferences
+  * * * Wrap with class
+  * * * Wrap with method
+  * API analysis (identify IDs previously used in other requests)
+</details>
 
 **Roadmap:**
 
