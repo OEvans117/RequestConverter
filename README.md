@@ -4,6 +4,7 @@
 
 <details>
   <summary>Features</summary>
+  
   ### Added
   - Analyse Http Requests & Websockets
   - Store request bundles (SQL server) rq.com/r/xyz
