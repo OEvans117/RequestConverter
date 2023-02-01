@@ -24,8 +24,6 @@
 
 **Early production version**: https://requestconverter.com/ | https://requestconverter.com/r/uezu51
 
-<br>
-
 <details>
   <summary>Features & roadmap</summary>
   
@@ -67,9 +65,7 @@
   - Ability to save request bundle to account (login/register features)
 </details>
 
-<br>
-
-**V2 (CSS Changes + React/Angular/Vue/Blazor Support):**
+## V2 (CSS Changes + React/Angular/Vue/Blazor Support):
 
 Class diagram: https://i.imgur.com/5Hc6VNQ.png
 
