@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-<img width=33% src="https://i.imgur.com/FGVa79j.png"/>
+<img width=32% src="https://i.imgur.com/FGVa79j.png"/>
     <br>
     RequestConverter
   <br>
