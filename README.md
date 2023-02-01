@@ -43,10 +43,10 @@
 
 **V2 (CSS Changes + React/Angular/Vue/Blazor Support):**
 
-Class diagram: https://i.imgur.com/QVaNUqY.png
+Class diagram: https://i.imgur.com/5Hc6VNQ.png
 Figma design: https://www.figma.com/file/j06HFXXYLrRfZTDrXpxMpz/RequestConverterWeb?node-id=0%3A1&t=1I7EnYRZHwBPJCuM-1
 
-![Class Diagram](https://i.imgur.com/QVaNUqY.png)
+![Class Diagram](https://i.imgur.com/5Hc6VNQ.png)
 
 ![V2](https://i.imgur.com/ef7u3T7.png)
 ![V2](https://i.imgur.com/rBxRGaT.png)
