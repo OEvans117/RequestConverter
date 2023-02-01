@@ -68,7 +68,7 @@ RequestConverter - Convert HTTP Requests & Websockets from Fiddler (.SAZ), Chrom
   - Ability to save request bundle to account (login/register features)
 </details>
 
-## Screenshots:
+## 📸 Links:
 
 Class diagram: https://i.imgur.com/5Hc6VNQ.png
 
