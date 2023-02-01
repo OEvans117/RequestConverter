@@ -100,7 +100,7 @@ export abstract class FormatterExtension {
     this.HasHttpRequest = (requests.some(r => r.RequestType != RequestType.WEBSOCKET))
   }
 
-  // Functions for code creation!
+  // Functions for code creation
   public _Result: string[] = [];
   public _Indent: string = "";
   public SetResult = (value: string) => this._Result.push(this._Indent + value);
