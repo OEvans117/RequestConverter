@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, Input, Pipe, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
-import { CodeFormatter, CodeService } from '../../services/code/code.service';
+import { HttpFormatter, CodeService } from '../../services/code/code.service';
 import { CSharpHttpWebRequestFormatter } from '../../services/code/languages/csharp/httpwebrequest';
 import { PythonRequestsFormatter } from '../../services/code/languages/python/requests';
 import { RcapiService } from '../../services/api/rcapi.service';
@@ -34,19 +34,19 @@ export class RequestpageComponent {
   }
 
   refreshCode() {
-    this.rcSettings.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.rcSettings.RequestArray)
+    this.rcSettings.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage)
   }
 
   // When you select a URL from the option
   onSelected(): void {
-    this.codeService.CurrentRequest = this.rcSettings.RequestArray.findIndex((j: { RequestID: string; }) => j.RequestID === this.currentRequest.RequestID);
+    this.codeService.CurrentRequestIndex = this.rcSettings.RequestArray.findIndex((j: { RequestID: string; }) => j.RequestID === this.currentRequest.RequestID);
     this.refreshCode();
   }
 
   // When you click on language buttons
   changeLanguage(language: string) {
     if (this.codeService.CurrentLanguage != language) {
-      this.rcSettings.CurrentTranslatedRequest = this.codeService.format(language, this.rcSettings.RequestArray);
+      this.rcSettings.CurrentTranslatedRequest = this.codeService.format(language);
     }
   }
 

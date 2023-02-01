@@ -2,6 +2,7 @@
 export interface SRequest {
   Cookies: Array<{ Item1: string, Item2: string }>;
   Headers: Array<{ Item1: string, Item2: string }>;
+  RequestMethodName: string;
   RequestBody: string;
   RequestBodyInfo: RequestBody;
   RequestID: string;

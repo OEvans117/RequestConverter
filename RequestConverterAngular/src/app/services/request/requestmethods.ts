@@ -17,6 +17,9 @@ export class RequestModification {
       // Set content type (multipart/xwww)
       this.SetContentType(req);
 
+      // Set method name
+      // this.SetMethodName(req);
+
       // Replace quotes with \
       if (req.RequestBody != null) {
         req.RequestBody = req.RequestBody.replace(/\r?\n/g, "\\n");

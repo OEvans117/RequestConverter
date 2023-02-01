@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CodeFormatter, CodeService } from '../../services/code/code.service';
+import { HttpFormatter, CodeService } from '../../services/code/code.service';
 import { CSharpHttpWebRequestFormatter } from '../../services/code/languages/csharp/httpwebrequest';
 import { PythonRequestsFormatter } from '../../services/code/languages/python/requests';
 import { RcapiService } from '../../services/api/rcapi.service';
@@ -32,7 +32,7 @@ export class CodesettingsComponent implements OnChanges {
   childProperties: any[];
 
   refreshCode() {
-    this.rcSettings.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.rcSettings.RequestArray)
+    this.rcSettings.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage)
   }
 
   ngOnInit() {

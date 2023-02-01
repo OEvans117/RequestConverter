@@ -1,52 +1,28 @@
 import { SRequest } from "../../../request/request";
-import { WebsocketFormatter, FormatterExtensions, FormatterOptions } from "../../code.service";
+import { WebsocketFormatter, FormatterExtension } from "../../code.service";
 
-export class CSharpWebsocketFormatter implements WebsocketFormatter {
-  GetWebsocketString(request: SRequest, options:FormatterOptions): string {
-    let functionName = this.FormatterExtensions.GetFunctionName(request.Url)
+export class CSharpWebsocketFormatter extends WebsocketFormatter {
 
-    if (options.FunctionWrap) {
-      if (options.ClassWrap) {
-        this.FormatterExtensions._Indent = "    ";
-        this.FormatterExtensions.SetResult("public async Task ws_" + this.FormatterExtensions.GetFunctionName(request.Url) + "()")
-        this.FormatterExtensions.SetResult("{");
-        this.FormatterExtensions._Indent = "        ";
-      }
-      else {
-        this.FormatterExtensions.SetResult("public async Task ws_" + this.FormatterExtensions.GetFunctionName(request.Url) + "()")
-        this.FormatterExtensions.SetResult("{");
-        this.FormatterExtensions._Indent = "    ";
-      }
-    }
+  constructor() { super('csharp'); }
 
-    this.FormatterExtensions.SetResult("var ws = new ClientWebSocket();");
+  websocket(request: SRequest): string {
+    this.extensions.SetResult("var ws = new ClientWebSocket();");
 
     request.Headers.forEach(header => {
-      this.FormatterExtensions.SetResult("ws.Options.SetRequestHeader(\"" + header.Item1 + "\", \"" + header.Item2 + "\");");
+      this.extensions.SetResult("ws.Options.SetRequestHeader(\"" + header.Item1 + "\", \"" + header.Item2 + "\");");
     })
 
-    this.FormatterExtensions.SetResult("");
+    this.extensions.SetResult("");
 
     request.Cookies.forEach(cookie => {
-      this.FormatterExtensions.SetResult("ws.Options.Cookies.Add(new Cookie(\"" + cookie.Item1 + "\", \"" + cookie.Item2 + "\"));");
+      this.extensions.SetResult("ws.Options.Cookies.Add(new Cookie(\"" + cookie.Item1 + "\", \"" + cookie.Item2 + "\"));");
     })
 
-    this.FormatterExtensions.SetResult("");
+    this.extensions.SetResult("");
 
-    this.FormatterExtensions.SetResult("var cts = new CancellationTokenSource();");
-    this.FormatterExtensions.SetResult("await ws.ConnectAsync(new Uri(\"" + request.Url + "\"), cts.Token);");
+    this.extensions.SetResult("var cts = new CancellationTokenSource();");
+    this.extensions.SetResult("await ws.ConnectAsync(new Uri(\"" + request.Url + "\"), cts.Token);");
 
-    if (options.FunctionWrap) {
-      if (options.ClassWrap) {
-        this.FormatterExtensions._Indent = "    ";
-      }
-      else {
-        this.FormatterExtensions._Indent = "";
-      }
-      this.FormatterExtensions.SetResult("}");
-    }
-
-    return this.FormatterExtensions.GetResult(this.FormatterExtensions._Result);
+    return this.extensions.GetResult(this.extensions._Result);
   }
-  FormatterExtensions = new FormatterExtensions();
 }

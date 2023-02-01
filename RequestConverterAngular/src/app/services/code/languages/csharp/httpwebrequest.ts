@@ -1,16 +1,18 @@
 import { forEach } from "jszip";
 import { Multipart, MultipartType, RequestBody, RequestBodyTypes, RequestType, SRequest } from "../../../request/request";
-import { CodeFormatter } from "../../code.service";
+import { HttpFormatter } from "../../code.service";
 import { CSharpWebsocketFormatter } from "./csharpwebsocket";
 
-export class CSharpHttpWebRequestFormatter extends CodeFormatter {
-  constructor() { super('httpwebrequest', new CSharpWebsocketFormatter()); }
+export class CSharpHttpWebRequestFormatter extends HttpFormatter {
+  constructor() { super('httpwebrequest', 'csharp'); }
 
+  _Request: SRequest;
   RequestName: string = "HttpReq";
   ProxyString: string = "";
 
   request(request: SRequest): string {
 
+    // Post data code
     if (request.RequestType == RequestType.POST) {
       if (request.RequestBodyInfo.Type == RequestBodyTypes.MULTIPART) {
         this.extensions.SetResult("var boundary = \"------------------------\" + DateTime.Now.Ticks;");
@@ -28,6 +30,7 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
 
     this.extensions.SetResult("HttpWebRequest " + this.RequestName + " = WebRequest.CreateHttp(\"" + request.Url + "\");\n")
 
+    // Header setting code
     this.extensions.SetResult(this.RequestName + ".Method = \"" + RequestType[request.RequestType] + "\";")
     request.Headers.forEach((header) => {
 
@@ -67,6 +70,7 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
       this.extensions.SetResult(this.RequestName + ".Headers.Add(\"" + header.Item1 + "\", \"" + header.Item2 + "\");");
     });
 
+    // Proxy setting code
     if (this.ProxyString != "" && this.ProxyString.includes(":") && this.ProxyString.split(':').length > 0) {
       let proxyIP = this.ProxyString.split(':')[0];
       let proxyPort = this.ProxyString.split(':')[1];
@@ -88,6 +92,7 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
 
     this.extensions.SetResult("");
 
+    // Write post data to request code
     if (request.RequestType == RequestType.POST) {
 
       if (request.RequestBodyInfo.Type == RequestBodyTypes.MULTIPART) {
@@ -113,6 +118,7 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
       }
     }
 
+    // Response retrieval code
     this.extensions.SetResult("using(HttpWebResponse response = (HttpWebResponse)" + this.RequestName + ".GetResponse())");
     this.extensions.SetResult("using(Stream stream = response.GetResponseStream())");
     this.extensions.SetResult("using(StreamReader reader = new StreamReader(stream))");
@@ -121,26 +127,5 @@ export class CSharpHttpWebRequestFormatter extends CodeFormatter {
     this.extensions.SetResult("}");
 
     return this.extensions.GetResult(this.extensions._Result);
-  }
-  all(requests: SRequest[]): string {
-
-    let requeststrings: string[] = [];
-
-    this.extensions.SetResult("public class " + this.ClassName);
-    this.extensions.SetResult("{");
-    this.extensions._Indent = "    ";
-
-    requests.forEach(request => {
-      if (request.RequestType == RequestType.WEBSOCKET) {
-        requeststrings.push(this.wsformatter.GetWebsocketString(request, this.options))
-      }
-      else {
-        requeststrings.push(this.request(request) + "\n");
-      }
-    })
-
-    this.extensions.SetResult("}");
-
-    return this.extensions.GetResult(requeststrings);
   }
 }

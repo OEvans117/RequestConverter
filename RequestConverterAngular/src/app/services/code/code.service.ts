@@ -6,33 +6,100 @@ import { PythonRequestsFormatter } from './languages/python/requests';
 
 @Injectable({ providedIn: 'root' })
 export class CodeService {
-  constructor(@Inject(CodeFormatter) private formatters: CodeFormatter[]) { }
+  constructor(
+    @Inject(HttpFormatter) private httpFormatters: HttpFormatter[],
+    @Inject(WebsocketFormatter) private wsFormatters: WebsocketFormatter[],
+    @Inject(FormatterExtension) private fmExtensions: FormatterExtension[],
+    ) { }
 
   // Public modifyable settings
   public ShowAllRequests: boolean = true;
 
   // Private settings
-  public CurrentRequest: number = 0;
+  public RequestBundle: SRequest[];
+  public CurrentRequestIndex: number = 0;
   public CurrentLanguage: string = "requests";
-  public CurrentFormatter: CodeFormatter | undefined;
 
-  format(language:string, RequestBundle: SRequest[]): string {
+  public currentHttpFormatter: HttpFormatter | undefined;
+  private currentWebsocketFormatter: WebsocketFormatter | undefined;
+  private currentFormattingExtension: FormatterExtension | undefined;
+
+  format(language:string): string {
+
+    //this.fmExtensions.ResetFunctionNames();
 
     this.CurrentLanguage = language;
-    this.CurrentFormatter = this.formatters.find(c => c.name === language);
-    this.CurrentFormatter?.extensions.ResetFunctionNames();
 
-    // If show all requests, set class wrap to true. Otherwise, to false.
-    this.ShowAllRequests ? this.CurrentFormatter!.ClassWrap = true : this.CurrentFormatter!.ClassWrap = false;
+    this.currentHttpFormatter = this.httpFormatters.find(c => c.name === language);
+    this.currentWebsocketFormatter = this.wsFormatters.find(w => w.language === this.currentHttpFormatter!.language);
+    this.currentFormattingExtension = this.fmExtensions.find(e => e.Language === this.currentHttpFormatter!.language);
 
-    if (this.ShowAllRequests)
-      return this.CurrentFormatter!.all(RequestBundle);
+    // Set the extension class for websockets & http.
+    this.currentHttpFormatter?.SetExtension(this.currentFormattingExtension!);
+    this.currentWebsocketFormatter?.SetExtension(this.currentFormattingExtension!);
+
+    if (this.ShowAllRequests) {
+      this.currentFormattingExtension!.SetHasOptions(this.RequestBundle);
+
+      return this.all(language);
+    }
+    else {
+      let request = this.RequestBundle[this.CurrentRequestIndex];
+      this.currentFormattingExtension!.SetHasOptions([request]);
+
+      return this.single(request, language);
+    }
+  }
+
+  private all(language: string): string {
+
+    this.currentFormattingExtension!.writeclass()
+
+    this.RequestBundle.forEach(request => {
+
+      this.currentFormattingExtension!.writehttpmethod(request)
+      this.currentFormattingExtension!.SetResult(this.single(request, language));
+      this.currentFormattingExtension!.writeclosemethod()
+    })
+
+    this.currentFormattingExtension!.writecloseclass()
+    return this.currentFormattingExtension!.GetResult(this.currentFormattingExtension!._Result);
+  }
+  private single(request:SRequest, language: string): string {
+
+    if (request.RequestType == RequestType.WEBSOCKET)
+      return this.currentWebsocketFormatter!.websocket(request);
     else
-      return this.CurrentFormatter!.single(RequestBundle[this.CurrentRequest])
+      return this.currentHttpFormatter!.request(request);
   }
 }
 
-export class FormatterExtensions {
+@Injectable({ providedIn: 'root' })
+export abstract class FormatterExtension {
+  abstract Language: string;
+
+  // Syntax modification variables
+  public ClassWrap: boolean = true;
+  public ClassName: string = "CustomRequests";
+  public FunctionWrap: boolean = true;
+
+  // Functions for writing code syntax
+  abstract writeimports(): void;
+  abstract writeclass(): void;
+  abstract writehttpmethod(request: SRequest): void;
+  abstract writewsmethod(request: SRequest): void;
+  abstract writeclosemethod(): void;
+  abstract writecloseclass(): void;
+
+  // Has variables (check for websocket etc)
+  // Helps write methods
+  public HasWebsocket: boolean = false;
+  public HasHttpRequest: boolean = false;
+  SetHasOptions(requests: SRequest[]) {
+    this.HasWebsocket = (requests.some(r => r.RequestType == RequestType.WEBSOCKET))
+    this.HasHttpRequest = (requests.some(r => r.RequestType != RequestType.WEBSOCKET))
+  }
+
   // Functions for code creation
   public _Result: string[] = [];
   public _Indent: string = "";
@@ -78,38 +145,26 @@ export class FormatterExtensions {
   public ResetFunctionNames = () => this._FunctionNames = [];
 }
 
-export class FormatterOptions {
-  public constructor(ClassWrap: boolean, ClassName: string, FunctionWrap: boolean) {
-    this.ClassWrap = ClassWrap,
-      this.ClassName = ClassName,
-      this.FunctionWrap = FunctionWrap
+export abstract class HttpFormatter {
+  constructor(public name: string,
+    public language: string) { }
+
+  public extensions: FormatterExtension;
+  SetExtension(extensions: FormatterExtension) {
+    this.extensions = extensions;
   }
-  public ClassWrap: boolean = true;
-  public ClassName: string = "CustomRequests";
-  public FunctionWrap: boolean = true;
-}
 
-export abstract class CodeFormatter {
-  constructor(public name: string, public wsformatter: WebsocketFormatter) { }
-  
-  public ClassWrap: boolean = true;
-  public ClassName: string = "CustomRequests";
-  public FunctionWrap: boolean = true;
-
-  public options = new FormatterOptions(
-    true, "CustomClass", true);
-  public extensions = new FormatterExtensions();
-
-  abstract all(requests: SRequest[]): string;
   abstract request(request: SRequest): string;
-  single(request: SRequest): string {
-    return request.RequestType == RequestType.WEBSOCKET
-      ? this.wsformatter.GetWebsocketString(request, this.options)
-      : this.request(request);
-  }
 }
 
-export interface WebsocketFormatter {
-  GetWebsocketString(request: SRequest, options: FormatterOptions): string;
-  FormatterExtensions: FormatterExtensions;
+export abstract class WebsocketFormatter {
+
+  constructor(public language: string) { }
+
+  public extensions: FormatterExtension;
+  SetExtension(extensions: FormatterExtension) {
+    this.extensions = extensions;
+  }
+
+  abstract websocket(request: SRequest): string;
 }

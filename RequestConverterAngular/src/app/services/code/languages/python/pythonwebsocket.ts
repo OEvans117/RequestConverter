@@ -1,31 +1,20 @@
 import { SRequest } from "../../../request/request";
-import { WebsocketFormatter, FormatterExtensions, FormatterOptions } from "../../code.service";
+import { WebsocketFormatter, FormatterExtension } from "../../code.service";
 
-export class PythonWebsocketFormatter implements WebsocketFormatter {
-  GetWebsocketString(request: SRequest, options: FormatterOptions): string {
-    let functionName = this.FormatterExtensions.GetFunctionName(request.Url)
+export class PythonWebsocketFormatter extends WebsocketFormatter {
+  constructor() { super('python'); }
 
-    if (options.FunctionWrap) {
-      if (options.ClassWrap) {
-        this.FormatterExtensions._Indent = "    ";
-        this.FormatterExtensions.SetResult("def ws_" + functionName + "(self):")
-        this.FormatterExtensions._Indent = "        ";
-      }
-      else {
-        this.FormatterExtensions.SetResult("def ws_" + functionName + "():")
-        this.FormatterExtensions._Indent = "    ";
-      }
-    }
-
+  websocket(request: SRequest): string {
+    let functionName = this.extensions.GetFunctionName(request.Url)
     let funcNameToLower = functionName.toLowerCase()
 
     // Websocket contains headers, so create dict.
     if (request.Headers.length > 1) {
-      this.FormatterExtensions.SetResult(funcNameToLower + "_headers = {")
+      this.extensions.SetResult(funcNameToLower + "_headers = {")
       request.Headers.forEach(header => {
-        this.FormatterExtensions.SetResult("    \"" + header.Item1 + "\": \"" + header.Item2 + "\",")
+        this.extensions.SetResult("    \"" + header.Item1 + "\": \"" + header.Item2 + "\",")
       })
-      this.FormatterExtensions.SetResult("}\n")
+      this.extensions.SetResult("}\n")
     }
 
     // Initialize, subscribe to events & start
@@ -49,37 +38,32 @@ export class PythonWebsocketFormatter implements WebsocketFormatter {
       websocketAppInitialization += "\", ";
     }
 
-    this.FormatterExtensions.SetResult(websocketAppInitialization);
+    this.extensions.SetResult(websocketAppInitialization);
 
-    if (options.ClassWrap) {
-      this.FormatterExtensions.SetResult("    on_open=self." + onOpenFuncName + ",")
-      this.FormatterExtensions.SetResult("    on_message=self." + onMessageFuncName + ",")
-      this.FormatterExtensions.SetResult("    on_error=self." + onErrorFuncName + ",")
-      this.FormatterExtensions.SetResult("    on_close=self." + onCloseFuncName + ",)")
+    if (this.extensions.ClassWrap) {
+      this.extensions.SetResult("    on_open=self." + onOpenFuncName + ",")
+      this.extensions.SetResult("    on_message=self." + onMessageFuncName + ",")
+      this.extensions.SetResult("    on_error=self." + onErrorFuncName + ",")
+      this.extensions.SetResult("    on_close=self." + onCloseFuncName + ",)")
     }
     else {
-      this.FormatterExtensions.SetResult("    on_open=" + onOpenFuncName + ",")
-      this.FormatterExtensions.SetResult("    on_message=" + onMessageFuncName + ",")
-      this.FormatterExtensions.SetResult("    on_error=" + onErrorFuncName + ",")
-      this.FormatterExtensions.SetResult("    on_close=" + onCloseFuncName + ",)")
+      this.extensions.SetResult("    on_open=" + onOpenFuncName + ",")
+      this.extensions.SetResult("    on_message=" + onMessageFuncName + ",")
+      this.extensions.SetResult("    on_error=" + onErrorFuncName + ",")
+      this.extensions.SetResult("    on_close=" + onCloseFuncName + ",)")
     }
-    this.FormatterExtensions.SetResult("ws.run_forever()\n")
-
-    // If class wrap, make the indent big, otherwise small.
-    options.ClassWrap ? this.FormatterExtensions._Indent = "    " : this.FormatterExtensions._Indent = ""
+    this.extensions.SetResult("ws.run_forever()\n")
 
     // Define events
-    this.FormatterExtensions.SetResult("def " + onOpenFuncName + "(ws, message):")
-    this.FormatterExtensions.SetResult("    print(message)")
-    this.FormatterExtensions.SetResult("def " + onMessageFuncName + "(ws, error):")
-    this.FormatterExtensions.SetResult("    print(error)")
-    this.FormatterExtensions.SetResult("def " + onErrorFuncName + "(ws, close_status_code, close_msg):")
-    this.FormatterExtensions.SetResult("    print(\"Websocket closed\")")
-    this.FormatterExtensions.SetResult("def " + onCloseFuncName + "(ws, message):")
-    this.FormatterExtensions.SetResult("    print(\"Websocket opened\")")
+    this.extensions.SetResult("def " + onOpenFuncName + "(ws, message):")
+    this.extensions.SetResult("    print(message)")
+    this.extensions.SetResult("def " + onMessageFuncName + "(ws, error):")
+    this.extensions.SetResult("    print(error)")
+    this.extensions.SetResult("def " + onErrorFuncName + "(ws, close_status_code, close_msg):")
+    this.extensions.SetResult("    print(\"Websocket closed\")")
+    this.extensions.SetResult("def " + onCloseFuncName + "(ws, message):")
+    this.extensions.SetResult("    print(\"Websocket opened\")")
 
-    return this.FormatterExtensions.GetResult(this.FormatterExtensions._Result);
+    return this.extensions.GetResult(this.extensions._Result);
   }
-
-  FormatterExtensions = new FormatterExtensions();
 }

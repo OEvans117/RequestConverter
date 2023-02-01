@@ -36,10 +36,11 @@ export class RcapiService {
 
     this.http.post(this.ApiBaseUrl + "/Convert", FileFormData, { headers })
       .pipe(catchError(this.HandleError)).subscribe(resp => {
-        this.rcSettings.RequestArray = resp as SRequest[];
+        this.rcSettings.RequestArray = resp as SRequest[]; // remove this and just use codeservice
+        this.codeService.RequestBundle = resp as SRequest[];
 
-        this.codeService.CurrentRequest = 0;
-        this.rcSettings.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.rcSettings.RequestArray)
+        this.codeService.CurrentRequestIndex = 0;
+        this.rcSettings.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage)
     });
   }
 
@@ -59,7 +60,7 @@ export class RcapiService {
       .pipe(catchError(this.HandleLoadStateError)).subscribe(resp => {
         this.HasLoadedState = true;
         this.rcSettings.RequestArray = resp as SRequest[];
-        this.rcSettings.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage, this.rcSettings.RequestArray)
+        this.rcSettings.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage)
     });
   }
 

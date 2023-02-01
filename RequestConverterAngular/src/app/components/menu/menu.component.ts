@@ -12,6 +12,6 @@ export class MenuComponent {
     public rcApi: RcapiService,
     private rcSettings: SettingsService) { }
     goHome() {
-      this.rcSettings.RequestArray;
+      //this.rcSettings.RequestArray;
     }
 }
