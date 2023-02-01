@@ -15,10 +15,7 @@
   <a href="https://img.shields.io/badge/Microsoft_SQL_Server-CC2927">
     <img src="https://img.shields.io/badge/SQL_Server-CC2927?logo=microsoft-sql-server&logoColor=white" alt="TS">
   </a>
-  <a href="https://www.nuget.org/profiles/jjconsulting">
-    <img src="https://img.shields.io/nuget/v/JJMasterData.Web.svg?color=004880" alt="NuGet">
-  </a>
-  <a href="https://discord.gg/s9F2ntBXnn">
+  <a href="[https://discord.gg/s9F2ntBXnn](https://discord.gg/7xFzrjTpYk)">
     <img src="https://img.shields.io/discord/984473468114456667?color=5b62ef&label=discord" alt="Discord">
   </a>
 </p>
