@@ -22,11 +22,11 @@
 
 RequestConverter - Convert HTTP Requests & Websockets from Fiddler (.SAZ), Chrome (.HAR) into code from multiple programming languages. Ability to modify global/language related settings which will impact the output.
 
-## Early production version: 
+## Demo: 
 - https://requestconverter.com/
 - https://requestconverter.com/r/uezu51
 
-## Features & roadmap
+## Features
 <details>
   <summary>Click to open</summary>
   
