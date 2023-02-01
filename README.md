@@ -20,7 +20,7 @@
   </a>
 </p>
 
-**RequestConverter** - Convert HTTP Requests & Websockets from Fiddler (.SAZ), Chrome (.HAR) into code from multiple programming languages. Ability to modify global/language related settings which will impact the output.
+RequestConverter - Convert HTTP Requests & Websockets from Fiddler (.SAZ), Chrome (.HAR) into code from multiple programming languages. Ability to modify global/language related settings which will impact the output.
 
 ## Early production version: 
 - https://requestconverter.com/
