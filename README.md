@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-<img width=35% src="https://i.imgur.com/FGVa79j.png"/>
+<img width=30% src="https://i.imgur.com/FGVa79j.png"/>
     <br>
     RequestConverter
   <br>
@@ -22,11 +22,11 @@
 
 RequestConverter - Convert HTTP Requests & Websockets from Fiddler (.SAZ), Chrome (.HAR) into code from multiple programming languages. Ability to modify global/language related settings which will impact the output.
 
-## Demo: 
+## 🌐 Demo: 
 - https://requestconverter.com/
 - https://requestconverter.com/r/uezu51
 
-## Features
+## 📙 Features
 <details>
   <summary>Click to open</summary>
   
@@ -68,7 +68,7 @@ RequestConverter - Convert HTTP Requests & Websockets from Fiddler (.SAZ), Chrom
   - Ability to save request bundle to account (login/register features)
 </details>
 
-## V2 (CSS Changes + React/Angular/Vue/Blazor Support):
+## Screenshots:
 
 Class diagram: https://i.imgur.com/5Hc6VNQ.png
 
