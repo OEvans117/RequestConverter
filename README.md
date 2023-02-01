@@ -2,7 +2,7 @@
   <br>
 <img width=25% src="doc/JJMasterData.Documentation/media/JJMasterDataLogo.png"/>
     <br>
-    JJMasterData
+    RequestConverter
   <br>
 </h1>
 <p align="center">
