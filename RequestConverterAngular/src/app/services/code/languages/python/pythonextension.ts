@@ -20,7 +20,7 @@ export class PythonExtension extends FormatterExtension {
     this._Indent = "    ";
   }
   writehttpmethod(request: SRequest) {
-    this.SetResult("def req_" + this.GetFunctionName(request.Url) + "():")
+    this.SetResult("def req_" + request.RequestMethodName + "():")
     this._Indent = "        ";
   }
   writewsmethod(request: SRequest) {

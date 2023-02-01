@@ -5,8 +5,7 @@ export class PythonWebsocketFormatter extends WebsocketFormatter {
   constructor() { super('python'); }
 
   websocket(request: SRequest): string {
-    let functionName = this.extensions.GetFunctionName(request.Url)
-    let funcNameToLower = functionName.toLowerCase()
+    let funcNameToLower = request.RequestMethodName.toLowerCase()
 
     // Websocket contains headers, so create dict.
     if (request.Headers.length > 1) {

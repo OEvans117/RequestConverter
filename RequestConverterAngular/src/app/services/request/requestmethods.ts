@@ -18,7 +18,7 @@ export class RequestModification {
       this.SetContentType(req);
 
       // Set method name
-      // this.SetMethodName(req);
+      req.RequestMethodName = this.GetFunctionName(req.Url);
 
       // Replace quotes with \
       if (req.RequestBody != null) {
@@ -50,6 +50,40 @@ export class RequestModification {
 
     req.RequestBodyInfo = new Textplain();
   }
+
+  // Get names for functions
+  private _FunctionNames: string[] = [];
+  public GetFunctionName(url: string): string {
+
+    url = url.replace(/^(https?|ftp):\/\/*/, ''); // remove the protocol/scheme
+    url = url.replace(/\..{2,6}\/\//, ''); // remove the domain extension
+    url = url.replace(/\.com/, '');
+    url = url.replace(/^www\./, ''); // remove the "www"
+    url = url.replace(/[^a-zA-Z0-9]/g, '.'); // replace non-alphanumeric characters with a dot
+
+    // convert each element of the array to start with an uppercase character
+    let urlArr = url.split('.').map(val => val.charAt(0).toUpperCase() + val.slice(1));
+
+    let urlString = "";
+    for (let i = 0; i < urlArr.length; i++) {
+      urlString += urlArr[i]; // add array element
+
+      // check if the current url is already stored
+      if (!this._FunctionNames.includes(urlString)) {
+        this._FunctionNames.push(urlString);
+        return urlString;
+      }
+    }
+
+    // have exhausted all paths & url parameters
+    // so add index at the end
+
+    // if array element already has number, add +1 to it
+    urlString = urlString.replace(/\d$/, (n) => n + 1)
+
+    return urlString;
+  }
+  public ResetFunctionNames = () => this._FunctionNames = [];
 
   // this function needs reworking.
   // insomnia is sending double line content-disposition & content-type

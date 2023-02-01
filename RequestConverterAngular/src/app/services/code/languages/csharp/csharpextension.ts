@@ -12,12 +12,12 @@ export class CSharpExtension extends FormatterExtension {
     this._Indent = "    ";
   }
   writehttpmethod(request: SRequest) {
-    this.SetResult("public string req_" + this.GetFunctionName(request.Url) + "()")
+    this.SetResult("public string req_" + request.RequestMethodName + "()")
     this.SetResult("{");
     this._Indent = "        ";
   }
   writewsmethod(request: SRequest) {
-    this.SetResult("public async Task ws_" + this.GetFunctionName(request.Url) + "()")
+    this.SetResult("public async Task ws_" + request.RequestMethodName + "()")
     this.SetResult("{");
     this._Indent = "        ";
   }
