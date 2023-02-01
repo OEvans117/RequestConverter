@@ -1,5 +1,27 @@
-![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white)
-![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=c-sharp&logoColor=white)
+<h1 align="center">
+  <br>
+<img width=25% src="doc/JJMasterData.Documentation/media/JJMasterDataLogo.png"/>
+    <br>
+    JJMasterData
+  <br>
+</h1>
+<p align="center">
+  <a href="https://img.shields.io/badge/.NET-5C2D91">
+    <img src="https://img.shields.io/badge/.NET-512BD4?logo=dotnet" alt=".NET 6">
+  </a>
+  <a href="https://img.shields.io/badge/TypeScript-007ACC">
+    <img src="https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white" alt="TS">
+  </a>
+  <a href="https://img.shields.io/badge/Microsoft_SQL_Server-CC2927">
+    <img src="https://img.shields.io/badge/SQL_Server-CC2927?logo=microsoft-sql-server&logoColor=white" alt="TS">
+  </a>
+  <a href="https://www.nuget.org/profiles/jjconsulting">
+    <img src="https://img.shields.io/nuget/v/JJMasterData.Web.svg?color=004880" alt="NuGet">
+  </a>
+  <a href="https://discord.gg/s9F2ntBXnn">
+    <img src="https://img.shields.io/discord/984473468114456667?color=5b62ef&label=discord" alt="Discord">
+  </a>
+</p>
 
 **RequestConverter** - Convert HTTP Requests & Websockets from Fiddler (.SAZ), Chrome (.HAR) into code from multiple programming languages. Ability to modify global/language related settings which will impact the output.
 
