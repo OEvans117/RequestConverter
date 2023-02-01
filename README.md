@@ -1,4 +1,4 @@
-**RequestConverter** - Convert HTTP Requests & Websockets from Fiddler, Chrome etc into clean, readable code. Current support for C# & Python
+**RequestConverter** - Convert HTTP Requests & Websockets from Fiddler (.SAZ), Chrome (.HAR) etc into clean, readable code.
 
 **Early production version**: https://requestconverter.com/ | https://requestconverter.com/r/uezu51
 
