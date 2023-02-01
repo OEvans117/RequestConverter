@@ -1,10 +1,10 @@
 import { forEach } from "jszip";
 import { Multipart, MultipartType, RequestBody, RequestBodyTypes, RequestType, SRequest } from "../../../request/request";
-import { HttpFormatter } from "../../code.service";
+import { FormatterExtension, HttpFormatter } from "../../code.service";
 import { CSharpWebsocketFormatter } from "./csharpwebsocket";
 
 export class CSharpHttpWebRequestFormatter extends HttpFormatter {
-  constructor() { super('httpwebrequest', 'csharp'); }
+  constructor() { super('httpwebrequest', 'csharphttpwebrequest'); }
 
   _Request: SRequest;
   RequestName: string = "HttpReq";
@@ -127,5 +127,36 @@ export class CSharpHttpWebRequestFormatter extends HttpFormatter {
     this.extensions.SetResult("}");
 
     return this.extensions.GetResult(this.extensions._Result);
+  }
+}
+
+export class HttpWebRequestExtension extends FormatterExtension {
+
+  Language = "csharphttpwebrequest";
+
+  writeimports() { return; }
+  writeclass() {
+    this.SetResult("public class " + this.ClassName);
+    this.SetResult("{");
+    this._Indent = "    ";
+  }
+
+  writehttpmethod(request: SRequest) {
+    this.SetResult("public string req_" + request.RequestMethodName + "()")
+    this.SetResult("{");
+    this._Indent = "        ";
+  }
+  writewsmethod(request: SRequest) {
+    this.SetResult("public async Task ws_" + request.RequestMethodName + "()")
+    this.SetResult("{");
+    this._Indent = "        ";
+  }
+  writeclosemethod() {
+    this._Indent = "    ";
+    this.SetResult("}\n");
+  }
+  writecloseclass() {
+    this._Indent = "";
+    this.SetResult("}");
   }
 }

@@ -4,25 +4,29 @@ import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import { Location } from '@angular/common';
 import { HttpFormatter, CodeService, WebsocketFormatter, FormatterExtension } from './services/code/code.service';
 import { PythonRequestsFormatter } from './services/code/languages/python/requests';
-import { CSharpHttpWebRequestFormatter } from './services/code/languages/csharp/httpwebrequest';
+import { CSharpHttpWebRequestFormatter, HttpWebRequestExtension } from './services/code/languages/csharp/httpwebrequest';
 import { SettingsService } from './services/settings.service';
 import { RcapiService } from './services/api/rcapi.service';
 import { CSharpWebsocketFormatter } from './services/code/languages/csharp/csharpwebsocket';
 import { PythonWebsocketFormatter } from './services/code/languages/python/pythonwebsocket';
-import { CSharpExtension } from './services/code/languages/csharp/csharpextension';
 import { PythonExtension } from './services/code/languages/python/pythonextension';
+import { CSharpHttpClientFormatter, CSharpHttpClientExtension } from './services/code/languages/csharp/csharphttpclient';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   providers: [RcapiService, CodeService,
-    { provide: HttpFormatter, useClass: PythonRequestsFormatter, multi: true },
-    { provide: HttpFormatter, useClass: CSharpHttpWebRequestFormatter, multi: true },
     { provide: WebsocketFormatter, useClass: PythonWebsocketFormatter, multi: true },
     { provide: WebsocketFormatter, useClass: CSharpWebsocketFormatter, multi: true },
-    { provide: FormatterExtension, useClass: CSharpExtension, multi: true },
+
+    { provide: HttpFormatter, useClass: PythonRequestsFormatter, multi: true },
+    { provide: HttpFormatter, useClass: CSharpHttpWebRequestFormatter, multi: true },
+    { provide: HttpFormatter, useClass: CSharpHttpClientFormatter, multi: true },
+
+    { provide: FormatterExtension, useClass: HttpWebRequestExtension, multi: true },
     { provide: FormatterExtension, useClass: PythonExtension, multi: true },
+    { provide: FormatterExtension, useClass: CSharpHttpClientExtension, multi: true },
   ],
 })
 export class AppComponent {

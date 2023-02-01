@@ -40,12 +40,14 @@ export class CodeService {
 
     if (this.ShowAllRequests) {
       this.currentFormattingExtension!.SetHasOptions(this.RequestBundle);
+      this.currentFormattingExtension!.SetDuplicateHeaders(this.RequestBundle);
 
       return this.all(language);
     }
     else {
       let request = this.RequestBundle[this.CurrentRequestIndex];
       this.currentFormattingExtension!.SetHasOptions([request]);
+      this.currentFormattingExtension!.SetDuplicateHeaders(this.RequestBundle);
 
       return this.single(request, language);
     }
@@ -100,7 +102,7 @@ export abstract class FormatterExtension {
     this.HasHttpRequest = (requests.some(r => r.RequestType != RequestType.WEBSOCKET))
   }
 
-  // Functions for code creation!
+  // Functions for code creation
   public _Result: string[] = [];
   public _Indent: string = "";
   public SetResult = (value: string) => this._Result.push(this._Indent + value);
@@ -108,6 +110,30 @@ export abstract class FormatterExtension {
     this._Result = [];
     this._Indent = "";
     return value.join("\n")
+  }
+
+  // Set default headers in libraries
+  public DuplicateHeaders: Array<any>;
+  private FilterByCount(array: Array<any>, count: number) {
+    return array.filter((a, index) =>
+      array.indexOf(a) === index &&
+      array.reduce((acc, b) => +(a === b) + acc, 0) === count
+      );
+  }
+  public SetDuplicateHeaders(requests:SRequest[]) {
+
+    let HeaderList = new Array<{ Item1: string, Item2: string }>();
+
+    requests.forEach(request => { request.Headers.forEach(header => { HeaderList.push(header); }) })
+
+    let values = HeaderList.map(item => JSON.stringify(item));
+    let repeatedelems = this.FilterByCount(values, requests.length);
+
+    HeaderList = []
+
+    repeatedelems.forEach(dup => { HeaderList.push(JSON.parse(dup)); })
+
+    this.DuplicateHeaders = HeaderList;
   }
 }
 
