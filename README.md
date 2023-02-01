@@ -24,6 +24,8 @@
 
 **Early production version**: https://requestconverter.com/ | https://requestconverter.com/r/uezu51
 
+<br>
+
 <details>
   <summary>Features & roadmap</summary>
   
@@ -64,6 +66,8 @@
   - Add settings to change the programming output & theme etc.
   - Ability to save request bundle to account (login/register features)
 </details>
+
+<br>
 
 **V2 (CSS Changes + React/Angular/Vue/Blazor Support):**
 
