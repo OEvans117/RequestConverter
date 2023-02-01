@@ -15,7 +15,7 @@
   <a href="https://img.shields.io/badge/Microsoft_SQL_Server-CC2927">
     <img src="https://img.shields.io/badge/SQL_Server-CC2927?logo=microsoft-sql-server&logoColor=white" alt="TS">
   </a>
-  <a href="https://discord.gg/s9F2ntBXnn">
+  <a href="https://discord.gg/7xFzrjTpYk">
     <img src="https://img.shields.io/discord/984473468114456667?color=5b62ef&label=discord" alt="Discord">
   </a>
 </p>
