@@ -48,12 +48,6 @@
 Class diagram: https://i.imgur.com/5Hc6VNQ.png
 Figma design: https://www.figma.com/file/j06HFXXYLrRfZTDrXpxMpz/RequestConverterWeb?node-id=0%3A1&t=1I7EnYRZHwBPJCuM-1
 
-![Class Diagram](https://i.imgur.com/5Hc6VNQ.png)
-
 ![V2](https://i.imgur.com/ef7u3T7.png)
 ![V2](https://i.imgur.com/rBxRGaT.png)
-
-**V1:**
-
-![V1](https://i.imgur.com/qhNUIOb.png)
-![V1](https://i.imgur.com/GOC3fS5.png)
+![Class Diagram](https://i.imgur.com/5Hc6VNQ.png)
