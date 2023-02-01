@@ -17,7 +17,7 @@ export class RequestModification {
       // Set content type (multipart/xwww)
       this.SetContentType(req);
 
-      // Set method name
+      // Set method name!
       req.RequestMethodName = this.GetFunctionName(req.Url);
 
       // Replace quotes with \
