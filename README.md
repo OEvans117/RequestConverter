@@ -26,8 +26,9 @@
 - https://requestconverter.com/
 - https://requestconverter.com/r/uezu51
 
+## Features & roadmap
 <details>
-  <summary>Features & roadmap</summary>
+  <summary>Click to open</summary>
   
   ### Added
   - Analyse Http Requests & Websockets
