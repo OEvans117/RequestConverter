@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-<img width=25% src="doc/JJMasterData.Documentation/media/JJMasterDataLogo.png"/>
+<img width=25% src="https://i.imgur.com/FGVa79j.png"/>
     <br>
     RequestConverter
   <br>
