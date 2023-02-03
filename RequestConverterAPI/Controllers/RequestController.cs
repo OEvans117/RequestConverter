@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +16,7 @@ using System.Dynamic;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Net.WebSockets;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -46,7 +48,7 @@ namespace RequestConverterAPI.Controllers
             var firstFile = Request.Form.Files.FirstOrDefault();
             if (firstFile == null)
                 return BadRequest();
-            
+
             var RequestList = _rfc.ConvertRequestsToList(firstFile);
 
             var RequestListJson = JsonSerializer.Serialize(RequestList, _jsonSerializerOptions);

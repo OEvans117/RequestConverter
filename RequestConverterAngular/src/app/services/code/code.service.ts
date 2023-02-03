@@ -40,16 +40,18 @@ export class CodeService {
     this.currentWebsocketFormatter?.SetExtension(this.currentFormattingExtension!);
 
     if (this.ShowAllRequests) {
-      this.currentFormattingExtension!.SetHasOptions(this.RequestBundle);
-      this.currentFormattingExtension!.SetDuplicateHeaders(this.RequestBundle);
+      this.currentFormattingExtension!.SetHasValues(this.RequestBundle);
+      this.currentFormattingExtension!.SetDefaultHeaders(this.RequestBundle);
+      this.currentFormattingExtension!.SetDefaultCookies(this.RequestBundle);
       this.currentFormattingExtension!._ClassWrap = true;
 
       return this.all(language);
     }
     else {
       let request = this.RequestBundle[this.CurrentRequestIndex];
-      this.currentFormattingExtension!.SetHasOptions([request]);
-      this.currentFormattingExtension!.SetDuplicateHeaders(this.RequestBundle);
+      this.currentFormattingExtension!.SetHasValues([request]);
+      this.currentFormattingExtension!.SetDefaultHeaders(this.RequestBundle);
+      this.currentFormattingExtension!.SetDefaultCookies(this.RequestBundle);
       this.currentFormattingExtension!._ClassWrap = false;
 
       return this.single(request, language);
@@ -84,24 +86,11 @@ export abstract class FormatterExtension {
   abstract _Language: string;
 
   // Syntax modification variables
-  public _ClassWrap: boolean = true;
   public ClassName: string = "CustomRequests";
+  public _ClassWrap: boolean = true;
   public _FunctionWrap: boolean = true;
 
-  // Functions for writing code syntax
-  abstract writeaboverequests(): void;
-  abstract writebelowrequests(): void;
-
-  // Has variables (check for websocket etc)
-  // Helps write methods
-  public _HasWebsocket: boolean = false;
-  public _HasHttpRequest: boolean = false;
-  SetHasOptions(requests: SRequest[]) {
-    this._HasWebsocket = (requests.some(r => r.RequestType == RequestType.WEBSOCKET))
-    this._HasHttpRequest = (requests.some(r => r.RequestType != RequestType.WEBSOCKET))
-  }
-
-  // Functions for code creation
+  // Functions for writing code
   public _Result: string[] = [];
   public _Indent: string = "";
   public SetResult = (value: string) => this._Result.push(this._Indent + value);
@@ -111,28 +100,67 @@ export abstract class FormatterExtension {
     return value.join("\n")
   }
 
-  // Set default headers in libraries
-  public DuplicateHeaders: Array<any>;
+  // Functions for writing code syntax
+  abstract writeaboverequests(): void;
+  abstract writebelowrequests(): void;
+
+  // Set _HasWebsocket && _HasHttpRequest
+  public _HasWebsocket: boolean = false;
+  public _HasHttpRequest: boolean = false;
+  SetHasValues(requests: SRequest[]) {
+    this._HasWebsocket = (requests.some(r => r.RequestType == RequestType.WEBSOCKET))
+    this._HasHttpRequest = (requests.some(r => r.RequestType != RequestType.WEBSOCKET))
+  }
+
+  // Methods for DefaultHeaders & DefaultCookies
   private FilterByCount(array: Array<any>, count: number) {
     return array.filter((a, index) =>
       array.indexOf(a) === index &&
       array.reduce((acc, b) => +(a === b) + acc, 0) === count
-      );
+    );
   }
-  public SetDuplicateHeaders(requests:SRequest[]) {
+  public SubtractArrayElements(array: Array<any>, array2: Array<any>) {
+    return array.filter(one => {
+      return !array2.find(two => {
+        return JSON.stringify(one) === JSON.stringify(two);
+      });
+    });
+  }
 
-    let HeaderList = new Array<{ Item1: string, Item2: string }>();
+  // Set DefaultHeaders
+  public DefaultHeaders: Array<any> = [];
+  public SetDefaultHeaders(requests:SRequest[]) {
+    let headers: { Item1: string; Item2: string; }[] = [];
+    requests.forEach(request => {
+      request.Headers.forEach(header => {
+        headers.push(header);
+      });
+    });
 
-    requests.forEach(request => { request.Headers.forEach(header => { HeaderList.push(header); }) })
+    let repeatedHeaders = this.FilterByCount(headers.map(header => JSON.stringify(header)), requests.length);
+    this.DefaultHeaders = repeatedHeaders.map(header => JSON.parse(header));
+  }
 
-    let values = HeaderList.map(item => JSON.stringify(item));
-    let repeatedelems = this.FilterByCount(values, requests.length);
+  // Set DefaultCookies
+  public DefaultCookies: Array<any> = [];
+  public SetDefaultCookies(requests: SRequest[]) {
+    let cookies: { Item1: string; Item2: string; }[] = [];
+    requests.forEach(request => {
+      request.Cookies.forEach(cookie => {
+        cookies.push(cookie);
+      });
+    });
 
-    HeaderList = []
+    let repeatedCookies = this.FilterByCount(cookies.map(header => JSON.stringify(header)), requests.length);
+    this.DefaultCookies = repeatedCookies.map(header => JSON.parse(header));
+  }
 
-    repeatedelems.forEach(dup => { HeaderList.push(JSON.parse(dup)); })
-
-    this.DuplicateHeaders = HeaderList;
+  // Set DefaultUrl
+  public _DefaultUrl: string = "";
+  public SetDefaultUrl(requests: SRequest[]) {
+    if (this.FilterByCount(requests.map(r => r.Url), requests.length).length > 0) {
+      this._DefaultUrl = requests[0].Url;
+    }
   }
 }
 
