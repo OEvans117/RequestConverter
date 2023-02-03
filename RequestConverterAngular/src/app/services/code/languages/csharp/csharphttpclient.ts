@@ -35,7 +35,19 @@ export class CSharpHttpClientExtension extends FormatterExtension {
     this.SetResult("public class " + this.ClassName);
     this.SetResult("{");
     this._Indent = "    ";
-    this.SetResult("static readonly HttpClient client = new HttpClient();")
+    this.SetResult("static readonly HttpClient client = new HttpClient();\n");
+
+
+    if (this.DuplicateHeaders.length > 0) {
+      this.SetResult("public " + this.ClassName + "()");
+      this.SetResult("{");
+      this._Indent = "        ";
+      this.DuplicateHeaders.forEach(header => {
+        this.SetResult("client.SetDefaultHeader(\"" + header.Item1 + "\", \"" + header.Item2 + "\");");
+      })
+      this._Indent = "    ";
+      this.SetResult("}\n");
+    }
   }
   writebelowrequests() {
     this._Indent = "";
