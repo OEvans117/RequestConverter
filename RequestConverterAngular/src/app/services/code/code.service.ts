@@ -43,6 +43,7 @@ export class CodeService {
       this.currentFormattingExtension!.SetHasValues(this.RequestBundle);
       this.currentFormattingExtension!.SetDefaultHeaders(this.RequestBundle);
       this.currentFormattingExtension!.SetDefaultCookies(this.RequestBundle);
+      this.currentFormattingExtension!.SetDefaultUrl(this.RequestBundle);
       this.currentFormattingExtension!._ClassWrap = true;
 
       return this.all(language);
@@ -52,6 +53,7 @@ export class CodeService {
       this.currentFormattingExtension!.SetHasValues([request]);
       this.currentFormattingExtension!.SetDefaultHeaders(this.RequestBundle);
       this.currentFormattingExtension!.SetDefaultCookies(this.RequestBundle);
+      this.currentFormattingExtension!.SetDefaultUrl(this.RequestBundle);
       this.currentFormattingExtension!._ClassWrap = false;
 
       return this.single(request, language);
@@ -60,13 +62,13 @@ export class CodeService {
 
   private all(language: string): string {
 
-    this.currentFormattingExtension!.writeaboverequests()
+    this.currentFormattingExtension!.WriteAboveRequests()
 
     this.RequestBundle.forEach(request => {
       this.currentFormattingExtension!.SetResult(this.single(request, language));
     })
 
-    this.currentFormattingExtension!.writebelowrequests()
+    this.currentFormattingExtension!.WriteBelowRequests()
 
     return this.currentFormattingExtension!.GetResult(this.currentFormattingExtension!._Result);
   }
@@ -101,8 +103,8 @@ export abstract class FormatterExtension {
   }
 
   // Functions for writing code syntax
-  abstract writeaboverequests(): void;
-  abstract writebelowrequests(): void;
+  abstract WriteAboveRequests(): void;
+  abstract WriteBelowRequests(): void;
 
   // Set _HasWebsocket && _HasHttpRequest
   public _HasWebsocket: boolean = false;
@@ -128,7 +130,7 @@ export abstract class FormatterExtension {
   }
 
   // Set DefaultHeaders
-  public DefaultHeaders: Array<any> = [];
+  public _DefaultHeaders: Array<any> = [];
   public SetDefaultHeaders(requests:SRequest[]) {
     let headers: { Item1: string; Item2: string; }[] = [];
     requests.forEach(request => {
@@ -138,11 +140,11 @@ export abstract class FormatterExtension {
     });
 
     let repeatedHeaders = this.FilterByCount(headers.map(header => JSON.stringify(header)), requests.length);
-    this.DefaultHeaders = repeatedHeaders.map(header => JSON.parse(header));
+    this._DefaultHeaders = repeatedHeaders.map(header => JSON.parse(header));
   }
 
   // Set DefaultCookies
-  public DefaultCookies: Array<any> = [];
+  public _DefaultCookies: Array<any> = [];
   public SetDefaultCookies(requests: SRequest[]) {
     let cookies: { Item1: string; Item2: string; }[] = [];
     requests.forEach(request => {
@@ -152,12 +154,13 @@ export abstract class FormatterExtension {
     });
 
     let repeatedCookies = this.FilterByCount(cookies.map(header => JSON.stringify(header)), requests.length);
-    this.DefaultCookies = repeatedCookies.map(header => JSON.parse(header));
+    this._DefaultCookies = repeatedCookies.map(header => JSON.parse(header));
   }
 
   // Set DefaultUrl
   public _DefaultUrl: string = "";
   public SetDefaultUrl(requests: SRequest[]) {
+    this._DefaultUrl = "";
     if (this.FilterByCount(requests.map(r => r.Url), requests.length).length > 0) {
       this._DefaultUrl = requests[0].Url;
     }

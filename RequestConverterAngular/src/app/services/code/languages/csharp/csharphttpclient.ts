@@ -8,7 +8,6 @@ export class CSharpHttpClientFormatter extends HttpFormatter {
   _Request: SRequest;
   RequestName: string = "HttpReq";
   ResponseName: string = "HttpReq";
-  ProxyString: string = "";
 
   private convertRequestType(string: string) {
     string = string.toLowerCase();
@@ -26,7 +25,7 @@ export class CSharpHttpClientFormatter extends HttpFormatter {
     this.extensions.SetResult("{")
 
     // Remove headers that I set as default from list, and then add remains
-    let newHeaderList = this.extensions.SubtractArrayElements(request.Headers, this.extensions.DefaultHeaders);
+    let newHeaderList = this.extensions.SubtractArrayElements(request.Headers, this.extensions._DefaultHeaders);
     if (newHeaderList.length > 0) {
       newHeaderList.forEach(header => {
         this.extensions.SetResult("    " + this.RequestName + ".Headers.Add(\"" + header.Item1 + "\", \"" + header.Item2 + "\");")
@@ -35,7 +34,7 @@ export class CSharpHttpClientFormatter extends HttpFormatter {
     }
 
     // Remove cookies that I set as default from list, and then add remains
-    let newCookieList = this.extensions.SubtractArrayElements(request.Cookies, this.extensions.DefaultCookies);
+    let newCookieList = this.extensions.SubtractArrayElements(request.Cookies, this.extensions._DefaultCookies);
     if (newCookieList.length > 0) {
       newCookieList.forEach(cookie => {
         this.extensions.SetResult("    cookieContainer.Add(new Cookie(\"" + cookie.Item1 + "\", \"" + cookie.Item2 + "\"));");
@@ -58,9 +57,8 @@ export class CSharpHttpClientExtension extends FormatterExtension {
   _Language = "C#_HttpClient";
 
   DefaultProxyString: string = "";
-  DefaultUrl: string = this._DefaultUrl;
 
-  writeaboverequests() {
+  WriteAboveRequests() {
     this.SetResult("public class " + this.ClassName);
     this.SetResult("{");
     this._Indent = "    ";
@@ -83,7 +81,7 @@ export class CSharpHttpClientExtension extends FormatterExtension {
     }
 
     // Check whether there is default cookies
-    let HasDefaultCookies = this.DefaultCookies.length > 0;
+    let HasDefaultCookies = this._DefaultCookies.length > 0;
 
     // Create httpClientHandler
     let handlerName = "";
@@ -105,7 +103,7 @@ export class CSharpHttpClientExtension extends FormatterExtension {
     }
 
     // Set default url
-    this.SetResult("static readonly HttpClient client = new HttpClient(" + handlerName + ");\n");
+    this.SetResult("static readonly HttpClient client = new HttpClient(" + handlerName + ");");
     if (this._DefaultUrl != "") {
       this.SetResult("{");
       this.SetResult("    BaseAddress = new Uri(\"" + this._DefaultUrl + "\"),");
@@ -113,23 +111,23 @@ export class CSharpHttpClientExtension extends FormatterExtension {
     }
 
     // Create constructor
-    if (this.DefaultHeaders.length > 0) {
+    if (this._DefaultHeaders.length > 0) {
       this.SetResult("public " + this.ClassName + "()");
       this.SetResult("{");
       this._Indent = "        ";
       // Set default cookies
-      this.DefaultCookies.forEach(header => {
+      this._DefaultCookies.forEach(header => {
         this.SetResult("cookieContainer.Add(new Cookie(\"" + header.Item1 + "\", \"" + header.Item2 + "\"));");
       })
       // Set default headers
-      this.DefaultHeaders.forEach(header => {      
+      this._DefaultHeaders.forEach(header => {      
         this.SetResult("client.DefaultRequestHeaders.Add(\"" + header.Item1 + "\", \"" + header.Item2 + "\");");
       })
       this._Indent = "    ";
       this.SetResult("}\n");
     }
   }
-  writebelowrequests() {
+  WriteBelowRequests() {
     this._Indent = "";
     this.SetResult("}");
   }

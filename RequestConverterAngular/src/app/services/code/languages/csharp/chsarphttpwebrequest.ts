@@ -143,12 +143,12 @@ export class HttpWebRequestExtension extends FormatterExtension {
 
   _Language = "C#_HttpWebRequest";
 
-  writeaboverequests() {
+  WriteAboveRequests() {
     this.SetResult("public class " + this.ClassName);
     this.SetResult("{");
     this._Indent = "    ";
   }
-  writebelowrequests() {
+  WriteBelowRequests() {
     this._Indent = "";
     this.SetResult("}");
   }

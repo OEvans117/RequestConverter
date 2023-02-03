@@ -5,7 +5,7 @@ export class PythonExtension extends FormatterExtension {
 
   _Language = "Python";
 
-  writeaboverequests() {
+  WriteAboveRequests() {
     if (this._HasHttpRequest) {
       this.SetResult("import requests")
       this.SetResult("from collections import OrderedDict\n")
@@ -17,7 +17,7 @@ export class PythonExtension extends FormatterExtension {
 
     this.SetResult("class " + this.ClassName + ":");
   }
-  writebelowrequests() {
+  WriteBelowRequests() {
     this.SetResult("");
   }
 }
