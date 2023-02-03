@@ -14,11 +14,13 @@ namespace RequestConverterAPI.Features.RequestConversion
 
         List<SingleRequest> RequestList = new List<SingleRequest>();
 
-        public List<SingleRequest> ConvertRequestsToList(IFormFile RequestBundle)
+        //I toke the liberty of renaming the variable to a camelCase style, the industry normally adopts this way
+        // https://en.wikipedia.org/wiki/Camel_case
+        public List<SingleRequest> ConvertRequestsToList(IFormFile requestBundle)
         {
-            this.RequestBundle = RequestBundle;
+            RequestBundle = requestBundle;
 
-            return Path.GetExtension(RequestBundle.FileName) switch
+            return Path.GetExtension(requestBundle.FileName) switch
             {
                 ".saz" => ConvertFiddler(),
                 ".har" => ConvertHar(),
@@ -31,8 +33,9 @@ namespace RequestConverterAPI.Features.RequestConversion
             using (var stream = RequestBundle.OpenReadStream())
             using (var archive = new ZipArchive(stream))
             {
-                List<ZipArchiveEntry> RequestEntry = archive.Entries.Where(x => x.Name.Contains("_c")).ToList();
-                List<ZipArchiveEntry> ResponseEntry = archive.Entries.Where(x => x.Name.Contains("_s")).ToList();
+                //As we are doing a .ToList() here, we can simplify and use var in the declaration.
+                var RequestEntry = archive.Entries.Where(x => x.Name.Contains("_c")).ToList();
+                var ResponseEntry = archive.Entries.Where(x => x.Name.Contains("_s")).ToList();
 
                 for(int i = 0; i < RequestEntry.Count; i++)
                 {

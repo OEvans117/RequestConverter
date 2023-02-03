@@ -9,6 +9,7 @@ using RequestConverterAPI.Models;
 using RequestConverterAPI.Models.HarFile;
 using RequestConverterAPI.Models.Request_Models;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Dynamic;
 using System.IO;
 using System.IO.Compression;
@@ -28,6 +29,11 @@ namespace RequestConverterAPI.Controllers
         private RequestConverterContext _context;
         private RequestsFileConverter _rfc;
         private RequestAnalyser _ra;
+        private static JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
+        {
+            IncludeFields = true,
+            WriteIndented = true,
+        };
 
         public RequestController(RequestConverterContext context,
             RequestsFileConverter rfc,
@@ -36,12 +42,18 @@ namespace RequestConverterAPI.Controllers
         [HttpPost("Convert")]
         public IActionResult ConvertAsync(IFormFile file)
         {
-            var RequestList = _rfc.ConvertRequestsToList(Request.Form.Files[0]);
+            //We should not trust the user input. If the user didn't send a file?
+            //We should check if and return if there is no file, like:
+            var firstFile = Request.Form.Files.FirstOrDefault();
+            if (firstFile == null)
+            {
+                return BadRequest();
+            }
+            
+            var RequestList = _rfc.ConvertRequestsToList(firstFile);
 
-            var RequestListJson = JsonSerializer.Serialize(RequestList, new JsonSerializerOptions { 
-                IncludeFields = true, 
-                WriteIndented = true,
-            });
+            //The second parameter of the serialization should be a private static constant, this will save some memory. 
+            var RequestListJson = JsonSerializer.Serialize(RequestList, _jsonSerializerOptions);
 
             // analyse request
 
@@ -53,7 +65,8 @@ namespace RequestConverterAPI.Controllers
         [HttpPost("Save")]
         public async Task<IActionResult> Save()
         {
-            string ConversionResult = string.Empty;
+            //no need to put string on the left side, if you are going to set immediately to string.Empty, this will save you some keystrokes.
+            var ConversionResult = string.Empty;
             using (var sr = new StreamReader(Request.Body))
                 ConversionResult = await sr.ReadToEndAsync();
 
@@ -71,12 +84,22 @@ namespace RequestConverterAPI.Controllers
         }
 
         [HttpGet("Get")]
-        public async Task<IActionResult> GetAsync(string Id)
+        //It's good to put the framework to work for you, in this case the Required will automatically validate the value sent by the user,
+        // and the `AllowEmptyStrings` will block the user to send an empty value, this will allow you to not have to create and if against that condition.
+        public async Task<IActionResult> GetAsync([Required(AllowEmptyStrings = false)] string id)
         {
-            ConvertedRequest convertedRequest = _context.Find<ConvertedRequest>(Id);
-
+            //Imagine here that the ID doesn't have a convertRequest? What we should do? 
+            var convertedRequest = _context.Find<ConvertedRequest>(id);
+            
             var CompressedResult = await Compression.FromBrotliAsync(value: convertedRequest.ConversionResult);
 
+            //This check is valid it's a bit late, we should do it before line 96, like this:
+            // if (convertedRequest == null)
+            // {
+            //     return NotFound();
+            // }
+            
+            //and in this line we just return the value from CompressedResult.
             return convertedRequest == null ? NotFound() : Ok(CompressedResult);
         }
     }
