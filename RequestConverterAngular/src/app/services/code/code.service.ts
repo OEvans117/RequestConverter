@@ -18,7 +18,7 @@ export class CodeService {
   // Private settings
   public RequestBundle: SRequest[];
   public CurrentRequestIndex: number = 0;
-  public CurrentLanguage: string = "requests";
+  public CurrentLanguage: string = "Requests";
 
   public currentHttpFormatter: HttpFormatter | undefined;
   public currentWebsocketFormatter: WebsocketFormatter | undefined;
@@ -30,8 +30,9 @@ export class CodeService {
 
     this.CurrentLanguage = language;
 
+    // Http formatters can be subsets of a language (eg: c#_http1, c#_http2), so get 1st part
     this.currentHttpFormatter = this.httpFormatters.find(c => c._name === language);
-    this.currentWebsocketFormatter = this.wsFormatters.find(w => w.language.split('_')[0] === this.currentHttpFormatter!.language);
+    this.currentWebsocketFormatter = this.wsFormatters.find(w => w.language === this.currentHttpFormatter!.language.split('_')[0]);
     this.currentFormattingExtension = this.fmExtensions.find(e => e._Language === this.currentHttpFormatter!.language);
 
     // Set the extension class for websockets & http.

@@ -7,9 +7,8 @@ export class PythonWebsocketFormatter extends WebsocketFormatter {
   websocket(request: SRequest): string {
     let funcNameToLower = request.RequestMethodName.toLowerCase()
 
-    this.extensions.SetResult("def " + request.RequestMethodName + "():")
+    this.extensions.SetResult("    def " + request.RequestMethodName + "():")
     this.extensions._Indent = "        ";
-    this.extensions.SetResult("")
 
     // Websocket contains headers, so create dict.
     if (request.Headers.length > 1) {
