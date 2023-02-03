@@ -25,14 +25,18 @@
         <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
       </div>
       <hr />
-      <div class="sidebarcontent" (click)="changeLanguage('requests')">
+      <div class="sidebarcontent" *ngFor="let formatter of this.codeService.httpFormatters" (click)="changeLanguage(formatter._name)">
+        <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
+        <p class="sidebartext" style="float: right;">{{formatter.language.split('_')[0] + " - " + formatter._name}}</p>
+      </div>
+      <!--<div class="sidebarcontent" (click)="changeLanguage('requests')">
         <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
         <p class="sidebartext" style="float: right;">Python - Requests</p>
       </div>
       <div class="sidebarcontent" (click)="changeLanguage('httpwebrequest')">
         <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
         <p class="sidebartext" style="float: right;">C# - HttpWebRequest</p>
-      </div>
+      </div>-->
     </div>
 
     <div class="sidebarsection">

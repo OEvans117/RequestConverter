@@ -3,13 +3,16 @@ import { HttpFormatter, CodeService } from "../../code.service";
 import { PythonWebsocketFormatter } from "./pythonwebsocket";
 
 export class PythonRequestsFormatter extends HttpFormatter {
-  constructor() { super('requests', 'python'); }
+  constructor() { super('Requests', 'Python'); }
 
   public HeaderName: string = "reqHeaders";
   public RequestName: string = "reqName";
   public ResponseName: string = "respName";
 
   request(request: SRequest): string {
+
+    this.extensions.SetResult("    def " + request.RequestMethodName + "():")
+    this.extensions._Indent = "        ";
 
     this.extensions.SetResult(this.HeaderName + " = OrderedDict([");
 
@@ -61,6 +64,8 @@ export class PythonRequestsFormatter extends HttpFormatter {
     }
 
     this.extensions.SetResult(this.ResponseName + " = reqName.text");
+
+    this.extensions.SetResult("");
 
     return this.extensions.GetResult(this.extensions._Result);
   }

@@ -1,10 +1,9 @@
-import { forEach } from "jszip";
 import { Multipart, MultipartType, RequestBody, RequestBodyTypes, RequestType, SRequest } from "../../../request/request";
 import { FormatterExtension, HttpFormatter } from "../../code.service";
 import { CSharpWebsocketFormatter } from "./csharpwebsocket";
 
 export class CSharpHttpClientFormatter extends HttpFormatter {
-  constructor() { super('httpclient', 'csharphttpclient'); }
+  constructor() { super('HttpClient', 'C#_HttpClient'); }
 
   _Request: SRequest;
   RequestName: string = "HttpReq";
@@ -13,38 +12,32 @@ export class CSharpHttpClientFormatter extends HttpFormatter {
 
   request(request: SRequest): string {
 
+    this.extensions._Indent = "    ";
+    this.extensions.SetResult("public string req_" + request.RequestMethodName + "()")
+    this.extensions.SetResult("{");
+    this.extensions._Indent = "        ";
+
+    this.extensions.SetResult("// Work in progress!")
     this.extensions.SetResult("using HttpResponseMessage " + this.RequestName + " = await client.GetAsync(\"" + request.Url + "\");")
     this.extensions.SetResult("string " + this.ResponseName + " = await response.Content.ReadAsStringAsync();")
+
+    this.extensions._Indent = "    ";
+    this.extensions.SetResult("}\n");
 
     return this.extensions.GetResult(this.extensions._Result);
   }
 }
 
 export class CSharpHttpClientExtension extends FormatterExtension {
-  Language = "csharphttpclient";
+  _Language = "C#_HttpClient";
 
-  writeimports() { return; }
-  writeclass() {
+  writeaboverequests() {
     this.SetResult("public class " + this.ClassName);
     this.SetResult("{");
     this._Indent = "    ";
     this.SetResult("static readonly HttpClient client = new HttpClient();")
   }
-  writehttpmethod(request: SRequest) {
-    this.SetResult("public async Task " + request.RequestMethodName + "()")
-    this.SetResult("{");
-    this._Indent = "        ";
-  }
-  writewsmethod(request: SRequest) {
-    this.SetResult("public async Task ws_" + request.RequestMethodName + "()")
-    this.SetResult("{");
-    this._Indent = "        ";
-  }
-  writeclosemethod() {
-    this._Indent = "    ";
-    this.SetResult("}\n");
-  }
-  writecloseclass() {
+  writebelowrequests() {
     this._Indent = "";
     this.SetResult("}");
   }

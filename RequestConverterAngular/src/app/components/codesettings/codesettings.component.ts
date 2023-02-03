@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { HttpFormatter, CodeService } from '../../services/code/code.service';
-import { CSharpHttpWebRequestFormatter } from '../../services/code/languages/csharp/httpwebrequest';
-import { PythonRequestsFormatter } from '../../services/code/languages/python/requests';
+import { PythonRequestsFormatter } from '../../services/code/languages/python/pythonrequests';
 import { RcapiService } from '../../services/api/rcapi.service';
 import { SettingsService } from '../../services/settings.service';
 

@@ -3,11 +3,11 @@ import { SettingsService } from '../../services/settings.service';
 import { RcapiService } from '../../services/api/rcapi.service';
 
 @Component({
-  selector: 'menu',
-  templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.css']
+  selector: 'topmenu',
+  templateUrl: './topmenu.component.html',
+  styleUrls: ['./topmenu.component.css']
 })
-export class MenuComponent {
+export class TopmenuComponent {
   constructor(public settings: SettingsService,
     public rcApi: RcapiService,
     private rcSettings: SettingsService) { }

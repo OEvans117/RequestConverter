@@ -1,7 +1,12 @@
 <div id="preferences-container" class="preferencescontainer">
   <div class="sidebartitle">
-    <p class="sidebartext" style="float: left;">CODE PREFERENCES</p>
+    <p class="sidebartext" style="float: left;">LANGUAGE PREFERENCES</p>
     <i class="preferencescloseicon fa-sharp fa-solid fa-circle-xmark fa-xl" (click)="closeModal()"></i>
+  </div>
+  <hr />
+  <codesettings [childClass]="codeService.currentFormattingExtension" [parentClass]="codeService"></codesettings>
+  <div class="sidebartitle">
+    <p class="sidebartext" style="float: left;">{{ codeService!.currentHttpFormatter!._name!.toUpperCase() }} PREFERENCES</p>
   </div>
   <hr />
   <codesettings [childClass]="codeService.currentHttpFormatter" [parentClass]="codeService"></codesettings>

@@ -2,10 +2,14 @@ import { SRequest } from "../../../request/request";
 import { WebsocketFormatter, FormatterExtension } from "../../code.service";
 
 export class PythonWebsocketFormatter extends WebsocketFormatter {
-  constructor() { super('python'); }
+  constructor() { super('Python'); }
 
   websocket(request: SRequest): string {
     let funcNameToLower = request.RequestMethodName.toLowerCase()
+
+    this.extensions.SetResult("def " + request.RequestMethodName + "():")
+    this.extensions._Indent = "        ";
+    this.extensions.SetResult("")
 
     // Websocket contains headers, so create dict.
     if (request.Headers.length > 1) {
@@ -39,7 +43,7 @@ export class PythonWebsocketFormatter extends WebsocketFormatter {
 
     this.extensions.SetResult(websocketAppInitialization);
 
-    if (this.extensions.ClassWrap) {
+    if (this.extensions._ClassWrap) {
       this.extensions.SetResult("    on_open=self." + onOpenFuncName + ",")
       this.extensions.SetResult("    on_message=self." + onMessageFuncName + ",")
       this.extensions.SetResult("    on_error=self." + onErrorFuncName + ",")

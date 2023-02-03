@@ -3,14 +3,14 @@ import { Component, ViewChild } from '@angular/core';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import { Location } from '@angular/common';
 import { HttpFormatter, CodeService, WebsocketFormatter, FormatterExtension } from './services/code/code.service';
-import { PythonRequestsFormatter } from './services/code/languages/python/requests';
-import { CSharpHttpWebRequestFormatter, HttpWebRequestExtension } from './services/code/languages/csharp/httpwebrequest';
+import { PythonRequestsFormatter } from './services/code/languages/python/pythonrequests';
 import { SettingsService } from './services/settings.service';
 import { RcapiService } from './services/api/rcapi.service';
 import { CSharpWebsocketFormatter } from './services/code/languages/csharp/csharpwebsocket';
 import { PythonWebsocketFormatter } from './services/code/languages/python/pythonwebsocket';
 import { PythonExtension } from './services/code/languages/python/pythonextension';
 import { CSharpHttpClientFormatter, CSharpHttpClientExtension } from './services/code/languages/csharp/csharphttpclient';
+import { CSharpHttpWebRequestFormatter, HttpWebRequestExtension } from './services/code/languages/csharp/chsarphttpwebrequest';
 
 @Component({
   selector: 'app-root',

@@ -60,6 +60,7 @@ export class RcapiService {
       .pipe(catchError(this.HandleLoadStateError)).subscribe(resp => {
         this.HasLoadedState = true;
         this.rcSettings.RequestArray = resp as SRequest[];
+        this.codeService.RequestBundle = resp as SRequest[];
         this.rcSettings.CurrentTranslatedRequest = this.codeService.format(this.codeService.CurrentLanguage)
     });
   }

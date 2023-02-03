@@ -3,9 +3,14 @@ import { WebsocketFormatter, FormatterExtension } from "../../code.service";
 
 export class CSharpWebsocketFormatter extends WebsocketFormatter {
 
-  constructor() { super('csharp'); }
+  constructor() { super('C#'); }
 
   websocket(request: SRequest): string {
+
+    this.extensions.SetResult("public async Task ws_" + request.RequestMethodName + "()")
+    this.extensions.SetResult("{");
+    this.extensions._Indent = "        ";
+
     this.extensions.SetResult("var ws = new ClientWebSocket();");
 
     request.Headers.forEach(header => {
@@ -22,6 +27,9 @@ export class CSharpWebsocketFormatter extends WebsocketFormatter {
 
     this.extensions.SetResult("var cts = new CancellationTokenSource();");
     this.extensions.SetResult("await ws.ConnectAsync(new Uri(\"" + request.Url + "\"), cts.Token);");
+
+    this.extensions._Indent = "    ";
+    this.extensions.SetResult("}\n");
 
     return this.extensions.GetResult(this.extensions._Result);
   }
