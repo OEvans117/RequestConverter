@@ -21,7 +21,13 @@ export class CSharpHttpClientFormatter extends HttpFormatter {
     this.extensions.SetResult("{");
     this.extensions._Indent = "        ";
 
-    this.extensions.SetResult("using(var " + this.RequestName + " = new HttpRequestMessage(HttpMethod." + this.convertRequestType(RequestType[request.RequestType]) + ", \"" + request.Url + "\"))")
+    // Fix this!
+    if (this.extensions._DefaultUrl != "") {
+      this.extensions.SetResult("using(var " + this.RequestName + " = new HttpRequestMessage(HttpMethod." + this.convertRequestType(RequestType[request.RequestType]) + ", \"/\"))")
+    }
+    else {
+      this.extensions.SetResult("using(var " + this.RequestName + " = new HttpRequestMessage(HttpMethod." + this.convertRequestType(RequestType[request.RequestType]) + ", \"" + request.Url + "\"))")
+    }
     this.extensions.SetResult("{")
 
     // Remove headers that I set as default from list, and then add remains
@@ -103,11 +109,14 @@ export class CSharpHttpClientExtension extends FormatterExtension {
     }
 
     // Set default url
-    this.SetResult("static readonly HttpClient client = new HttpClient(" + handlerName + ");");
     if (this._DefaultUrl != "") {
+      this.SetResult("static readonly HttpClient client = new HttpClient(" + handlerName + ")");
       this.SetResult("{");
       this.SetResult("    BaseAddress = new Uri(\"" + this._DefaultUrl + "\"),");
       this.SetResult("};\n");
+    }
+    else {
+      this.SetResult("static readonly HttpClient client = new HttpClient(" + handlerName + ");");
     }
 
     // Create constructor

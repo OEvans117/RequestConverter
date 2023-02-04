@@ -7,8 +7,8 @@ export class CSharpWebsocketFormatter extends WebsocketFormatter {
 
   websocket(request: SRequest): string {
 
-    this.extensions.SetResult("    public async Task ws_" + request.RequestMethodName + "()")
-    this.extensions.SetResult("    {");
+    this.extensions.SetResult("public async Task ws_" + request.RequestMethodName + "()")
+    this.extensions.SetResult("{");
     this.extensions._Indent = "        ";
 
     this.extensions.SetResult("var ws = new ClientWebSocket();");

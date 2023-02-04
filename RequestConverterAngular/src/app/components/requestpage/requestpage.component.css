@@ -33,7 +33,7 @@
 
 .sidebartext {
   color: white;
-  font-family: 'Open Sans', sans-serif;
+  /*font-family: 'Open Sans', sans-serif;*/
   font-size: 12px;
 }
 
@@ -85,7 +85,7 @@ hr {
 
 .CodeMirror-wrap {
   height: 100vh;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .CodeMirror-sizer {
