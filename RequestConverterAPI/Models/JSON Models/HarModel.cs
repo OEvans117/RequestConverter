@@ -290,28 +290,20 @@
 
     public partial class Timings
     {
-        [JsonPropertyName("blocked")]
-        public double Blocked { get; set; }
+        public string Blocked { get; set; }
 
-        [JsonPropertyName("dns")]
-        public long Dns { get; set; }
+        public string Dns { get; set; }
 
-        [JsonPropertyName("ssl")]
-        public long Ssl { get; set; }
+        public string Ssl { get; set; }
 
-        [JsonPropertyName("connect")]
-        public long Connect { get; set; }
+        public string Connect { get; set; }
 
-        [JsonPropertyName("send")]
-        public double Send { get; set; }
+        public string Send { get; set; }
 
-        [JsonPropertyName("wait")]
-        public double Wait { get; set; }
+        public string Wait { get; set; }
 
-        [JsonPropertyName("receive")]
-        public double Receive { get; set; }
+        public string Receive { get; set; }
 
-        [JsonPropertyName("_blocked_queueing")]
-        public double BlockedQueueing { get; set; }
+        public string BlockedQueueing { get; set; }
     }
 }

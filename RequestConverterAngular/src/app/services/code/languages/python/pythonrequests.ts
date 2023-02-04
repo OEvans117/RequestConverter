@@ -14,17 +14,17 @@ export class PythonRequestsFormatter extends HttpFormatter {
     this.extensions.SetResult("    def " + request.RequestMethodName + "():")
     this.extensions._Indent = "        ";
 
-    this.extensions.SetResult(this.HeaderName + " = OrderedDict([");
+    this.extensions.SetResult(this.HeaderName + " = OrderedDict({");
 
     request.Headers.forEach((header) => {
       // In python, files = formData will already set the header automatically.
       if (request.RequestBodyInfo.Type == RequestBodyTypes.MULTIPART && header.Item1.toLowerCase() == "content-type")
         return;
 
-      this.extensions.SetResult("    (\"" + header.Item1 + "\", \"" + header.Item2 + "\"),");
+      this.extensions.SetResult("    \"" + header.Item1 + "\": \"" + header.Item2 + "\",");
     });
 
-    this.extensions.SetResult("])\n");
+    this.extensions.SetResult("})\n");
 
     if (request.RequestType == RequestType.POST) {
 
