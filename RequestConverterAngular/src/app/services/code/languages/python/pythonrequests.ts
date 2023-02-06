@@ -50,7 +50,7 @@ export class PythonRequestsFormatter extends HttpFormatter {
         let xwwwformurlencoded = (request.RequestBodyInfo as XWUrlFormEncoded);
         this.extensions.SetResult("reqBody = {")
         xwwwformurlencoded.FormData.forEach(data =>
-          this.extensions.SetResult("    \"" + data.Name + ": \"" + data.Value + "\","));
+          this.extensions.SetResult("    \"" + data.Name + "\": \"" + data.Value + "\","));
         this.extensions.SetResult("}")
         this.extensions.SetResult(this.RequestName + " = requests.post('" + request.Url + "', data = reqBody, headers = reqHeaders)");
       }
