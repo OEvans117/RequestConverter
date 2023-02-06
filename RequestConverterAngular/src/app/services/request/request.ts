@@ -11,6 +11,14 @@ export interface SRequest {
   Url: string;
 }
 
+export class SimpleSRequest {
+  Cookies: Array<{ Item1: string, Item2: string }>;
+  Headers: Array<{ Item1: string, Item2: string }>;
+  RequestBody: string;
+  RequestType: string;
+  Url: string;
+}
+
 export enum RequestType {
   GET,
   HEAD,

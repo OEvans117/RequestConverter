@@ -11,6 +11,6 @@ export class PreferencesmodalComponent {
   constructor(public codeService: CodeService, public settings: SettingsService) { }
 
   closeModal() {
-    this.settings.LaunchPreferences = false;
+    this.settings.ShowPreferences = false;
   }
 }

@@ -16,6 +16,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CodesettingsComponent } from './components/codesettings/codesettings.component';
 import { PreferencesmodalComponent } from './components/preferencesmodal/preferencesmodal.component';
 
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,6 +32,7 @@ import { PreferencesmodalComponent } from './components/preferencesmodal/prefere
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    NgxJsonViewerModule,
   ],
   providers: [
     

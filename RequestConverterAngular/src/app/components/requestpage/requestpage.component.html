@@ -1,4 +1,4 @@
-<preferencesmodal *ngIf="this.settings.LaunchPreferences"></preferencesmodal>
+<preferencesmodal *ngIf="this.settings.ShowPreferences"></preferencesmodal>
 
 <div id="outer-container">
   <div id="sidebar" class="sidebar">
@@ -25,18 +25,15 @@
         <i class="sidebaricon fa-solid fa-circle-question" style=""></i>
       </div>
       <hr />
-      <div class="sidebarcontent" *ngFor="let formatter of this.codeService.httpFormatters" (click)="changeLanguage(formatter._name)">
+      <div class="sidebarcontent" (click)="this.settings.ShowJsonViewer = true">
+        <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
+        <p class="sidebartext" style="float: right;">JSON - Raw</p>
+      </div>
+
+      <div class="sidebarcontent" *ngFor="let formatter of this.codeService.httpFormatters" (click)="this.settings.ShowJsonViewer = false; changeLanguage(formatter._name)">
         <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
         <p class="sidebartext" style="float: right;">{{formatter.language.split('_')[0] + " - " + formatter._name}}</p>
       </div>
-      <!--<div class="sidebarcontent" (click)="changeLanguage('requests')">
-        <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
-        <p class="sidebartext" style="float: right;">Python - Requests</p>
-      </div>
-      <div class="sidebarcontent" (click)="changeLanguage('httpwebrequest')">
-        <i class="sidebariconleft fa-solid fa-code fa-xl"></i>
-        <p class="sidebartext" style="float: right;">C# - HttpWebRequest</p>
-      </div>-->
     </div>
 
     <div class="sidebarsection">
@@ -55,19 +52,10 @@
         </select>
       </div>
     </div>
-
-    <!--<div class="sidebarsection">
-      <div class="sidebartitle">
-        <p class="sidebartext" style="float: right;">CODE SETTINGS</p>
-        <i class="sidebaricon fa-solid fa-circle-plus" style=""></i>
-      </div>
-      <hr />
-      <codesettings [childClass]="codeService.CurrentFormatter" [parentClass]="codeService" [numberOfSettings]="2"></codesettings>
-    </div>-->
-
   </div>
 </div>
 
 <div id="content">
-    <ngx-codemirror [ngModel]="rcSettings.CurrentTranslatedRequest" id="codemirror" [options]="codeMirrorOptions"></ngx-codemirror>
+  <ngx-json-viewer *ngIf="this.settings.ShowJsonViewer" [expanded]="true" [depth]="1" [json]="this.settings.SimplifiedRequestArray"></ngx-json-viewer>
+  <ngx-codemirror *ngIf="!this.settings.ShowJsonViewer" [ngModel]="rcSettings.CurrentTranslatedRequest" id="codemirror" [options]="codeMirrorOptions"></ngx-codemirror>
 </div>

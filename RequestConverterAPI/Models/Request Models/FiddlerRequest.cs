@@ -1,4 +1,5 @@
 ﻿using RequestConverterAPI.Models.HarFile;
+using System;
 using System.Net;
 using System.Text.RegularExpressions;
 using static System.Net.Mime.MediaTypeNames;
@@ -22,11 +23,18 @@ namespace RequestConverterAPI.Models
         public override void SetRequestInfo()
         {
             // Add headers
-            var ResponseHeaders = ResponseSplit.ToList().GetRange(1, ResponseSplit.Length - 3);
+            var ResponseValues = ResponseSplit.ToList();
+
+            var SeparatorIndex = ResponseValues.FindIndex(x => string.IsNullOrEmpty(x));
+            var ResponseHeaders = ResponseValues.GetRange(1, SeparatorIndex - 1);
+
             foreach (var elems in ResponseHeaders)
                 ResponseData.Headers.Add((elems.Split(": ")[0], elems.Split(": ")[1]));
 
-            ResponseData.Body = ResponseHeaders.Last();
+            foreach (string bodyLine in ResponseValues.GetRange(SeparatorIndex + 1, ResponseValues.Count - SeparatorIndex - 1))
+                ResponseData.Body = bodyLine + "\n";
+
+            Console.WriteLine("test");
         }
 
         public override void SetResponseInfo()
