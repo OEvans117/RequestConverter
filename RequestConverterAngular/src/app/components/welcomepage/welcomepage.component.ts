@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, isDevMode } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
 import { RcapiService } from '../../services/api/rcapi.service';
 
@@ -20,8 +20,17 @@ export class WelcomepageComponent {
       this.rcApi.ConvertFile(RequestFile);
   }
 
+  private exampleBundle: string;
+
+
   visitExample() {
-    location.href = window.location.href + "r/jq2mse";
+
+    if (isDevMode())
+      this.exampleBundle = "fjb829"
+    else
+      this.exampleBundle = "hklyhi";
+
+    location.href = window.location.href + "r/" + this.exampleBundle;
   }
 
   visitUrl(value: string) {

@@ -51,8 +51,9 @@ export class RequestpageComponent {
 
   resetRequests(): void {
     this.location.go("")
-    this.rcSettings.RequestArray = [];
-    this.rcApi.HasLoadedState = true;
+    window.location.reload();
+    //this.rcSettings.RequestArray = [];
+    //this.rcApi.HasLoadedState = true;
   }
 
   codeMirrorOptions: any = {
