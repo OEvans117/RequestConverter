@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Meta } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { TopmenuComponent } from './components/topmenu/topmenu.component';
@@ -35,7 +35,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
     NgxJsonViewerModule,
   ],
   providers: [
-    
+    Meta
   ],
   bootstrap: [AppComponent]
 })

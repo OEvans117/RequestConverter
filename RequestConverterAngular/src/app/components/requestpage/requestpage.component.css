@@ -99,7 +99,7 @@ hr {
 }
 
 .ngx-json-viewer {
-  overflow-y: auto !important;
+  overflow-y: visible !important;
   overflow-x: hidden !important;
   padding-left: 20px;
   --ngx-json-string: #A3BE8C;
@@ -111,6 +111,11 @@ hr {
   --ngx-json-key: #81A1C1;
   --ngx-json-object: #8FBCBB;
   --ngx-json-function: white;
+  --ngx-json-null: #8FBCBB;
+  --ngx-json-null-bg: transparent;
+  font-size: 14.5px !important;
+  width: 98% !important;
+  height: unset !important;
 }
 
 .cm-s-nord.CodeMirror {

@@ -11,6 +11,7 @@ import { PythonWebsocketFormatter } from './services/code/languages/python/pytho
 import { PythonExtension } from './services/code/languages/python/pythonextension';
 import { CSharpHttpClientFormatter, CSharpHttpClientExtension } from './services/code/languages/csharp/csharphttpclient';
 import { CSharpHttpWebRequestFormatter, HttpWebRequestExtension } from './services/code/languages/csharp/chsarphttpwebrequest';
+import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -36,7 +37,8 @@ export class AppComponent {
   constructor(private codeService: CodeService,
     public rcApi: RcapiService,
     public rcSettings: SettingsService,
-    private location: Location) {
+    private location: Location,
+    private metaService: Meta) {
     codeService.currentHttpFormatter = new PythonRequestsFormatter();
     // Load state from API if path contains url parameters
     this.UrlParameters = this.location.path().split('/');

@@ -1,4 +1,4 @@
-import { Multipart, MultipartType, RequestBody, RequestBodyTypes, RequestType, SRequest } from "../../../request/request";
+import { Multipart, MultipartType, RequestBody, RequestBodyTypes, RequestType, SRequest, XWUrlFormEncoded } from "../../../request/request";
 import { FormatterExtension, HttpFormatter } from "../../code.service";
 import { CSharpWebsocketFormatter } from "./csharpwebsocket";
 
@@ -6,8 +6,9 @@ export class CSharpHttpClientFormatter extends HttpFormatter {
   constructor() { super('HttpClient', 'C#_HttpClient'); }
 
   _Request: SRequest;
-  RequestName: string = "HttpReq";
-  ResponseName: string = "HttpReq";
+  RequestName: string = "httpReq";
+  ResponseName: string = "httpResp";
+  MultipartDataBoundary: string = "\"------------------------\" + DateTime.Now.Ticks";
 
   private convertRequestType(string: string) {
     string = string.toLowerCase();
@@ -21,7 +22,7 @@ export class CSharpHttpClientFormatter extends HttpFormatter {
     this.extensions.SetResult("{");
     this.extensions._Indent = "        ";
 
-    // Fix this!
+    // Fix this! (Don't just add a "/" if there is a default url to a single request.)
     if (this.extensions._DefaultUrl != "") {
       this.extensions.SetResult("using(var " + this.RequestName + " = new HttpRequestMessage(HttpMethod." + this.convertRequestType(RequestType[request.RequestType]) + ", \"/\"))")
     }
@@ -29,12 +30,52 @@ export class CSharpHttpClientFormatter extends HttpFormatter {
       this.extensions.SetResult("using(var " + this.RequestName + " = new HttpRequestMessage(HttpMethod." + this.convertRequestType(RequestType[request.RequestType]) + ", \"" + request.Url + "\"))")
     }
     this.extensions.SetResult("{")
+    this.extensions._Indent = "            "
+
+    // Add post body content
+    if (request.RequestType == RequestType.POST && request.RequestBody != "") {
+      // Do I need to remove header values in any of these because setting the Content variable in
+      // http client will automatically add a header?
+
+      if (request.RequestBodyInfo.Type == RequestBodyTypes.TEXTPLAIN) {
+        // String content
+        this.extensions.SetResult(this.request + ".Content = new StringContent(\"" + request.RequestBody + "\");")
+      }
+      else if (request.RequestBodyInfo.Type == RequestBodyTypes.XWWWFORMURLENCODED) {
+        // Form url encoded
+        let xwwwformurlencoded = (request.RequestBodyInfo as XWUrlFormEncoded);
+
+        // Variable to change requestContent name.
+        this.extensions.SetResult("var requestContent = new Dictionary<string, string>();\n")
+        xwwwformurlencoded.FormData.forEach(data => this.extensions.SetResult("requestContent.Add(\"" + data.Name + "\", \"" + data.Value + "\");"));
+        this.extensions.SetResult("");
+        this.extensions.SetResult(this.RequestName + ".Content = new FormUrlEncodedContent(requestContent);\n")
+      }
+      else if (request.RequestBodyInfo.Type == RequestBodyTypes.MULTIPART) {
+        /// Multipart form data
+        let multipart = (request.RequestBodyInfo as Multipart);
+
+        // Variable to change requestContent name.
+        this.extensions.SetResult("var requestContent = new MultipartFormDataContent(" + this.MultipartDataBoundary + ");\n")
+        multipart.FormData.forEach(mpfd => {
+          if (mpfd.Type == MultipartType.Property) {
+            this.extensions.SetResult("requestContent.Add(new StringContent(\"" + mpfd.Name + "\"), \"" + mpfd.Value + "\");");
+          }
+          else if (mpfd.Type == MultipartType.FileHeader) {
+            this.extensions.SetResult("var fileStream = File.OpenRead(\"" + mpfd.Filename + "\"); ");
+            this.extensions.SetResult("requestContent.Add(new StringContent(fileStream), \"" + mpfd.Name + "\", Path.GetFileName(path));");
+          }
+        })
+        this.extensions.SetResult("");
+        this.extensions.SetResult(this.RequestName + ".Content = requestContent;\n")
+      }
+    }
 
     // Remove headers that I set as default from list, and then add remains
     let newHeaderList = this.extensions.SubtractArrayElements(request.Headers, this.extensions._DefaultHeaders);
     if (newHeaderList.length > 0) {
       newHeaderList.forEach(header => {
-        this.extensions.SetResult("    " + this.RequestName + ".Headers.Add(\"" + header.Item1 + "\", \"" + header.Item2 + "\");")
+        this.extensions.SetResult(this.RequestName + ".Headers.Add(\"" + header.Item1 + "\", \"" + header.Item2 + "\");")
       })
       this.extensions.SetResult("");
     }
@@ -43,13 +84,14 @@ export class CSharpHttpClientFormatter extends HttpFormatter {
     let newCookieList = this.extensions.SubtractArrayElements(request.Cookies, this.extensions._DefaultCookies);
     if (newCookieList.length > 0) {
       newCookieList.forEach(cookie => {
-        this.extensions.SetResult("    cookieContainer.Add(new Cookie(\"" + cookie.Item1 + "\", \"" + cookie.Item2 + "\"));");
+        this.extensions.SetResult("cookieContainer.Add(new Cookie(\"" + cookie.Item1 + "\", \"" + cookie.Item2 + "\"));");
       })
       this.extensions.SetResult("");
     }
 
-    this.extensions.SetResult("    var response = await client.SendAsync(" + this.RequestName + ");\n")
-    this.extensions.SetResult("    return await response.Content.ReadAsStringAsync();")
+    this.extensions.SetResult("var " + this.ResponseName + " = await client.SendAsync(" + this.RequestName + "); \n")
+    this.extensions.SetResult("return await " + this.ResponseName + ".Content.ReadAsStringAsync();")
+    this.extensions._Indent = "        ";
     this.extensions.SetResult("}")
 
     this.extensions._Indent = "    ";

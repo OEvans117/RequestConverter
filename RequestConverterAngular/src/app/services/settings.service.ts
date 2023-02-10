@@ -11,7 +11,7 @@ export class SettingsService {
 
   ShowPreferences: boolean = false;
 
-  ShowJsonViewer: boolean = false;
+  ShowJsonViewer: boolean = true;
 
   CurrentTranslatedRequest: string;
 

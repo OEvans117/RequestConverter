@@ -131,7 +131,10 @@ export abstract class FormatterExtension {
 
   // Set DefaultHeaders
   public _DefaultHeaders: Array<any> = [];
-  public SetDefaultHeaders(requests:SRequest[]) {
+  public SetDefaultHeaders(requests: SRequest[]) {
+    if (requests.length == 1)
+      return;
+
     let headers: { Item1: string; Item2: string; }[] = [];
     requests.forEach(request => {
       request.Headers.forEach(header => {
@@ -146,6 +149,9 @@ export abstract class FormatterExtension {
   // Set DefaultCookies
   public _DefaultCookies: Array<any> = [];
   public SetDefaultCookies(requests: SRequest[]) {
+    if (requests.length == 1)
+      return;
+
     let cookies: { Item1: string; Item2: string; }[] = [];
     requests.forEach(request => {
       request.Cookies.forEach(cookie => {
@@ -160,6 +166,9 @@ export abstract class FormatterExtension {
   // Set DefaultUrl
   public _DefaultUrl: string = "";
   public SetDefaultUrl(requests: SRequest[]) {
+    if (requests.length == 1)
+      return;
+
     this._DefaultUrl = "";
     if (this.FilterByCount(requests.map(r => r.Url), requests.length).length > 0) {
       this._DefaultUrl = requests[0].Url;
