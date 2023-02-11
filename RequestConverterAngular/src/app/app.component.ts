@@ -12,6 +12,9 @@ import { PythonExtension } from './services/code/languages/python/pythonextensio
 import { CSharpHttpClientFormatter, CSharpHttpClientExtension } from './services/code/languages/csharp/csharphttpclient';
 import { CSharpHttpWebRequestFormatter, HttpWebRequestExtension } from './services/code/languages/csharp/chsarphttpwebrequest';
 import { Meta } from '@angular/platform-browser';
+import { PHPWebsocketFormatter } from './services/code/languages/php/phpwebsocket';
+import { PHPCURLRequestsFormatter } from './services/code/languages/php/phpcurl';
+import { PhpExtension } from './services/code/languages/php/phpextension';
 
 @Component({
   selector: 'app-root',
@@ -20,14 +23,17 @@ import { Meta } from '@angular/platform-browser';
   providers: [RcapiService, CodeService,
     { provide: WebsocketFormatter, useClass: PythonWebsocketFormatter, multi: true },
     { provide: WebsocketFormatter, useClass: CSharpWebsocketFormatter, multi: true },
+    { provide: WebsocketFormatter, useClass: PHPWebsocketFormatter, multi: true },
 
     { provide: HttpFormatter, useClass: PythonRequestsFormatter, multi: true },
     { provide: HttpFormatter, useClass: CSharpHttpWebRequestFormatter, multi: true },
     { provide: HttpFormatter, useClass: CSharpHttpClientFormatter, multi: true },
+    { provide: HttpFormatter, useClass: PHPCURLRequestsFormatter, multi: true },
 
     { provide: FormatterExtension, useClass: HttpWebRequestExtension, multi: true },
     { provide: FormatterExtension, useClass: PythonExtension, multi: true },
     { provide: FormatterExtension, useClass: CSharpHttpClientExtension, multi: true },
+    { provide: FormatterExtension, useClass: PhpExtension, multi: true },
   ],
 })
 export class AppComponent {

@@ -10,4 +10,9 @@
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\RequestConverterAngular</BuildOutputFolder>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="src\app\services\code\languages\java\" />
+    <Folder Include="src\app\services\code\languages\nodejs\" />
+    <Folder Include="src\app\services\code\languages\php\" />
+  </ItemGroup>
 </Project>
